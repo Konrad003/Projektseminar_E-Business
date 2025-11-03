@@ -1,5 +1,5 @@
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('game')
+const ctx = canvas.getContext('2d')
 document.addEventListener("keydown", keyDownHandler)
 document.addEventListener("keyup", keyUpHandler)
 
@@ -8,11 +8,20 @@ upPressed = false
 leftPressed = false
 rightPressed = false
 downPressed = false
+
+// Map Variablen
+mapWidthTile=80 //in Kacheln
+mapHightTile=50 //in Kacheln
+Tilelength=64
+playerGlobalMapX=mapWidthTile*Tilelength/2
+playerGlobalMapY=mapHightTile*Tilelength/2
+FOV=canvas.height //Field of View in px
+
 function render(){ // Haubtfunktion für alle Funktionen die für die Frames des Spielen sind wie drawMap oder drawPlayer etc.
     playerMovement()
     drawMapinRange(playerGlobalMapX, playerGlobalMapY)
 }
-function keyUpHandler(e) { // liest Input der Tastur aus
+function keyDownHandler(e) { // liest Input der Tastur aus
     if ((e.key == "ArrowUp") || (e.key =='w')) {
         upPressed = true;
     }
@@ -40,6 +49,27 @@ function keyUpHandler(e) { // liest Output der Tastur aus
         downPressed = false;
     }
 }
+function drawSquare(x, y,width,height, color) {
+    ctx.beginPath()
+    ctx.rect(x, y, width, height)
+    ctx.fillStyle = color
+    ctx.fill()
+    ctx.strokeStyle = color;
+    ctx.stroke();
+}
+function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
+        leftBorder=playerGlobalMapX-FOV/2
+        topBorder=playerGlobalMapY-FOV/2
+        rightBorder=playerGlobalMapX+FOV/2
+        bottomBorder=playerGlobalMapY+FOV/2
+        drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'black')
+        for (i=Tilelength-(topBorder%Tilelength);i<FOV;i+=Tilelength){
+            drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
+        }
+        for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){
+            drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'green')
+        }
+    }
 class Player {
     //Koordinaten liegen bisher in Map.playerGlobalX / Y 
     level=0
@@ -80,17 +110,8 @@ class Player {
 }
 
 class Map {
-    keys = {}
     
-    mapWidth=800
-    mapHight=200
-    playerGlobalMapX=mapWidth/2
-    playerGlobalMapY=mapHight/2
-    FOV=100 //Field of View
-    drawMapinRange(playerGlobalMapX, playerGlobalMapY){
-        leftBorder=playerGlobalMapX-FOV/2
-        topBorder=playerGlobalMapY-FOV/2
-        rightBorder=playerGlobalMapX+FOV/2
-        bottomBorder=playerGlobalMapY+FOV/2
-    }
+    
 }
+drawSquare(0,0,canvas.width,canvas.height,'red')
+drawMapinRange(playerGlobalMapX,playerGlobalMapY)
