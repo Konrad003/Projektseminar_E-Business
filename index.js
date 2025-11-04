@@ -4,30 +4,30 @@ document.addEventListener("keydown", keyDownHandler)
 document.addEventListener("keyup", keyUpHandler)
 
 // Tastatur inputs:
-upPressed = false
-leftPressed = false
-rightPressed = false
-downPressed = false
+let upPressed = false
+let leftPressed = false
+let rightPressed = false
+let downPressed = false
 
 // Map Variablen
 mapWidthTile=81 //in Kacheln (Muss ungerade sein)vll
-mapHightTile=50 //in Kacheln
+mapHeightTile=50 //in Kacheln
 Tilelength=32
 playerGlobalMapX=mapWidthTile*Tilelength/2
-playerGlobalMapY=mapHightTile*Tilelength/2
+playerGlobalMapY=mapHeightTile*Tilelength/2
 FOV=canvas.height //Field of View in px
 
-function render(){ // Haubtfunktion für alle Funktionen die für die Frames des Spielen sind wie drawMap oder drawPlayer etc.
+function playerMovement(){
+  if(upPressed) playerGlobalMapY++
+  if(downPressed) playerGlobalMapY--
+  if(rightPressed) playerGlobalMapX++
+  if(leftPressed) playerGlobalMapX--
+}
+function render(){ // Hauptfunktion für alle Funktionen die für die Frames des Spielen sind wie drawMap oder drawPlayer etc.
     playerMovement()
     drawMapinRange(playerGlobalMapX, playerGlobalMapY)
 }
-function playerMovement(){
-    if(upPressed) playerGlobalMapY++
-    if(downPressed) playerGlobalMapY--
-    if(rightPressed) playerGlobalMapX++
-    if(leftPressed) playerGlobalMapX--
-}
-function keyDownHandler(e) { // liest Input der Tastur aus
+function keyDownHandler(e) { // liest Input der Tastatur aus
     if ((e.key == "ArrowUp") || (e.key =='w')) {
         upPressed = true;
     }
@@ -41,7 +41,7 @@ function keyDownHandler(e) { // liest Input der Tastur aus
         downPressed = true;
     }
 }
-function keyUpHandler(e) { // liest Output der Tastur aus
+function keyUpHandler(e) { // liest Output der Tastatur aus
     if ((e.key == "ArrowUp") || (e.key =='w')) {
         upPressed = false;
     }
@@ -65,14 +65,15 @@ function drawSquare(x, y,width,height, color) {
 }
 function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
         tileNr=0
-        leftBorder=playerGlobalMapX-FOV/2
-        topBorder=playerGlobalMapY-FOV/2
-        rightBorder=playerGlobalMapX+FOV/2
-        bottomBorder=playerGlobalMapY+FOV/2
+        const leftBorder=playerGlobalMapX-FOV/2
+        const topBorder=playerGlobalMapY-FOV/2
+        const rightBorder=playerGlobalMapX+FOV/2
+        const bottomBorder=playerGlobalMapY+FOV/2
+
         tileNr=Math.floor(topBorder/Tilelength)*mapWidthTile+Math.floor(leftBorder/Tilelength)
         //alert(tileNr) //12
         drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'Yellow')
-        
+
        // alert(Tilelength-(leftBorder%Tilelength)) //16
        // alert(Tilelength-(topBorder%Tilelength))  //32
         for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){
@@ -80,9 +81,9 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
             if (tileNr%2==0)
                 drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
             else drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'green')
-            
+
         }
-        
+
         for (i=Tilelength-(topBorder%Tilelength);i<FOV;i+=Tilelength){
             tileNr+=mapWidthTile
             if (tileNr%2==0)
@@ -97,7 +98,7 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
         }
     }
 class Player {
-    //Koordinaten liegen bisher in Map.playerGlobalX / Y 
+    //Koordinaten liegen bisher in Map.playerGlobalX / Y
     level=0
     constructor(hp, baseDamage, hitbox, firstWeapon,speed,range){
         this.hp=hp
@@ -110,18 +111,18 @@ class Player {
 
     playerMovement(){
         if (upPressed){
-            playerGlobalMapY-=speed
+            playerGlobalMapY-=this.speed
         }
         if (downPressed){
-            playerGlobalMapY+=speed
+            playerGlobalMapY+=this.speed
         }
         if (rightPressed){
-            playerGlobalMapX+=speed
+            playerGlobalMapX+=this.speed
         }
         if (leftPressed){
-            playerGlobalMapX-=speed
+            playerGlobalMapX-=this.speed
         }
-        
+
 
     }
     takeDamage(){
@@ -131,13 +132,13 @@ class Player {
 
     }
     draw(){
-        
+
     }
 }
 
 class Map {
-    
-    
+
+
 }
 drawSquare(0,0,canvas.width,canvas.height,'gray')
 setInterval(render, 5)
