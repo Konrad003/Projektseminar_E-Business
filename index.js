@@ -10,7 +10,7 @@ rightPressed = false
 downPressed = false
 
 // Map Variablen
-mapWidthTile=81 //in Kacheln (Muss ungerade sein)vll
+mapWidthTile=111 //in Kacheln (Muss ungerade sein)vll
 mapHightTile=50 //in Kacheln
 Tilelength=32
 playerGlobalMapX=mapWidthTile*Tilelength/2
@@ -21,9 +21,12 @@ function render(){ // Haubtfunktion für alle Funktionen die für die Frames des
     playerMovement()
     drawMapinRange(playerGlobalMapX, playerGlobalMapY)
 }
+function getTileNr(){
+    return tileRow*mapWidthTile+tileColumnWalker
+}
 function playerMovement(){
-    if(upPressed) playerGlobalMapY++
-    if(downPressed) playerGlobalMapY--
+    if(upPressed) playerGlobalMapY--
+    if(downPressed) playerGlobalMapY++
     if(rightPressed) playerGlobalMapX++
     if(leftPressed) playerGlobalMapX--
 }
@@ -69,31 +72,32 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
         topBorder=playerGlobalMapY-FOV/2
         rightBorder=playerGlobalMapX+FOV/2
         bottomBorder=playerGlobalMapY+FOV/2
-        tileNr=Math.floor(topBorder/Tilelength)*mapWidthTile+Math.floor(leftBorder/Tilelength)
-        //alert(tileNr) //12
+        tileRow=Math.floor(topBorder/Tilelength)
+        tileColumn=Math.floor(leftBorder/Tilelength)
+        tileColumnWalker=tileColumn
+        //alert(tileNr) 
         drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'Yellow')
-        
-       // alert(Tilelength-(leftBorder%Tilelength)) //16
-       // alert(Tilelength-(topBorder%Tilelength))  //32
         for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){
-            tileNr++
-            if (tileNr%2==0)
+            tileColumnWalker++
+            if (getTileNr()%2==0)
                 drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
             else drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'green')
             
         }
         
         for (i=Tilelength-(topBorder%Tilelength);i<FOV;i+=Tilelength){
-            tileNr+=mapWidthTile
-            if (tileNr%2==0)
+            tileRow++
+            tileColumnWalker=tileColumn
+            if (getTileNr()%2==0)
                 drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'black')
             else drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'green')
             for (j=Tilelength-(leftBorder%Tilelength);j<FOV;j+=Tilelength){
-                tileNr++
-                if (tileNr%2==0)
+                tileColumnWalker++
+                if (getTileNr()%2==0)
                     drawSquare(j,i,Tilelength,Tilelength,'black')
                 else drawSquare(j,i,Tilelength,Tilelength,'green')
             }
+            tileColumnWalker++
         }
     }
 class Player {
