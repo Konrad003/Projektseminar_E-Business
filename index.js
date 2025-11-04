@@ -10,8 +10,8 @@ rightPressed = false
 downPressed = false
 
 // Map Variablen
-mapWidthTile=111 //in Kacheln (Muss ungerade sein)vll
-mapHightTile=50 //in Kacheln
+mapWidthTile=111 //in Kacheln/Tile (Muss ungerade sein solange wir in dem Karo muster sind)
+mapHightTile=50 //in Kacheln/Tile
 Tilelength=32
 playerGlobalMapX=mapWidthTile*Tilelength/2
 playerGlobalMapY=mapHightTile*Tilelength/2
@@ -22,10 +22,12 @@ function render(){ // Haubtfunktion für alle Funktionen die für die Frames des
     drawMapinRange(playerGlobalMapX, playerGlobalMapY)
 }
 function getTileNr(){
-    return tileRow*mapWidthTile+tileColumnWalker
+    return tileRow*mapWidthTile+tileColumnWalker /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip 1 2  3  4
+                                                                                                           5 6  7  8
+                                                                                                           9 10 11 12  */
 }
 function playerMovement(){
-    if(upPressed) playerGlobalMapY--
+    if(upPressed) playerGlobalMapY--        //Je nachdem welche Taste grade gedrückt wird
     if(downPressed) playerGlobalMapY++
     if(rightPressed) playerGlobalMapX++
     if(leftPressed) playerGlobalMapX--
@@ -66,7 +68,7 @@ function drawSquare(x, y,width,height, color) {
     ctx.strokeStyle = color;
     ctx.stroke();
 }
-function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
+function drawMapinRange(playerGlobalMapX, playerGlobalMapY){ //zeichnet die sichtbare Map 
         tileNr=0
         leftBorder=playerGlobalMapX-FOV/2
         topBorder=playerGlobalMapY-FOV/2
@@ -75,9 +77,9 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
         tileRow=Math.floor(topBorder/Tilelength)
         tileColumn=Math.floor(leftBorder/Tilelength)
         tileColumnWalker=tileColumn
-        //alert(tileNr) 
-        drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'Yellow')
-        for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){
+
+        drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'Yellow')   //erstes Tile oben links
+        for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){                                 // obere Reihe an Tiles
             tileColumnWalker++
             if (getTileNr()%2==0)
                 drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
@@ -86,18 +88,18 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){
         }
         
         for (i=Tilelength-(topBorder%Tilelength);i<FOV;i+=Tilelength){
-            tileRow++
-            tileColumnWalker=tileColumn
+            tileRow++                                                                   //Zeilensprung
+            tileColumnWalker=tileColumn                                                 //Wieder auf die richitge Spalte gesetzt
             if (getTileNr()%2==0)
-                drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'black')
+                drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'black')   //linke Tiles(nicht immer vollständig Sichtbar)
             else drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'green')
-            for (j=Tilelength-(leftBorder%Tilelength);j<FOV;j+=Tilelength){
-                tileColumnWalker++
+            for (j=Tilelength-(leftBorder%Tilelength);j<FOV;j+=Tilelength){             
+                tileColumnWalker++                                                      //nächste Spalte
                 if (getTileNr()%2==0)
-                    drawSquare(j,i,Tilelength,Tilelength,'black')
+                    drawSquare(j,i,Tilelength,Tilelength,'black')                       //innere Tiles(vollständig Sichtbare)
                 else drawSquare(j,i,Tilelength,Tilelength,'green')
             }
-            tileColumnWalker++
+            tileColumnWalker++                                                          //nächste Spalte   
         }
     }
 class Player {
