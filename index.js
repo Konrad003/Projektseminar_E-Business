@@ -11,15 +11,15 @@ let downPressed = false
 
 // Map Variablen
 mapWidthTile=111 //in Kacheln/Tile (Muss ungerade sein solange wir in dem Karo muster sind)
-mapHightTile=50 //in Kacheln/Tile
+mapHeightTile=50 //in Kacheln/Tile
 Tilelength=32
 playerGlobalMapX=mapWidthTile*Tilelength/2
 playerGlobalMapY=mapHeightTile*Tilelength/2
 FOV=canvas.height //Field of View in px
 
-function playerMovement(){
-  if(upPressed) playerGlobalMapY++
-  if(downPressed) playerGlobalMapY--
+function playerMovement(){  //Je nachdem welche Taste grade gedrückt wird
+  if(upPressed) playerGlobalMapY--
+  if(downPressed) playerGlobalMapY++
   if(rightPressed) playerGlobalMapX++
   if(leftPressed) playerGlobalMapX--
 }
@@ -31,12 +31,6 @@ function getTileNr(){
     return tileRow*mapWidthTile+tileColumnWalker /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip 1 2  3  4
                                                                                                            5 6  7  8
                                                                                                            9 10 11 12  */
-}
-function playerMovement(){
-    if(upPressed) playerGlobalMapY--        //Je nachdem welche Taste grade gedrückt wird
-    if(downPressed) playerGlobalMapY++
-    if(rightPressed) playerGlobalMapX++
-    if(leftPressed) playerGlobalMapX--
 }
 function keyDownHandler(e) { // liest Input der Tastur aus
     if ((e.key == "ArrowUp") || (e.key =='w')) {
@@ -87,23 +81,26 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){ //zeichnet die sich
         drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'Yellow')   //erstes Tile oben links
         for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){                                 // obere Reihe an Tiles
             tileColumnWalker++
-            if (getTileNr()%2==0)
-                drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
-            else drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'green')
+            if(tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile) drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'brown')
+            else if (getTileNr()%2==0)
+                    drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
+                else drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'green')
 
         }
 
         for (i=Tilelength-(topBorder%Tilelength);i<FOV;i+=Tilelength){
             tileRow++                                                                   //Zeilensprung
-            tileColumnWalker=tileColumn                                                 //Wieder auf die richitge Spalte gesetzt
-            if (getTileNr()%2==0)
-                drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'black')   //linke Tiles(nicht immer vollständig Sichtbar)
-            else drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'green')
+            tileColumnWalker=tileColumn
+            if(tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile) drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'brown')                                             //Wieder auf die richitge Spalte gesetzt
+            else if (getTileNr()%2==0)
+                    drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'black')   //linke Tiles(nicht immer vollständig Sichtbar)
+                else drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'green')
             for (j=Tilelength-(leftBorder%Tilelength);j<FOV;j+=Tilelength){             
-                tileColumnWalker++                                                      //nächste Spalte
-                if (getTileNr()%2==0)
-                    drawSquare(j,i,Tilelength,Tilelength,'black')                       //innere Tiles(vollständig Sichtbare)
-                else drawSquare(j,i,Tilelength,Tilelength,'green')
+                tileColumnWalker++
+                if(tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile) drawSquare(j,i,Tilelength,Tilelength,'brown')                                                       //nächste Spalte
+                else if (getTileNr()%2==0)
+                        drawSquare(j,i,Tilelength,Tilelength,'black')                       //innere Tiles(vollständig Sichtbare)
+                    else drawSquare(j,i,Tilelength,Tilelength,'green')
             }
             tileColumnWalker++                                                          //nächste Spalte   
         }
