@@ -68,6 +68,9 @@ function drawSquare(x, y,width,height, color) {
     ctx.strokeStyle = color;
     ctx.stroke();
 }
+function isTileOutOfBorder(){
+    return (tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile)
+}
 function drawMapinRange(playerGlobalMapX, playerGlobalMapY){ //zeichnet die sichtbare Map 
         tileNr=0
         leftBorder=playerGlobalMapX-FOV/2
@@ -81,26 +84,36 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){ //zeichnet die sich
         drawSquare(0,0,Tilelength-(leftBorder%Tilelength),Tilelength-(topBorder%Tilelength),'Yellow')   //erstes Tile oben links
         for (i=Tilelength-(leftBorder%Tilelength);i<FOV;i+=Tilelength){                                 // obere Reihe an Tiles
             tileColumnWalker++
-            if(tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile) drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'brown')
+            if(isTileOutOfBorder()) 
+                color='brown'                                            //Wieder auf die richitge Spalte gesetzt
             else if (getTileNr()%2==0)
-                    drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'black')
-                else drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),'green')
+                    color='black'                                           //linke Tiles(nicht immer vollständig Sichtbar)
+                else 
+                    color='green'
+            drawSquare(i,0,Tilelength,Tilelength-(topBorder%Tilelength),color)
 
         }
 
         for (i=Tilelength-(topBorder%Tilelength);i<FOV;i+=Tilelength){
             tileRow++                                                                   //Zeilensprung
             tileColumnWalker=tileColumn
-            if(tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile) drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'brown')                                             //Wieder auf die richitge Spalte gesetzt
+            if(isTileOutOfBorder()) 
+                color='brown'                                            //Wieder auf die richitge Spalte gesetzt
             else if (getTileNr()%2==0)
-                    drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'black')   //linke Tiles(nicht immer vollständig Sichtbar)
-                else drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,'green')
+                    color='black'                                           //linke Tiles(nicht immer vollständig Sichtbar)
+                else 
+                    color='green'
+                drawSquare(0,i,Tilelength-(leftBorder%Tilelength),Tilelength,color)
+            
             for (j=Tilelength-(leftBorder%Tilelength);j<FOV;j+=Tilelength){             
                 tileColumnWalker++
-                if(tileColumnWalker<=0||tileColumnWalker>=mapWidthTile||tileRow<=0||tileRow>=mapHeightTile) drawSquare(j,i,Tilelength,Tilelength,'brown')                                                       //nächste Spalte
+                if(isTileOutOfBorder()) 
+                    color='brown'                                                    //nächste Spalte
                 else if (getTileNr()%2==0)
-                        drawSquare(j,i,Tilelength,Tilelength,'black')                       //innere Tiles(vollständig Sichtbare)
-                    else drawSquare(j,i,Tilelength,Tilelength,'green')
+                        color='black'               //innere Tiles(vollständig Sichtbare)
+                    else 
+                        color='green'
+                drawSquare(j,i,Tilelength,Tilelength,color)
             }
             tileColumnWalker++                                                          //nächste Spalte   
         }
