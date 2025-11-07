@@ -107,31 +107,30 @@ function drawMapInRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sic
     drawSquare(i, 0, Tilelength, offsetToBorder(topBorder), color)          //obere Tiles (nicht immer vollständig sichtbar)
   }
 
-  for (i = offsetToBorder(topBorder); i < FOV; i += Tilelength) {
-    tileRowWalker++                                                                   //Zeilensprung
-    tileColumnWalker = tileColumn
-    if (isTileOutOfBorder()) {
-      color = 'brown'
-    } else if (getTileNr() % 2 == 0) {
-      color = 'black'
-    } else {
-      color = 'green'
-    }
-    drawSquare(0, i, offsetToBorder(leftBorder), Tilelength, color)         //linke Tiles(nicht immer vollständig Sichtbar)
+        for (i=offsetToBorder(topBorder);i<FOV;i+=Tilelength){
+            tileRowWalker++                                                                   //Zeilensprung
+            tileColumnWalker=tileColumn
+            if(isTileOutOfBorder())
+                color='brown'
+            else if (getTileNr()%2==0)
+                    color='black'
+                else
+                    color='green'
+                drawSquare(0,i,offsetToBorder(leftBorder),Tilelength,color)         //linke Tiles(nicht immer vollständig Sichtbar)
 
-    for (j = offsetToBorder(leftBorder); j < FOV; j += Tilelength) {
-      tileColumnWalker++                                                  //nächste Spalte
-      if (isTileOutOfBorder())
-        color = 'brown'
-      else if (getTileNr() % 2 == 0)
-        color = 'black'
-      else
-        color = 'green'
-      drawSquare(j, i, Tilelength, Tilelength, color)                         //innere Tiles(vollständig Sichtbare)
+            for (let j=offsetToBorder(leftBorder);j<FOV;j+=Tilelength){
+                tileColumnWalker++                                                  //nächste Spalte
+                if(isTileOutOfBorder())
+                    color='brown'
+                else if (getTileNr()%2==0)
+                        color='black'
+                    else
+                        color='green'
+                drawSquare(j,i,Tilelength,Tilelength,color)                         //innere Tiles(vollständig Sichtbare)
+            }
+            tileColumnWalker++                                                          //nächste Spalte
+        }
     }
-    tileColumnWalker++                                                          //nächste Spalte
-  }
-}
 
 class Player {
   //Koordinaten liegen bisher in Map.playerGlobalX / Y
