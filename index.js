@@ -73,9 +73,9 @@ function isTileOutOfBorder(){
     return (tileColumnWalker<0||tileColumnWalker>mapWidthTile||tileRowWalker<0||tileRowWalker>mapHeightTile)
 }
 function offsetToBorder(offset){        
-    holder=(offset%Tilelength)      
-    if (holder<0) return holder*-1      //holder wird negativ wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
-    return Tilelength-holder
+    let holder = (offset % Tilelength);      
+    if (holder < 0) return holder * -1;      //holder wird negativ wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
+    return Tilelength - holder;
 }
 
 function drawMapinRange(playerGlobalMapX, playerGlobalMapY){ //zeichnet die sichtbare Map 
