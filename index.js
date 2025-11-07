@@ -112,7 +112,7 @@ function drawMapinRange(playerGlobalMapX, playerGlobalMapY){ //zeichnet die sich
                     color='green'
                 drawSquare(0,i,offsetToBorder(leftBorder),Tilelength,color)         //linke Tiles(nicht immer vollständig Sichtbar)
             
-            for (j=offsetToBorder(leftBorder);j<FOV;j+=Tilelength){             
+            for (let j=offsetToBorder(leftBorder);j<FOV;j+=Tilelength){             
                 tileColumnWalker++                                                  //nächste Spalte
                 if(isTileOutOfBorder()) 
                     color='brown'                                                   
