@@ -77,11 +77,10 @@ function drawSquare(x, y, width, height, color) {
 function isTileOutOfBorder() {
   return (tileColumnWalker < 0 || tileColumnWalker > mapWidthTile || tileRowWalker < 0 || tileRowWalker > mapHeightTile)
 }
-
-function offsetToBorder(offset) {
-  holder = (offset % Tilelength)
-  if (holder < 0) return holder * -1      //holder wird negativ, wenn die Border erreicht wird, da die Koordinaten ins negative gehen. Daher die Lösung mit return holder.
-  return Tilelength - holder
+function offsetToBorder(offset){
+    let holder = (offset % Tilelength);
+    if (holder < 0) return holder * -1;      //holder wird negativ wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
+    return Tilelength - holder;
 }
 
 function drawMapInRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sichtbare Map
