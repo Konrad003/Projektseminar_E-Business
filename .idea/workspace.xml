@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Refactor index.js for improved variable scoping and code clarity" />
+    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Refactor index.js and index.html for improved code clarity and formatting">
+      <change beforePath="$PROJECT_DIR$/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,7 +63,7 @@
     "Node.js.index.js.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "#17 on Merging 14-feat-moving-map",
+    "git-widget-placeholder": "31-feat-refactor-indexjs",
     "ignore.virus.scanning.warn.message": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -66,7 +71,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.uml",
     "spentTimePerTaskStorage.store": "{}",
     "timeTracker.activityTracker": "null",
     "timeTracker.comment": "",
@@ -111,6 +116,7 @@
       <workItem from="1761254146663" duration="825000" />
       <workItem from="1762290512368" duration="41000" />
       <workItem from="1762290576125" duration="1044000" />
+      <workItem from="1762510404311" duration="963000" />
     </task>
     <task id="LOCAL-00001" summary="Add style.css for styling the application">
       <option name="closed" value="true" />
@@ -154,9 +160,22 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add style.css for styling the application" />
+    <MESSAGE value="Merge branch 'main' into 21-bug-out-of-bound-bei-der-map-sorgt-für-grafik-fehler" />
     <MESSAGE value="Refactor index.js for improved variable scoping and code clarity" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor index.js for improved variable scoping and code clarity" />
+    <MESSAGE value="Refactor index.js and index.html for improved code clarity and formatting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor index.js and index.html for improved code clarity and formatting" />
   </component>
 </project>
