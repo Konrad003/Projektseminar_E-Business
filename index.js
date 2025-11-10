@@ -75,63 +75,52 @@ function drawSquare(x, y, width, height, color) {
 }
 
 function isTileOutOfBorder() {
-  return (tileColumnWalker < 0 || tileColumnWalker > mapWidthTile || tileRowWalker < 0 || tileRowWalker > mapHeightTile)
+    return (tileColumnWalker < 0 || tileColumnWalker > mapWidthTile || tileRowWalker < 0 || tileRowWalker > mapHeightTile)
 }
 
-function offsetToBorder(offset) {
-  holder = (offset % Tilelength)
-  if (holder < 0) return holder * -1      //holder wird negativ, wenn die Border erreicht wird, da die Koordinaten ins negative gehen. Daher die Lösung mit return holder.
-  return Tilelength - holder
+function offsetToBorder(offset){
+    let holder = (offset % Tilelength);
+    if (holder < 0) return holder * -1;      //holder wird negativ wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
+    return Tilelength - holder;
 }
 
-function drawMapInRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sichtbare Map
-  tileNr = 0
-  leftBorder = playerGlobalMapX - FOV / 2
-  topBorder = playerGlobalMapY - FOV / 2
-  rightBorder = playerGlobalMapX + FOV / 2
-  bottomBorder = playerGlobalMapY + FOV / 2
-  tileRow = Math.floor(topBorder / Tilelength)
-  tileRowWalker = tileRow
-  tileColumn = Math.floor(leftBorder / Tilelength)
-  tileColumnWalker = tileColumn
+function getColor(){
+    if(isTileOutOfBorder())
+        return color='brown'
+    else if (getTileNr()%2==0)
+        return color='black'
+    else
+        return color='green'
+}
 
-  drawSquare(0, 0, offsetToBorder(leftBorder), offsetToBorder(topBorder), 'Yellow')   //erstes Tile oben links
-  for (i = offsetToBorder(leftBorder); i < FOV; i += Tilelength) {                                 // obere Reihe an Tiles
-    tileColumnWalker++
-    if (isTileOutOfBorder()) {
-      color = 'brown'
-    } else if (getTileNr() % 2 == 0) {
-      color = 'black'
-    } else {
-      color = 'green'
-    }
-    drawSquare(i, 0, Tilelength, offsetToBorder(topBorder), color)          //obere Tiles (nicht immer vollständig sichtbar)
-  }
-
-  for (i = offsetToBorder(topBorder); i < FOV; i += Tilelength) {
-    tileRowWalker++                                                                   //Zeilensprung
+function drawMapinRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sichtbare Map
+    tileNr = 0
+    leftBorder = playerGlobalMapX - FOV / 2
+    topBorder = playerGlobalMapY - FOV / 2
+    rightBorder = playerGlobalMapX + FOV / 2
+    bottomBorder = playerGlobalMapY + FOV / 2
+    tileRow = Math.floor(topBorder / Tilelength)
+    tileRowWalker = tileRow
+    tileColumn = Math.floor(leftBorder / Tilelength)
     tileColumnWalker = tileColumn
-    if (isTileOutOfBorder()) {
-      color = 'brown'
-    } else if (getTileNr() % 2 == 0) {
-      color = 'black'
-    } else {
-      color = 'green'
-    }
-    drawSquare(0, i, offsetToBorder(leftBorder), Tilelength, color)         //linke Tiles(nicht immer vollständig Sichtbar)
 
-    for (j = offsetToBorder(leftBorder); j < FOV; j += Tilelength) {
-      tileColumnWalker++                                                  //nächste Spalte
-      if (isTileOutOfBorder())
-        color = 'brown'
-      else if (getTileNr() % 2 == 0)
-        color = 'black'
-      else
-        color = 'green'
-      drawSquare(j, i, Tilelength, Tilelength, color)                         //innere Tiles(vollständig Sichtbare)
+    drawSquare(0, 0, offsetToBorder(leftBorder), offsetToBorder(topBorder), 'Yellow')   //erstes Tile oben links
+    for (i = offsetToBorder(leftBorder); i < FOV; i += Tilelength) {                                 // obere Reihe an Tiles
+        tileColumnWalker++
+        drawSquare(i, 0, Tilelength, offsetToBorder(topBorder), getColor())          //obere Tiles(nicht immer vollständig sichtbar)
     }
-    tileColumnWalker++                                                          //nächste Spalte
-  }
+
+    for (i = offsetToBorder(topBorder); i < FOV; i += Tilelength) {
+        tileRowWalker++                                                                   //Zeilensprung
+        tileColumnWalker = tileColumn
+        drawSquare(0, i, offsetToBorder(leftBorder), Tilelength, getColor())         //linke Tiles(nicht immer vollständig Sichtbar)
+
+        for (let j = offsetToBorder(leftBorder); j < FOV; j += Tilelength) {
+            tileColumnWalker++                                                  //nächste Spalte
+            drawSquare(j, i, Tilelength, Tilelength, getColor())                         //innere Tiles(vollständig Sichtbare)
+        }
+        tileColumnWalker++                                                          //nächste Spalte
+    }
 }
 
 class Player {
