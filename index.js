@@ -93,7 +93,7 @@ function getColor(){
         return color='green'
 }
 
-function drawMapinRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sichtbare Map
+function drawMapInRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sichtbare Map
     tileNr = 0
     leftBorder = playerGlobalMapX - FOV / 2
     topBorder = playerGlobalMapY - FOV / 2
