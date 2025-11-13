@@ -1,7 +1,7 @@
 name: Bug report
 description: Report a Bug.
 title: "bug: short description"
-labels: "Status: Backlog", "Type: Bug"
+labels: ["Status: Backlog", "Type: Bug"]
 assignees: []
 projects: "Projektseminar E-Business"
 body:
