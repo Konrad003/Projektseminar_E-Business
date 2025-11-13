@@ -1,7 +1,7 @@
-name: Feature request
-description: Suggest an idea or improvement.
+name: "Feature request"
+description: "Suggest an idea or improvement."
 title: "feat: <short description>"
-labels: ["enhancement"]
+labels: ["Status: To Do", "Type: Feature"]
 assignees: []
 body:
 
