@@ -123,54 +123,6 @@ function drawMapInRange(playerGlobalMapX, playerGlobalMapY) { //zeichnet die sic
     }
 }
 
-class Player {
-  //Koordinaten liegen bisher in Map.playerGlobalX / Y
-  level = 0
-
-  constructor(hp, baseDamage, hitbox, firstWeapon, speed, range) {
-    this.hp = hp
-    this.baseDamage = baseDamage
-    this.hitbox = hitbox
-    this.firstWeapon = firstWeapon
-    this.speed = speed
-    this.range = range
-  }
-
-  playerMovement() {
-    if (upPressed) {
-      playerGlobalMapY -= this.speed
-    }
-    if (downPressed) {
-      playerGlobalMapY += this.speed
-    }
-    if (rightPressed) {
-      playerGlobalMapX += this.speed
-    }
-    if (leftPressed) {
-      playerGlobalMapX -= this.speed
-    }
-
-
-  }
-
-  takeDamage() {
-
-  }
-
-  levelUp() {
-
-  }
-
-  draw() {
-
-  }
-}
-
-class Map {
-
-
-}
 
 drawSquare(0, 0, canvas.width, canvas.height, 'gray')
 setInterval(render, 5)
-
