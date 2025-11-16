@@ -12,7 +12,7 @@ class Enemy extends Entity {
         let dy = player.globalY - this.globalY
 
         let distance = Math.sqrt(dx*dx+dy*dy) //Hypotenuse von Enemy zu Player berechnet distance
-        if (distance === 0) return //bleibt stehen bei distance = 0
+        if (distance <= 0) return //bleibt stehen bei distance = 0
 
         dx /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         dy /= distance;
@@ -25,11 +25,8 @@ class Enemy extends Entity {
     draw(ctx) {
     if (!this.png) return;
 
-    const drawX = this.globalX - this.hitbox.width / 2;
-    const drawY = this.globalY - this.hitbox.height / 2;
-
     ctx.drawImage(this.png, drawX, drawY, this.hitbox.width, this.hitbox.height);
-}
+    }
 
     die() {
     console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
