@@ -1,4 +1,5 @@
-class Player extends Entity {
+import { entity } from "./entity.js";
+export class Player extends Entity {
     constructor(globalX, globalY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0) {
         super(globalX, globalY, hp, png, speed, hitbox);
         this.xp = 0;

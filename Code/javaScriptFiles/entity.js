@@ -1,4 +1,4 @@
-class Entity {
+export class Entity {
     // Basisattribute für jede Spielfigur / jedes Objekt
     globalEntityX;
     globalEntityY;
