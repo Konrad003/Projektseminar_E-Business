@@ -1,4 +1,4 @@
-class entity {
+export class entity {
     
     globalX
     globalY

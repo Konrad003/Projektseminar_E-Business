@@ -1,4 +1,5 @@
-class player extends entity {
+import { entity } from "./entity.js";
+export class player extends entity {
     xp
     level
     ausrüstung = []
