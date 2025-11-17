@@ -63,12 +63,10 @@ export class game {
             this.PlayerOne.playerGlobalX += this.PlayerOne.speed;
         } else if (this.leftPressed) {
             this.PlayerOne.playerGlobalX -= this.PlayerOne.speed;
-        }
-
-        if (this.upPressed) {
-            this.PlayerOne.playerGlobalY += this.PlayerOne.speed;
-        } else if (this.downPressed) {
+        } else if (this.upPressed) {
             this.PlayerOne.playerGlobalY -= this.PlayerOne.speed;
+        } else if (this.downPressed) {
+            this.PlayerOne.playerGlobalY += this.PlayerOne.speed;
         }
     }
 
@@ -76,11 +74,14 @@ export class game {
         const timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
-        this.MapOne = new Map(57,52,32,canvas.width, ctx, canvas.width/2, canvas.height/2)
-        this.PlayerOne = new Player(canvas.width/2, canvas.height/2, 100, "png", 10, 32, 0, 0, 1, ctx)
+        let mwt = 57;
+        let mht = 52;
+        let tl = 32;
+        this.MapOne = new Map(mwt, mht,tl, canvas.width, ctx, (mwt*tl)/2, (mht*tl)/2); alert(this.MapOne.playerGlobalX + " " + this.MapOne.playerGlobalY)
+        this.PlayerOne = new Player((this.MapOne.mapWidthTile*this.MapOne.tilelength)/2, (this.MapOne.mapHightTile*this.MapOne.tilelength)/2, 100, null, 10, 32, 0, 0, 1, ctx); alert(this.PlayerOne.playerGlobalX + " " + this.PlayerOne.playerGlobalY)
         setInterval(() => this.render(), 5);
 
-        //setInterval(spawnEnemy, 100)
+        //setInterval(spawnEnemy, 100
 
     }
 
@@ -93,13 +94,13 @@ export class game {
     }
 
     end() {
-        
+        //myLife();
     }
 
     render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        this.PlayerOne.drawPlayer(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed, this.PlayerOne.hitbox, 'blue')
+        this.PlayerOne.drawPlayer(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
         this.handleInput()
         //enemy.draw()
     }

@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Add GitToolBox project settings for commit message validation overrides&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;">
+    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/entity.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/map.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/map.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/player.js" afterDir="false" />
     </list>
     <list id="7e083025-43d6-4dda-8202-1a48e360a4e3" name="Changes by ampbn" comment="">
       <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" afterDir="false" />
@@ -118,22 +115,11 @@
   <component name="LineStatusTrackerManager">
     <file path="$PROJECT_DIR$/Code/javaScriptFiles/game.js">
       <ranges>
-        <range start1="11" end1="11" start2="11" end2="14" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="13" end1="13" start2="16" end2="18" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="14" end1="19" start2="19" end2="24" changelist="7e083025-43d6-4dda-8202-1a48e360a4e3" />
-        <range start1="24" end1="24" start2="29" end2="73" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="27" end1="27" start2="76" end2="78" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="29" end1="31" start2="80" end2="82" changelist="7e083025-43d6-4dda-8202-1a48e360a4e3" />
-        <range start1="48" end1="49" start2="99" end2="100" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="50" end1="51" start2="101" end2="103" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="52" end1="53" start2="104" end2="104" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="56" end1="57" start2="107" end2="108" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="59" end1="73" start2="110" end2="110" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="74" end1="88" start2="111" end2="111" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="89" end1="92" start2="112" end2="112" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="93" end1="97" start2="113" end2="113" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="98" end1="100" start2="114" end2="114" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
-        <range start1="101" end1="105" start2="115" end2="117" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="65" end1="69" start2="65" end2="67" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="70" end1="71" start2="68" end2="69" changelist="7e083025-43d6-4dda-8202-1a48e360a4e3" />
+        <range start1="78" end1="80" start2="76" end2="81" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="95" end1="96" start2="96" end2="97" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="101" end1="102" start2="102" end2="103" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
       </ranges>
     </file>
   </component>
@@ -207,7 +193,7 @@
       <workItem from="1762290576125" duration="1044000" />
       <workItem from="1762510404311" duration="963000" />
       <workItem from="1763387337905" duration="3838000" />
-      <workItem from="1763393626584" duration="6422000" />
+      <workItem from="1763393626584" duration="9214000" />
     </task>
     <task id="LOCAL-00001" summary="Add style.css for styling the application">
       <option name="closed" value="true" />
@@ -257,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763391176959</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;">
+      <option name="closed" value="true" />
+      <created>1763400150879</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1763400150879</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,7 +287,8 @@
     <MESSAGE value="Refactor index.js and index.html for improved code clarity and formatting" />
     <MESSAGE value="Refactor import paths and improve code clarity in game.js, enemy.js, and index.html&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
     <MESSAGE value="Add GitToolBox project settings for commit message validation overrides&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add GitToolBox project settings for commit message validation overrides&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;" />
+    <MESSAGE value="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
