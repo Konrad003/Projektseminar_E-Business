@@ -25,7 +25,7 @@ class Enemy extends Entity {
     draw(ctx) {
     if (!this.png) return;
 
-    ctx.drawImage(this.png, drawX, drawY, this.hitbox.width, this.hitbox.height);
+    ctx.drawImage(this.png, this.globalX, this.globalY, this.hitbox.width, this.hitbox.height);
     }
 
     die() {
