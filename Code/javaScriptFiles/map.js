@@ -1,6 +1,6 @@
 import { Player } from "./player.js";
 export class Map {
-    mapWidthTile //in Kacheln/Tile (Muss ungerade sein solange wir in dem Karo muster sind)
+    mapWidthTile //in Kacheln/Tile (Muss ungerade sein, solange wir in dem Karo muster sind)
     mapHightTile //in Kacheln/Tile
     tilelength=32 //in Pixel
     leftBorder 
@@ -52,7 +52,7 @@ export class Map {
 
     offsetToBorder(offset){
         let holder = (offset % this.tilelength)
-        if (holder < 0) return holder * -1;      //holder wird negativ wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
+        if (holder < 0) return holder * -1;      //holder wird negativ, wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
          
         return this.tilelength - holder;
     }

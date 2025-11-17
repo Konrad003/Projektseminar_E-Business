@@ -10,7 +10,7 @@ export class Entity {
 
     constructor(playerGlobalX, playerGlobalY, hp, png, speed, hitbox) {
         this.playerGlobalX = playerGlobalX;
-        this.playerGlobaY = playerGlobalY;
+        this.playerGlobalY = playerGlobalY;
         this.hp = hp;
         this.maxHp = hp; // MaxHP entspricht Startwert
         this.png = png;
@@ -54,25 +54,8 @@ export class Entity {
     }
 
     // Bewegung basierend auf Richtung (dx, dy) und Delta-Time (dt)
-    move(dx, dy, dt) {
-        const length = Math.hypot(dx, dy); // Länge des Bewegungsvektors
-        const nx = length > 0 ? dx / length : 0; // normierter X-Anteil
-        const ny = length > 0 ? dy / length : 0; // normierter Y-Anteil
+    move() {
 
-        this.globalEntityX += nx * this.speed * dt;
-        this.globalEntityY += ny * this.speed * dt;
     }
 
-    // Zeichnet das Entity auf das Canvas
-    draw(ctx) {
-        if (!this.png) return;
-
-        ctx.drawImage(
-            this.png,
-            this.globalEntityX,
-            this.globalEntityY,
-            this.hitbox.width,
-            this.hitbox.height
-        );
-    }
 }

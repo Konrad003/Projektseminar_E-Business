@@ -38,20 +38,16 @@ export class Player extends Entity {
         item.apply(this);
     }
 
-    drawSquare(x, y, width, height, color) {
+    drawPlayer(x, y, width, height, color) {
         this.ctx.beginPath()
         this.ctx.rect(x, y, width, height)
         this.ctx.fillStyle = color
         this.ctx.fill()
         this.ctx.strokeStyle = color;
         this.ctx.stroke();
-        }
-    draw(canvasWidth, canvasHeight) {
-        if (!this.png) return
-        this.drawSquare(this.playerGlobalX, this.playerGlobalY, this.hitbox, this.hitbox, 'blue');
     }
 
     render(){
-        game.handleInput()
+
     }
 }
