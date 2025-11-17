@@ -8,9 +8,9 @@ export class Entity {
     speed;
     hitbox; // { width: number, height: number }
 
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox) {
-        this.globalEntityX = globalEntityX;
-        this.globalEntityY = globalEntityY;
+    constructor(playerGlobalX, playerGlobalY, hp, png, speed, hitbox) {
+        this.playerGlobalX = playerGlobalX;
+        this.playerGlobaY = playerGlobalY;
         this.hp = hp;
         this.maxHp = hp; // MaxHP entspricht Startwert
         this.png = png;

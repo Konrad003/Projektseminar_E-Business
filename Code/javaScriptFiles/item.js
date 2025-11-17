@@ -1,4 +1,4 @@
-class item{
+class Item{
 
     icon
     description

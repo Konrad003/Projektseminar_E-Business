@@ -1,25 +1,23 @@
-import { entity } from "./entity.js";
+import { Entity } from "./entity.js";
 export class Player extends Entity {
-    constructor(globalX, globalY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0) {
-        super(globalX, globalY, hp, png, speed, hitbox);
+    ctx
+      
+    constructor(playerGlobalX, playerGlobalY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx) {
+        super(playerGlobalX, playerGlobalY, hp, png, speed, hitbox)
+        this.playerGlobalY=playerGlobalY
+        this.playerGLobalX=playerGlobalX
         this.xp = 0;
         this.level = 1;
         this.ausrüstung = ausrüstung;
         this.weapons = weapons;
         this.regeneration = regeneration;
+        this.ctx = ctx   
+            upPressed
+        downPressed
+        leftPressed
+        rightPressed 
     }
-
-    handleInput(upPressed, downPressed, leftPressed, rightPressed, dt) {
-        let dx = 0;
-        let dy = 0;
-
-        if (upPressed) dy -= 1;
-        if (downPressed) dy += 1;
-        if (leftPressed) dx -= 1;
-        if (rightPressed) dx += 1;
-
-        this.move(dx, dy, dt);
-    }
+    
 
     lvlUp() {
         this.level++;
@@ -40,12 +38,20 @@ export class Player extends Entity {
         item.apply(this);
     }
 
-    draw(ctx, canvasWidth, canvasHeight) {
-        if (!this.png) return;
+    drawSquare(x, y, width, height, color) {
+        this.ctx.beginPath()
+        this.ctx.rect(x, y, width, height)
+        this.ctx.fillStyle = color
+        this.ctx.fill()
+        this.ctx.strokeStyle = color;
+        this.ctx.stroke();
+        }
+    draw(canvasWidth, canvasHeight) {
+        if (!this.png) return
+        this.drawSquare(this.playerGlobalX, this.playerGlobalY, this.hitbox, this.hitbox, 'blue');
+    }
 
-        const centerX = canvasWidth / 2 - this.hitbox.width / 2;
-        const centerY = canvasHeight / 2 - this.hitbox.height / 2;
-
-        ctx.drawImage(this.png, centerX, centerY, this.hitbox.width, this.hitbox.height);
+    render(){
+        handleInput()
     }
 }

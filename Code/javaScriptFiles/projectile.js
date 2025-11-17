@@ -1,4 +1,4 @@
-class projectile {
+class Projectile {
     piercing
     speed
     size
