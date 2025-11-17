@@ -1,4 +1,5 @@
-export class  Map {    
+import { Player } from "./player.js";
+export class Map {
     mapWidthTile //in Kacheln/Tile (Muss ungerade sein solange wir in dem Karo muster sind)
     mapHightTile //in Kacheln/Tile
     tilelength=32 //in Pixel
@@ -11,12 +12,14 @@ export class  Map {
     tilePicture = "-----.json" 
     FOV
     ctx
-    constructor(mapWidthTile, mapHightTile, tilelength, FOV, ctx) {
+    constructor(mapWidthTile, mapHightTile, tilelength, FOV, ctx, playerGlobalX, playerGlobalY) {
         this.mapWidthTile = mapWidthTile
         this.mapHightTile = mapHightTile
         this.tilelength = tilelength
         this.FOV = FOV
         this.ctx = ctx
+        this.playerGlobalX = playerGlobalX
+        this.playerGlobalY = playerGlobalY
     }
 
     drawSquare(x, y, width, height, color) {
@@ -41,7 +44,7 @@ export class  Map {
     getColor(tileColumnWalker, tileRowWalker){
         if(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))
             return 'brown'
-        else if (this.getTileNr()%2==0)
+        else if (this.getTileNr() % 2 == 0)
             return 'black'
         else
             return 'green'

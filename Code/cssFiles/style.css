@@ -1,4 +1,15 @@
-body {
-    color: black;
-    background-color: white;
+body, html {
+    height: auto;
+    width: auto;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #f8f6f6;
+    padding: 20px;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: bold;
+    overflow: hidden;
 }

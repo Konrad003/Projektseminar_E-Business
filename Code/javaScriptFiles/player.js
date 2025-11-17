@@ -4,18 +4,18 @@ export class Player extends Entity {
       
     constructor(playerGlobalX, playerGlobalY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx) {
         super(playerGlobalX, playerGlobalY, hp, png, speed, hitbox)
-        this.playerGlobalY=playerGlobalY
-        this.playerGLobalX=playerGlobalX
+        this.playerGlobalY = playerGlobalY
+        this.playerGlobalX = playerGlobalX
         this.xp = 0;
         this.level = 1;
         this.ausrüstung = ausrüstung;
         this.weapons = weapons;
         this.regeneration = regeneration;
         this.ctx = ctx   
-            upPressed
-        downPressed
-        leftPressed
-        rightPressed 
+        this.upPressed = game.upPressed
+        this.downPressed = game.downPressed
+        this.leftPressed = game.leftPressed
+        this.rightPressed = game.rightPressed
     }
     
 
@@ -52,6 +52,6 @@ export class Player extends Entity {
     }
 
     render(){
-        handleInput()
+        game.handleInput()
     }
 }

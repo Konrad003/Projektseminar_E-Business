@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Refactor index.js and index.html for improved code clarity and formatting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/cssFiles/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/cssFiles/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/enemy.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/enemy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/map.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/map.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/player.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/player.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+    </list>
+    <list id="4d7309ee-2486-4f9d-9638-7315cfe4ea0c" name="Changes by ampbn" comment="">
+      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +32,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="21-bug-out-of-bound-bei-der-map-sorgt-für-grafik-fehler" />
+        <entry key="$PROJECT_DIR$" value="66-feat-game-layout" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,17 +47,46 @@
     &quot;state&quot;: &quot;OPEN&quot;
   }
 }</component>
-  <component name="GitHubPullRequestState"><![CDATA[{
-  "prStates": [
+  <component name="GitHubPullRequestState">{
+  &quot;prStates&quot;: [
     {
-      "id": {
-        "id": "PR_kwDOQC9bt86yHsLE",
-        "number": 33
+      &quot;id&quot;: {
+        &quot;id&quot;: &quot;PR_kwDOQC9bt86yHsLE&quot;,
+        &quot;number&quot;: 33
       },
-      "lastSeen": 1762782396334
+      &quot;lastSeen&quot;: 1762782396334
     }
   ]
-}]]></component>
+}</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="61-feat-refactoring-aller-js-datein" />
+                    <option name="lastUsedInstant" value="1763385439" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="66-feat-game-layout" />
+                    <option name="lastUsedInstant" value="1763384436" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="64-feat-erstellen-aller-screens" />
+                    <option name="lastUsedInstant" value="1763384435" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
   <component name="GithubProjectSettings">
     <option name="branchProtectionPatterns">
       <list>
@@ -56,23 +94,53 @@
       </list>
     </option>
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Der-Mehlmann/Projektseminar_E-Business.git",
-    "accountId": "73160b2e-3526-49ca-a5ee-f72a3a49666d"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Der-Mehlmann/Projektseminar_E-Business.git&quot;,
+    &quot;accountId&quot;: &quot;73160b2e-3526-49ca-a5ee-f72a3a49666d&quot;
   },
-  "recentNewPullRequestHead": {
-    "server": {
-      "useHttp": false,
-      "host": "github.com",
-      "port": null,
-      "suffix": null
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
     },
-    "owner": "Der-Mehlmann",
-    "repository": "Projektseminar_E-Business"
+    &quot;owner&quot;: &quot;Der-Mehlmann&quot;,
+    &quot;repository&quot;: &quot;Projektseminar_E-Business&quot;
   },
-  "editorReviewEnabled": false
-}]]></component>
+  &quot;editorReviewEnabled&quot;: false
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Code/javaScriptFiles/game.js" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/Code/javaScriptFiles/game.js">
+      <ranges>
+        <range start1="1" end1="3" start2="1" end2="3" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="5" end1="6" start2="5" end2="6" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="7" end1="8" start2="7" end2="8" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="9" end1="10" start2="9" end2="9" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="11" end1="15" start2="10" end2="11" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="23" end1="23" start2="19" end2="20" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="24" end1="26" start2="21" end2="23" changelist="4d7309ee-2486-4f9d-9638-7315cfe4ea0c" />
+        <range start1="30" end1="31" start2="27" end2="28" changelist="4d7309ee-2486-4f9d-9638-7315cfe4ea0c" />
+        <range start1="33" end1="33" start2="30" end2="31" changelist="4d7309ee-2486-4f9d-9638-7315cfe4ea0c" />
+        <range start1="58" end1="59" start2="56" end2="57" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="60" end1="60" start2="58" end2="59" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="61" end1="62" start2="60" end2="61" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="64" end1="65" start2="63" end2="64" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="67" end1="68" start2="66" end2="67" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="70" end1="71" start2="69" end2="70" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="76" end1="78" start2="75" end2="77" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="79" end1="81" start2="78" end2="80" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="82" end1="84" start2="81" end2="83" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="85" end1="87" start2="84" end2="86" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="99" end1="100" start2="98" end2="99" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+        <range start1="102" end1="103" start2="101" end2="105" changelist="6db50c12-f734-4db6-9134-5b4974641645" />
+      </ranges>
+    </file>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -83,11 +151,12 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "JavaScript Debug.index.html.executor": "Run",
+    "JavaScript Debug.index.html.executor": "Debug",
     "Node.js.index.js.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "#32 on 31-feat-refactor-indexjs",
+    "git-widget-placeholder": "61-feat-refactoring-aller-js-datein",
     "ignore.virus.scanning.warn.message": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -95,7 +164,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.uml",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "spentTimePerTaskStorage.store": "{}",
     "timeTracker.activityTracker": "null",
     "timeTracker.comment": "",
@@ -141,6 +210,7 @@
       <workItem from="1762290512368" duration="41000" />
       <workItem from="1762290576125" duration="1044000" />
       <workItem from="1762510404311" duration="963000" />
+      <workItem from="1763387337905" duration="3413000" />
     </task>
     <task id="LOCAL-00001" summary="Add style.css for styling the application">
       <option name="closed" value="true" />
@@ -175,11 +245,7 @@
       <updated>1762291276631</updated>
     </task>
     <option name="localTasksCounter" value="5" />
-    <servers>
-      <YouTrack url="https://hkm.youtrack.cloud">
-        <username>random</username>
-      </YouTrack>
-    </servers>
+    <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
@@ -189,7 +255,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/66-feat-game-layout" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -201,5 +279,13 @@
     <MESSAGE value="Refactor index.js for improved variable scoping and code clarity" />
     <MESSAGE value="Refactor index.js and index.html for improved code clarity and formatting" />
     <option name="LAST_COMMIT_MESSAGE" value="Refactor index.js and index.html for improved code clarity and formatting" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>
