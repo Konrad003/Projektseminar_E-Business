@@ -74,11 +74,23 @@ export class game {
         const timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
-        let mwt = 57;
-        let mht = 52;
-        let tl = 32;
-        this.MapOne = new Map(mwt, mht,tl, canvas.width, ctx, (mwt*tl)/2, (mht*tl)/2); alert(this.MapOne.playerGlobalX + " " + this.MapOne.playerGlobalY)
-        this.PlayerOne = new Player((this.MapOne.mapWidthTile*this.MapOne.tilelength)/2, (this.MapOne.mapHightTile*this.MapOne.tilelength)/2, 100, null, 10, 32, 0, 0, 1, ctx); alert(this.PlayerOne.playerGlobalX + " " + this.PlayerOne.playerGlobalY)
+
+        let mwt = 57; //mapWithTiles for creating the map
+        let mht = 52; //mapHeightTiles for creating the map
+        let tl = 32; //tileLength for creating the map
+
+        const mapPixelWidth = mwt * tl
+        const mapPixelHeight = mht * tl
+
+        const playerHitbox = 32;
+
+        this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
+        this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
+
+        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx, mapPixelWidth, mapPixelHeight)
+
+        this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
+
         setInterval(() => this.render(), 5);
 
         //setInterval(spawnEnemy, 100
@@ -98,10 +110,11 @@ export class game {
     }
 
     render() {
+        this.handleInput()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
         this.PlayerOne.drawPlayer(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
-        this.handleInput()
+
         //enemy.draw()
     }
 
