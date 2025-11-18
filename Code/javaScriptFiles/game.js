@@ -59,15 +59,24 @@ export class game {
     }
 
     handleInput() {
-        if (this.rightPressed) {
-            this.PlayerOne.playerGlobalX += this.PlayerOne.speed;
-        } else if (this.leftPressed) {
-            this.PlayerOne.playerGlobalX -= this.PlayerOne.speed;
-        } else if (this.upPressed) {
-            this.PlayerOne.playerGlobalY -= this.PlayerOne.speed;
-        } else if (this.downPressed) {
-            this.PlayerOne.playerGlobalY += this.PlayerOne.speed;
-        }
+        if(this.PlayerOne.playerGlobalX >= 0 && this.PlayerOne.playerGlobalX <= this.MapOne.mapWidthTile * this.MapOne.tilelength &&
+           this.PlayerOne.playerGlobalY >= 0 && this.PlayerOne.playerGlobalY <= this.MapOne.mapHightTile * this.MapOne.tilelength) {
+            if (this.rightPressed) 
+                this.PlayerOne.playerGlobalX += this.PlayerOne.speed;
+            if (this.leftPressed) 
+                this.PlayerOne.playerGlobalX -= this.PlayerOne.speed;
+            if (this.upPressed) 
+                this.PlayerOne.playerGlobalY -= this.PlayerOne.speed;
+            if (this.downPressed) 
+                this.PlayerOne.playerGlobalY += this.PlayerOne.speed;
+        }else if(this.PlayerOne.playerGlobalX < 0 )
+            this.PlayerOne.playerGlobalX = 0
+        else if(this.PlayerOne.playerGlobalY < 0 )
+            this.PlayerOne.playerGlobalY = 0
+        else if(this.PlayerOne.playerGlobalX >= this.MapOne.mapWidthTile * this.MapOne.tilelength)
+            this.PlayerOne.playerGlobalX = this.MapOne.mapWidthTile * this.MapOne.tilelength
+        else if(this.PlayerOne.playerGlobalY >= this.MapOne.mapHightTile * this.MapOne.tilelength)
+            this.PlayerOne.playerGlobalY = this.MapOne.mapHightTile * this.MapOne.tilelength
     }
 
     start() {
@@ -113,7 +122,7 @@ export class game {
         this.handleInput()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        this.PlayerOne.drawPlayer(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.PlayerOne.drawPlayer(canvas.width/2, canvas.height/2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
         //enemy.draw()
     }

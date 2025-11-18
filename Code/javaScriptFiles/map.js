@@ -32,7 +32,7 @@ export class Map {
     }
 
     isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
-        return (tileColumnWalker < 0 || tileColumnWalker > this.mapWidthTile || tileRowWalker < 0 || tileRowWalker > this.mapHeightTile)
+        return (tileColumnWalker < 0 || tileColumnWalker > this.mapWidthTile || tileRowWalker < 0 || tileRowWalker > this.mapHqightTile)
     }
 
     getTileNr() {
