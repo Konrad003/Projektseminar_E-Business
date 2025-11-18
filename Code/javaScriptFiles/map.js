@@ -12,14 +12,52 @@ export class Map {
     tilePicture = "-----.json" 
     FOV
     ctx
+    map1
     constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx) {
         this.mapWidthTile = mapWidthTile
         this.mapHeightTile = mapHeightTile
         this.tilelength = tilelength
         this.FOV = FOV
         this.ctx = ctx
-        
+        this.map1=[]
+        this.loadMap("./Code/javaScriptFiles/Map1.json").then(() => {
+            const mapData = this.map1[0];
+            console.log("Höhe: "+mapData.height)
+            console.log("Breite: "+mapData.width)
+            console.log("TileDurchmesser: "+mapData.tilewidth )
+            console.log(mapData.layers[0].data)
+            this.mapDataTiles=mapData.layers[0].data
+            
+        });
     }
+
+    loadMap(file) {
+    return fetch(file)
+        .then(response => response.json())
+        .then(jsondata => {
+            this.map1.push(jsondata); // JSON als ein Element im Array speichern
+        })
+    }
+
+    loadTile(tileNr){
+        if(this.mapDataTiles[tileNr]<0 || this.mapDataTiles[tileNr]>this.mapWidthTile) return 'brown'
+        if(this.mapDataTiles[tileNr]==0) return 'black'
+        if(this.mapDataTiles[tileNr]==1) return 'green'
+        if(this.mapDataTiles[tileNr]==2) return 'yellow'
+        if(this.mapDataTiles[tileNr]==3) return 'red'
+        if(this.mapDataTiles[tileNr]==4) return 'orange'
+        if(this.mapDataTiles[tileNr]==5) return 'gray'
+        if(this.mapDataTiles[tileNr]==6) return 'brown'
+        if(this.mapDataTiles[tileNr]==7) return 'pink'
+        if(this.mapDataTiles[tileNr]==8) return 'white'
+        if(this.mapDataTiles[tileNr]==9) return 'blue'
+        if(this.mapDataTiles[tileNr]==10) return 'gray'
+        if(this.mapDataTiles[tileNr]==11) return 'white'
+        
+
+        
+        }
+    
 
     drawSquare(x, y, width, height, color) {
     this.ctx.beginPath()
@@ -69,17 +107,17 @@ export class Map {
         this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
         for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) {                                 // obere Reihe an Tiles
             this.tileColumnWalker++
-            this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.getColor(this.tileColumnWalker, this.tileRowWalker))          //obere Tiles(nicht immer vollständig sichtbar)
+            this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.loadTile(this.getTileNr()))          //obere Tiles(nicht immer vollständig sichtbar)
         }
     
         for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
             this.tileRowWalker++                                                                   //Zeilensprung
             this.tileColumnWalker = this.tileColumn
-            this.drawSquare(0, i, this.offsetToBorder(this.leftBorder), this.tilelength, this.getColor(this.tileColumnWalker, this.tileRowWalker))         //linke Tiles(nicht immer vollständig Sichtbar)
+            this.drawSquare(0, i, this.offsetToBorder(this.leftBorder), this.tilelength, this.loadTile(this.getTileNr()))         //linke Tiles(nicht immer vollständig Sichtbar)
 
                 for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
                 this.tileColumnWalker++                                                  //nächste Spalte
-                this.drawSquare(j, i, this.tilelength, this.tilelength, this.getColor(this.tileColumnWalker, this.tileRowWalker))                         //innere Tiles(vollständig Sichtbare)
+                this.drawSquare(j, i, this.tilelength, this.tilelength, this.loadTile(this.getTileNr()))                         //innere Tiles(vollständig Sichtbare)
             }
             this.tileColumnWalker++                                                          //nächste Spalte
         }
