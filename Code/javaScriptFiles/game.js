@@ -1,33 +1,123 @@
-//import { dropSingleUse } from "./dropSingleUse.js"
-//import { enemy } from "./enemy.js"
-//import { entity } from "./entity.js"
-//import { equipment } from "./equipment.js"
-//import { item } from "./item.js"
-import { map } from "./map.js"
-//import { obstacles } from "./obstacles.js"
-import { player } from "./player.js"
-//import { projectile } from "./projectile.js"
-//import { projectile } from "./projectile.js"
-//import { weapon } from "./weapon.js";
+//import { DropSingleUse } from "./dropSingleUse.js"
+import { Enemy } from "/Code/javaScriptFiles/enemy.js"
+import { Entity } from "/Code/javaScriptFiles/entity.js"
+//import { Equipment } from "./equipment.js"
+//import { Item } from "./item.js"
+import { Map } from "/Code/javaScriptFiles/map.js"
+//import { Obstacles } from "./obstacles.js"
+import { Player } from "/Code/javaScriptFiles/player.js"
+//import { Projectile } from "./projectile.js"
+//import { Weapon } from "./weapon.js";
+
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
 
 export class game {
+
+
+
     difficulty=1
-    timesstamp
+    timestamp
+    upPressed = false
+    downPressed = false
+    leftPressed = false
+    rightPressed = false
 
     constructor() {
-        this.MapOne=null
-        this.PlayerOne=null
+        this.MapOne = null
+        this.PlayerOne = null
+    }
+
+    keyDownHandler(e) { // liest Input der Tastatur aus
+        if ((e.key === "ArrowUp") || (e.key === 'w')) {
+            this.upPressed = true;
+        }
+        if ((e.key === "ArrowLeft") || (e.key === 'a')) {
+            this.leftPressed = true;
+        }
+        if ((e.key === "ArrowRight") || (e.key === 'd')) {
+            this.rightPressed = true;
+        }
+        if ((e.key === "ArrowDown") || (e.key === 's')) {
+            this.downPressed = true;
+        }
+    }
+
+    keyUpHandler(e) { // liest Output der Tastatur aus
+        if ((e.key === "ArrowUp") || (e.key === 'w')) {
+            this.upPressed = false;
+        }
+        if ((e.key === "ArrowLeft") || (e.key === 'a')) {
+            this.leftPressed = false;
+        }
+        if ((e.key === "ArrowRight") || (e.key === 'd')) {
+            this.rightPressed = false;
+        }
+        if ((e.key === "ArrowDown") || (e.key === 's')) {
+            this.downPressed = false;
+        }
+    }
+
+    handleInput() {
+        let mapLength=this.MapOne.mapWidthTile * this.MapOne.tilelength
+        let mapHeight=this.MapOne.mapHeightTile * this.MapOne.tilelength
+            if (this.rightPressed && this.PlayerOne.playerGlobalX <= mapLength) 
+                this.PlayerOne.playerGlobalX += this.PlayerOne.speed
+            if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0) 
+                this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
+            if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
+                this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
+                if (this.leftPressed != this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
+                    if (this.leftPressed){ 
+                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
+                    }
+                    if (this.rightPressed){
+                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
+                    }
+                }
+            }
+            if (this.downPressed && this.PlayerOne.playerGlobalY <= mapHeight){         // smoothe diagonale bewegung runter
+                this.PlayerOne.playerGlobalY += this.PlayerOne.speed
+                if (this.leftPressed != this.rightPressed && !(this.upPressed)){
+                    if (this.leftPressed){ 
+                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
+                    }
+                    if (this.rightPressed){
+                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
+                    }
+                }
+            }
     }
 
     start() {
         const timestamp = Date.now();
-        this.MapOne = new map(57,52,32,canvas.width, ctx)
-        this.PlayerOne = new player(canvas.width/2, canvas.height/2, 100, "png", 10, 56, 0, 0, 1 /*usw. */)
-        setInterval(Game.render.bind(this), 5)
-        //setInterval(spawnEnemy, 100)
-        
+        document.addEventListener("keydown", this.keyDownHandler.bind(this));
+        document.addEventListener("keyup", this.keyUpHandler.bind(this));
+
+        let mwt = 57; //mapWithTiles for creating the map
+        let mht = 52; //mapHeightTiles for creating the map
+        let tl = 32; //tileLength for creating the map
+
+        const mapPixelWidth = mwt * tl
+        const mapPixelHeight = mht * tl
+
+        const playerHitbox = 32;
+
+        this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
+        this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
+
+        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx)
+
+        this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
+
+        setInterval(() => this.render(), 5);
+
+        //setInterval(spawnEnemy, 100
+
     }
 
     stop() {
@@ -39,21 +129,28 @@ export class game {
     }
 
     end() {
-        
+        //myLife();
     }
 
     render() {
-        //this.PlayerOne.draw()
-        this.MapOne.draw(this.PlayerOne.globalX, this.PlayerOne.globalY)
-        
+        this.handleInput()
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
+        this.PlayerOne.drawPlayer(canvas.width/2, canvas.height/2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+
         //enemy.draw()
-        
     }
 
     spawnEnemy() {
-        enemy = new enemy(map.leftBorder, map.topBorder, 100, "a.png", 10, 5, 0, 5, false)
+        //Enemy = new enemy(map.leftBorder, map.topBorder, 100, "a.png", 10, 5, 0, 5, false)
     }
+
+
+
+
+
 }
+
 
 const Game = new game()
 Game.start()

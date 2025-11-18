@@ -1,4 +1,4 @@
-class obstacles {
+class Obstacles {
     globalX
     globalY
     hitbox

@@ -1,7 +1,8 @@
-export class  map {    
-    mapWidthTile //in Kacheln/Tile (Muss ungerade sein solange wir in dem Karo muster sind)
-    mapHightTile //in Kacheln/Tile
-    tilelength
+import { Player } from "./player.js";
+export class Map {
+    mapWidthTile //in Kacheln/Tile (Muss ungerade sein, solange wir in dem Karo muster sind)
+    mapHeightTile //in Kacheln/Tile
+    tilelength=32 //in Pixel
     leftBorder 
     topBorder 
     rightBorder 
@@ -11,12 +12,13 @@ export class  map {
     tilePicture = "-----.json" 
     FOV
     ctx
-    constructor(mapWidthTile, mapHightTile, tilelength, FOV, ctx) {
+    constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx) {
         this.mapWidthTile = mapWidthTile
-        this.mapHightTile = mapHightTile
+        this.mapHeightTile = mapHeightTile
         this.tilelength = tilelength
         this.FOV = FOV
         this.ctx = ctx
+        
     }
 
     drawSquare(x, y, width, height, color) {
@@ -41,24 +43,25 @@ export class  map {
     getColor(tileColumnWalker, tileRowWalker){
         if(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))
             return 'brown'
-        else if (this.getTileNr()%2==0)
+        else if (this.getTileNr() % 2 == 0)
             return 'black'
         else
             return 'green'
     }
 
     offsetToBorder(offset){
-        let holder = (offset % this.tilelength);
-        if (holder < 0) return holder * -1;      //holder wird negativ wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
+        let holder = (offset % this.tilelength)
+        if (holder < 0) return holder * -1;      //holder wird negativ, wenn die Border erreicht wird, da die Koords ins negative gehen. Daher die Lösung mit return holder
+         
         return this.tilelength - holder;
     }
 
-    draw(playerGlobalMapX, playerGlobalMapY) {
+    draw(playerGlobalX, playerGlobalY) {
         
-        this.leftBorder = playerGlobalMapX - this.FOV / 2
-        this.topBorder = playerGlobalMapY - this.FOV / 2
-        this.rightBorder = playerGlobalMapX + this.FOV / 2
-        this.bottomBorder = playerGlobalMapY + this.FOV / 2
+        this.leftBorder = playerGlobalX - this.FOV / 2
+        this.topBorder = playerGlobalY - this.FOV / 2
+        this.rightBorder = playerGlobalX + this.FOV / 2
+        this.bottomBorder = playerGlobalY + this.FOV / 2
         this.tileRow = Math.floor(this.topBorder / this.tilelength)
         this.tileRowWalker = this.tileRow
         this.tileColumn = Math.floor(this.leftBorder / this.tilelength)
@@ -68,8 +71,8 @@ export class  map {
             this.tileColumnWalker++
             this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.getColor(this.tileColumnWalker, this.tileRowWalker))          //obere Tiles(nicht immer vollständig sichtbar)
         }
+    
         for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
-            
             this.tileRowWalker++                                                                   //Zeilensprung
             this.tileColumnWalker = this.tileColumn
             this.drawSquare(0, i, this.offsetToBorder(this.leftBorder), this.tilelength, this.getColor(this.tileColumnWalker, this.tileRowWalker))         //linke Tiles(nicht immer vollständig Sichtbar)

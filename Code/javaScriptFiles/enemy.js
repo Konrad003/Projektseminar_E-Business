@@ -1,4 +1,5 @@
-class Enemy extends Entity {
+import { Entity } from "/Code/javaScriptFiles/entity.js"
+export class Enemy extends Entity {
     
     constructor(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite){
         super(globalX, globalY, hp, png, speed, hitbox)

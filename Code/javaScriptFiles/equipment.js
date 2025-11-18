@@ -1,4 +1,4 @@
-class equipment extends item{
+class Equipment extends Item{
 
     attackBonus
     defenseBonus

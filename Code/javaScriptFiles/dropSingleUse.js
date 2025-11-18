@@ -1,4 +1,4 @@
-class dropSingleUse  {
+class DropSingleUse  {
     
     globalX
     globalY
