@@ -59,24 +59,38 @@ export class game {
     }
 
     handleInput() {
-        if(this.PlayerOne.playerGlobalX >= 0 && this.PlayerOne.playerGlobalX <= this.MapOne.mapWidthTile * this.MapOne.tilelength &&
-           this.PlayerOne.playerGlobalY >= 0 && this.PlayerOne.playerGlobalY <= this.MapOne.mapHightTile * this.MapOne.tilelength) {
-            if (this.rightPressed) 
-                this.PlayerOne.playerGlobalX += this.PlayerOne.speed;
-            if (this.leftPressed) 
-                this.PlayerOne.playerGlobalX -= this.PlayerOne.speed;
-            if (this.upPressed) 
-                this.PlayerOne.playerGlobalY -= this.PlayerOne.speed;
-            if (this.downPressed) 
-                this.PlayerOne.playerGlobalY += this.PlayerOne.speed;
-        }else if(this.PlayerOne.playerGlobalX < 0 )
-            this.PlayerOne.playerGlobalX = 0
-        else if(this.PlayerOne.playerGlobalY < 0 )
-            this.PlayerOne.playerGlobalY = 0
-        else if(this.PlayerOne.playerGlobalX >= this.MapOne.mapWidthTile * this.MapOne.tilelength)
-            this.PlayerOne.playerGlobalX = this.MapOne.mapWidthTile * this.MapOne.tilelength
-        else if(this.PlayerOne.playerGlobalY >= this.MapOne.mapHightTile * this.MapOne.tilelength)
-            this.PlayerOne.playerGlobalY = this.MapOne.mapHightTile * this.MapOne.tilelength
+        let mapLength=this.MapOne.mapWidthTile * this.MapOne.tilelength
+        let mapHeight=this.MapOne.mapHeightTile * this.MapOne.tilelength
+            if (this.rightPressed && this.PlayerOne.playerGlobalX <= mapLength) 
+                this.PlayerOne.playerGlobalX += this.PlayerOne.speed
+            if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0) 
+                this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
+            if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
+                this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
+                if (this.leftPressed != this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
+                    if (this.leftPressed){ 
+                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
+                    }
+                    if (this.rightPressed){
+                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
+                    }
+                }
+            }
+            if (this.downPressed && this.PlayerOne.playerGlobalY <= mapHeight){         // smoothe diagonale bewegung runter
+                this.PlayerOne.playerGlobalY += this.PlayerOne.speed
+                if (this.leftPressed != this.rightPressed && !(this.upPressed)){
+                    if (this.leftPressed){ 
+                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
+                    }
+                    if (this.rightPressed){
+                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
+                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
+                    }
+                }
+            }
     }
 
     start() {
@@ -96,7 +110,7 @@ export class game {
         this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
         this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
 
-        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx, mapPixelWidth, mapPixelHeight)
+        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx)
 
         this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
 
