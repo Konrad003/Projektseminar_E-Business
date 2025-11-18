@@ -12,10 +12,6 @@ export class Player extends Entity {
         this.weapons = weapons;
         this.regeneration = regeneration;
         this.ctx = ctx   
-        this.upPressed = game.upPressed
-        this.downPressed = game.downPressed
-        this.leftPressed = game.leftPressed
-        this.rightPressed = game.rightPressed
     }
     
 
@@ -48,6 +44,6 @@ export class Player extends Entity {
     }
 
     render(){
-
+        
     }
 }
