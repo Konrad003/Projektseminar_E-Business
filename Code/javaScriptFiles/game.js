@@ -22,12 +22,30 @@ export class game {
     downPressed = false
     leftPressed = false
     rightPressed = false
-
-    constructor() {
+    mapData
+    constructor() { 
         this.MapOne = null
         this.PlayerOne = null
+        this.mapData = []
+        this.loadMap("./Code/javaScriptFiles/Map1.json").then(() => {
+            this.mapData = this.mapData[0];
+            console.log("Höhe: "+this.mapData.height)
+            console.log("Breite: "+this.mapData.width)
+            console.log("TileDurchmesser: "+this.mapData.tilewidth )
+            console.log(this.mapData.layers[0].data)
+            this.mapDataTiles=this.mapData.layers[0].data
+            
+        });
     }
 
+    loadMap(file) {
+    return fetch(file)
+        .then(response => response.json())
+        .then(jsondata => {
+            this.mapData.push(jsondata); // JSON als ein Element im Array speichern
+        })
+    }
+    
     keyDownHandler(e) { // liest Input der Tastatur aus
         if ((e.key === "ArrowUp") || (e.key === 'w')) {
             this.upPressed = true;
@@ -109,8 +127,8 @@ export class game {
 
         this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
         this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
-
-        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx)
+        console.log(this.mapData.tilewidth)
+        this.MapOne = new Map(this.mapData.width, this.mapData.height, this.mapData.tilewidth, canvas.width, ctx, this.mapDataTiles)
 
         this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
 

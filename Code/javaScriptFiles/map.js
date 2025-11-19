@@ -13,33 +13,21 @@ export class Map {
     FOV
     ctx
     map1
-    constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx) {
+    mapDataTiles
+    constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx, mapDataTiles) {
         this.mapWidthTile = mapWidthTile
         this.mapHeightTile = mapHeightTile
         this.tilelength = tilelength
         this.FOV = FOV
         this.ctx = ctx
-        this.map1=[]
-        this.loadMap("./Code/javaScriptFiles/Map1.json").then(() => {
-            const mapData = this.map1[0];
-            console.log("Höhe: "+mapData.height)
-            console.log("Breite: "+mapData.width)
-            console.log("TileDurchmesser: "+mapData.tilewidth )
-            console.log(mapData.layers[0].data)
-            this.mapDataTiles=mapData.layers[0].data
-            
-        });
+        this.mapDataTiles = mapDataTiles
+        console.log(this.tilelength)
     }
 
-    loadMap(file) {
-    return fetch(file)
-        .then(response => response.json())
-        .then(jsondata => {
-            this.map1.push(jsondata); // JSON als ein Element im Array speichern
-        })
-    }
+    
 
     loadTile(tileNr){
+        console.log("TileNr: ")
         if(this.mapDataTiles[tileNr]<0 || this.mapDataTiles[tileNr]>this.mapWidthTile) return 'brown'
         if(this.mapDataTiles[tileNr]==0) return 'black'
         if(this.mapDataTiles[tileNr]==1) return 'green'
@@ -95,7 +83,6 @@ export class Map {
     }
 
     draw(playerGlobalX, playerGlobalY) {
-        
         this.leftBorder = playerGlobalX - this.FOV / 2
         this.topBorder = playerGlobalY - this.FOV / 2
         this.rightBorder = playerGlobalX + this.FOV / 2
@@ -105,6 +92,8 @@ export class Map {
         this.tileColumn = Math.floor(this.leftBorder / this.tilelength)
         this.tileColumnWalker = this.tileColumn
         this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
+               
+
         for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) {                                 // obere Reihe an Tiles
             this.tileColumnWalker++
             this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.loadTile(this.getTileNr()))          //obere Tiles(nicht immer vollständig sichtbar)
