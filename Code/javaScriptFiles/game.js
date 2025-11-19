@@ -1,11 +1,11 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import { Enemy } from "/Code/javaScriptFiles/enemy.js"
-import { Entity } from "/Code/javaScriptFiles/entity.js"
+import { Enemy } from "./enemy.js"
+import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
-import { Map } from "/Code/javaScriptFiles/map.js"
+import { Map } from "./map.js"
 //import { Obstacles } from "./obstacles.js"
-import { Player } from "/Code/javaScriptFiles/player.js"
+import { Player } from "./player.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
