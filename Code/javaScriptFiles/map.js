@@ -26,9 +26,9 @@ export class Map {
 
     
 
-    loadTile(tileNr){
-        console.log("TileNr: ")
-        if(this.mapDataTiles[tileNr]<0 || this.mapDataTiles[tileNr]>this.mapWidthTile) return 'brown'
+    loadTile(tileNr, tileColumnWalker, tileRowWalker){
+        if(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker)) return 'brown'
+        else{
         if(this.mapDataTiles[tileNr]==0) return 'black'
         if(this.mapDataTiles[tileNr]==1) return 'green'
         if(this.mapDataTiles[tileNr]==2) return 'yellow'
@@ -41,7 +41,7 @@ export class Map {
         if(this.mapDataTiles[tileNr]==9) return 'blue'
         if(this.mapDataTiles[tileNr]==10) return 'gray'
         if(this.mapDataTiles[tileNr]==11) return 'white'
-        
+        }
 
         
         }
@@ -96,17 +96,17 @@ export class Map {
 
         for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) {                                 // obere Reihe an Tiles
             this.tileColumnWalker++
-            this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.loadTile(this.getTileNr()))          //obere Tiles(nicht immer vollständig sichtbar)
+            this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.loadTile(this.getTileNr(),this.tileColumnWalker, this.tileRowWalker))          //obere Tiles(nicht immer vollständig sichtbar)
         }
     
         for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
             this.tileRowWalker++                                                                   //Zeilensprung
             this.tileColumnWalker = this.tileColumn
-            this.drawSquare(0, i, this.offsetToBorder(this.leftBorder), this.tilelength, this.loadTile(this.getTileNr()))         //linke Tiles(nicht immer vollständig Sichtbar)
+            this.drawSquare(0, i, this.offsetToBorder(this.leftBorder), this.tilelength, this.loadTile(this.getTileNr(),this.tileColumnWalker, this.tileRowWalker))         //linke Tiles(nicht immer vollständig Sichtbar)
 
                 for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
                 this.tileColumnWalker++                                                  //nächste Spalte
-                this.drawSquare(j, i, this.tilelength, this.tilelength, this.loadTile(this.getTileNr()))                         //innere Tiles(vollständig Sichtbare)
+                this.drawSquare(j, i, this.tilelength, this.tilelength, this.loadTile(this.getTileNr(),this.tileColumnWalker, this.tileRowWalker))                         //innere Tiles(vollständig Sichtbare)
             }
             this.tileColumnWalker++                                                          //nächste Spalte
         }

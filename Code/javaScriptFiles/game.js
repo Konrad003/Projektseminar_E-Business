@@ -26,16 +26,7 @@ export class game {
     constructor() { 
         this.MapOne = null
         this.PlayerOne = null
-        this.mapData = []
-        this.loadMap("./Code/javaScriptFiles/Map1.json").then(() => {
-            this.mapData = this.mapData[0];
-            console.log("Höhe: "+this.mapData.height)
-            console.log("Breite: "+this.mapData.width)
-            console.log("TileDurchmesser: "+this.mapData.tilewidth )
-            console.log(this.mapData.layers[0].data)
-            this.mapDataTiles=this.mapData.layers[0].data
-            
-        });
+        
     }
 
     loadMap(file) {
@@ -116,24 +107,28 @@ export class game {
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
-        let mwt = 57; //mapWithTiles for creating the map
-        let mht = 52; //mapHeightTiles for creating the map
-        let tl = 32; //tileLength for creating the map
 
-        const mapPixelWidth = mwt * tl
-        const mapPixelHeight = mht * tl
+
 
         const playerHitbox = 32;
 
         this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
         this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
-        console.log(this.mapData.tilewidth)
-        this.MapOne = new Map(this.mapData.width, this.mapData.height, this.mapData.tilewidth, canvas.width, ctx, this.mapDataTiles)
 
         this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
 
-        setInterval(() => this.render(), 5);
-
+        this.mapData = []
+        this.loadMap("./Code/javaScriptFiles/Map1.json").then(() => {
+            this.mapData = this.mapData[0];
+            //console.log(this.mapData.layers[0].data)
+            this.mapDataTiles=this.mapData.layers[0].data
+            
+            this.MapOne = new Map(this.mapData.width, this.mapData.height, this.mapData.tilewidth, canvas.width, ctx, this.mapDataTiles)
+            
+            setInterval(() => this.render(), 5);
+            });
+            
+        
         //setInterval(spawnEnemy, 100
 
     }
