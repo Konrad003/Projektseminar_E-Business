@@ -14,6 +14,8 @@ export class Map {
     ctx
     map1
     mapDataTiles
+    tileSetX
+    tileSetY
     constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx, mapDataTiles) {
         this.mapWidthTile = mapWidthTile
         this.mapHeightTile = mapHeightTile
@@ -21,13 +23,20 @@ export class Map {
         this.FOV = FOV
         this.ctx = ctx
         this.mapDataTiles = mapDataTiles
-        console.log(this.tilelength)
+        this.tilesetImage = new Image();
+        this.tilesLoaded= false
+        this.tilesetImage.onload = () => {
+            this.tilesLoaded = true;
+            this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)-1
+            
+        };
+        this.tilesetImage.src = './Graphics/OIP (1).jpg'; 
     }
 
     
 
     loadTile(tileNr, tileColumnWalker, tileRowWalker){
-        if(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker)) return 'brown'
+        if(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker)) return 'brown'
         else{
         if(this.mapDataTiles[tileNr]==0) return 'black'
         if(this.mapDataTiles[tileNr]==1) return 'green'
@@ -57,13 +66,18 @@ export class Map {
     }
 
     isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
-        return (tileColumnWalker < 0 || tileColumnWalker > this.mapWidthTile || tileRowWalker < 0 || tileRowWalker > this.mapHeightTile)
-    }
+    return (
+        tileColumnWalker < 0 || tileColumnWalker > this.mapWidthTile ||
+        tileRowWalker < 0 || tileRowWalker > this.mapHeightTile
+    );
+}
 
     getTileNr() {
+       
         return this.tileRowWalker * this.mapWidthTile + this.tileColumnWalker /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip    1  2   3   4
                                                                                                                             5  6   7   8
                                                                                                                             9  10  11  12  */
+    
     }
 
     getColor(tileColumnWalker, tileRowWalker){
@@ -83,6 +97,8 @@ export class Map {
     }
 
     draw(playerGlobalX, playerGlobalY) {
+        
+        
         this.leftBorder = playerGlobalX - this.FOV / 2
         this.topBorder = playerGlobalY - this.FOV / 2
         this.rightBorder = playerGlobalX + this.FOV / 2
@@ -91,24 +107,39 @@ export class Map {
         this.tileRowWalker = this.tileRow
         this.tileColumn = Math.floor(this.leftBorder / this.tilelength)
         this.tileColumnWalker = this.tileColumn
+         
         this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
-               
-
-        for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) {                                 // obere Reihe an Tiles
+        for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) { 
             this.tileColumnWalker++
-            this.drawSquare(i, 0, this.tilelength, this.offsetToBorder(this.topBorder), this.loadTile(this.getTileNr(),this.tileColumnWalker, this.tileRowWalker))          //obere Tiles(nicht immer vollständig sichtbar)
+            let tileNr=this.getTileNr()         // column wird nicht weitergegeben
+            if(tileNr<0) tileNr=0                               // obere Reihe an Tiles
+            const tileSetNr=this.mapDataTiles[tileNr]
+            
+            this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
+            this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
+            console.log(Math.floor(28/this.tilesPerRow) * this.tilelength)
+            //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, i , 0 * this.tilelength, this.tilelength, this.tilelength)          //obere Tiles(nicht immer vollständig sichtbar)
         }
-    
+
         for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
             this.tileRowWalker++                                                                   //Zeilensprung
             this.tileColumnWalker = this.tileColumn
-            this.drawSquare(0, i, this.offsetToBorder(this.leftBorder), this.tilelength, this.loadTile(this.getTileNr(),this.tileColumnWalker, this.tileRowWalker))         //linke Tiles(nicht immer vollständig Sichtbar)
-
-                for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
+            const tileSetNr=this.mapDataTiles[this.getTileNr()]
+            this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
+            this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
+            //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, 0 , i , this.tilelength, this.tilelength)      //linke Tiles(nicht immer vollständig Sichtbar)
+            
+            for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
                 this.tileColumnWalker++                                                  //nächste Spalte
-                this.drawSquare(j, i, this.tilelength, this.tilelength, this.loadTile(this.getTileNr(),this.tileColumnWalker, this.tileRowWalker))                         //innere Tiles(vollständig Sichtbare)
+                const tileSetNr=this.mapDataTiles[this.getTileNr()]
+                this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
+                this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
+                //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, j , i , this.tilelength, this.tilelength)                         //innere Tiles(vollständig Sichtbare)
             }
-            this.tileColumnWalker++                                                          //nächste Spalte
+            this.tileColumnWalker++              //nächste Spalte
         }
+        
+        
+        this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY)
     }
 }

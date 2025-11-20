@@ -1,0 +1,24 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "exportAsImage.useCurrentScale": true,
+    "fileStates": {
+    },
+    "last.exportedFilePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Code/Tiled",
+    "last.imagePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Graphics",
+    "map.height": 90,
+    "map.lastUsedExportFilter": "JSON-Kartendateien (*.tmj *.json)",
+    "map.lastUsedFormat": "json",
+    "map.width": 70,
+    "openFiles": [
+    ],
+    "project": "VampirioTestMap.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true
+}
