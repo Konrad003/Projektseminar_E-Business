@@ -118,7 +118,7 @@ export class game {
         this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
 
         this.mapData = []
-        this.loadMap("./Code/javaScriptFiles/Map1.json").then(() => {
+        this.loadMap("./Code/JSON/Map1.json").then(() => {
             this.mapData = this.mapData[0];
             //console.log(this.mapData.layers[0].data)
             this.mapDataTiles=this.mapData.layers[0].data
