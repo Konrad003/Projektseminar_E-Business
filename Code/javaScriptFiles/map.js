@@ -32,28 +32,6 @@ export class Map {
         };
         this.tilesetImage.src = './Graphics/OIP (1).jpg'; 
     }
-
-    
-
-    loadTile(tileNr, tileColumnWalker, tileRowWalker){
-        if(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker)) return 'brown'
-        else{
-        if(this.mapDataTiles[tileNr]==0) return 'black'
-        if(this.mapDataTiles[tileNr]==1) return 'green'
-        if(this.mapDataTiles[tileNr]==2) return 'yellow'
-        if(this.mapDataTiles[tileNr]==3) return 'red'
-        if(this.mapDataTiles[tileNr]==4) return 'orange'
-        if(this.mapDataTiles[tileNr]==5) return 'gray'
-        if(this.mapDataTiles[tileNr]==6) return 'brown'
-        if(this.mapDataTiles[tileNr]==7) return 'pink'
-        if(this.mapDataTiles[tileNr]==8) return 'white'
-        if(this.mapDataTiles[tileNr]==9) return 'blue'
-        if(this.mapDataTiles[tileNr]==10) return 'gray'
-        if(this.mapDataTiles[tileNr]==11) return 'white'
-        }
-
-        
-        }
     
 
     drawSquare(x, y, width, height, color) {
@@ -67,26 +45,17 @@ export class Map {
 
     isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
     return (
-        tileColumnWalker < 0 || tileColumnWalker > this.mapWidthTile ||
-        tileRowWalker < 0 || tileRowWalker > this.mapHeightTile
+        tileColumnWalker < 0 || tileColumnWalker >= this.mapWidthTile ||
+        tileRowWalker < 0 || tileRowWalker >= this.mapHeightTile
     );
 }
 
-    getTileNr() {
+    getTileNr(column, row) {
        
-        return this.tileRowWalker * this.mapWidthTile + this.tileColumnWalker /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip    1  2   3   4
+        return row * this.mapWidthTile + column /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip    1  2   3   4
                                                                                                                             5  6   7   8
                                                                                                                             9  10  11  12  */
     
-    }
-
-    getColor(tileColumnWalker, tileRowWalker){
-        if(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))
-            return 'brown'
-        else if (this.getTileNr() % 2 == 0)
-            return 'black'
-        else
-            return 'green'
     }
 
     offsetToBorder(offset){
@@ -111,9 +80,8 @@ export class Map {
         
         for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) { 
             this.tileColumnWalker++
-            let tileNr=this.getTileNr()         // column wird nicht weitergegeben
-            if(tileNr<0) tileNr=0                               // obere Reihe an Tiles
-            const tileSetNr=this.mapDataTiles[tileNr]
+            if (!(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker))) {                                        // obere Reihe an Tiles
+            const tileSetNr=this.mapDataTiles[this.getTileNr(this.tileColumnWalker, this.tileRowWalker) ]
             
             this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
             this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)+(this.tilelength-this.offsetToBorder(this.topBorder))
@@ -128,13 +96,14 @@ export class Map {
                                 this.tilelength, 
                                 this.offsetToBorder(this.topBorder))
                                 //obere Tiles(nicht immer vollständig sichtbar)
+            }
         }
-        console.log()
         //console.log((this.tilelength-this.offsetToBorder(this.topBorder)))
         for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
             this.tileRowWalker++                                                                   //Zeilensprung
             this.tileColumnWalker = this.tileColumn
-            const tileSetNr=this.mapDataTiles[this.getTileNr()]
+            if (!(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker))) {
+            const tileSetNr=this.mapDataTiles[this.getTileNr(this.tileColumnWalker, this.tileRowWalker)]
             this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength+(this.tilelength-this.offsetToBorder(this.leftBorder))
             this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
             this.ctx.drawImage( this.tilesetImage,
@@ -146,16 +115,18 @@ export class Map {
                                 i , 
                                 this.offsetToBorder(this.leftBorder), 
                                 this.tilelength)      //linke Tiles(nicht immer vollständig Sichtbar)
-            
+            }
             for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
-                this.tileColumnWalker++                                                  //nächste Spalte
-                const tileSetNr=this.mapDataTiles[this.getTileNr()]
+                this.tileColumnWalker++  
+                if (!(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker))) {                                               //nächste Spalte
+                const tileSetNr=this.mapDataTiles[this.getTileNr(this.tileColumnWalker, this.tileRowWalker)]
                 this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
                 this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
                 this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, j , i , this.tilelength, this.tilelength)                         //innere Tiles(vollständig Sichtbare)
+                }
             }
             this.tileColumnWalker++              //nächste Spalte
-        }
+        }   
         this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
         //console.log(this.offsetToBorder(this.topBorder))
         //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY)
