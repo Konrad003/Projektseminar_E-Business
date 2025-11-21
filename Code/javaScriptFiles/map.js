@@ -108,7 +108,7 @@ export class Map {
         this.tileColumn = Math.floor(this.leftBorder / this.tilelength)
         this.tileColumnWalker = this.tileColumn
          
-        this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
+        
         for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) { 
             this.tileColumnWalker++
             let tileNr=this.getTileNr()         // column wird nicht weitergegeben
@@ -116,30 +116,48 @@ export class Map {
             const tileSetNr=this.mapDataTiles[tileNr]
             
             this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
-            this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
-            console.log(Math.floor(28/this.tilesPerRow) * this.tilelength)
-            //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, i , 0 * this.tilelength, this.tilelength, this.tilelength)          //obere Tiles(nicht immer vollständig sichtbar)
-        }
+            this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)+(this.tilelength-this.offsetToBorder(this.topBorder))
 
+            this.ctx.drawImage( this.tilesetImage,
+                                this.tileSetX,
+                                this.tileSetY, 
+                                this.tilelength, 
+                                this.offsetToBorder(this.topBorder)  ,
+                                i ,
+                                0 ,
+                                this.tilelength, 
+                                this.offsetToBorder(this.topBorder))
+                                //obere Tiles(nicht immer vollständig sichtbar)
+        }
+        console.log()
+        //console.log((this.tilelength-this.offsetToBorder(this.topBorder)))
         for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
             this.tileRowWalker++                                                                   //Zeilensprung
             this.tileColumnWalker = this.tileColumn
             const tileSetNr=this.mapDataTiles[this.getTileNr()]
-            this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
+            this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength+(this.tilelength-this.offsetToBorder(this.leftBorder))
             this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
-            //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, 0 , i , this.tilelength, this.tilelength)      //linke Tiles(nicht immer vollständig Sichtbar)
+            this.ctx.drawImage( this.tilesetImage,
+                                this.tileSetX,
+                                this.tileSetY, 
+                                this.offsetToBorder(this.leftBorder), 
+                                this.tilelength, 
+                                0 , 
+                                i , 
+                                this.offsetToBorder(this.leftBorder), 
+                                this.tilelength)      //linke Tiles(nicht immer vollständig Sichtbar)
             
             for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
                 this.tileColumnWalker++                                                  //nächste Spalte
                 const tileSetNr=this.mapDataTiles[this.getTileNr()]
                 this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
                 this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
-                //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, j , i , this.tilelength, this.tilelength)                         //innere Tiles(vollständig Sichtbare)
+                this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, j , i , this.tilelength, this.tilelength)                         //innere Tiles(vollständig Sichtbare)
             }
             this.tileColumnWalker++              //nächste Spalte
         }
-        
-        
-        this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY)
+        this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
+        //console.log(this.offsetToBorder(this.topBorder))
+        //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY)
     }
 }
