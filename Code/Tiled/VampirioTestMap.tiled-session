@@ -8,6 +8,34 @@
     ],
     "exportAsImage.useCurrentScale": true,
     "fileStates": {
+        "Map1.json": {
+            "scale": 0.4159548611111111,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1119.1118160190326,
+                "y": 1438.8580491673276
+            }
+        },
+        "Map1.json#Sonnenuntergang": {
+            "scaleInDock": 1
+        },
+        "Map1.json#terrain_tiles_v2": {
+            "scaleInDock": 1
+        },
+        "Map1Ges.json": {
+            "scale": 0.4159548611111111,
+            "selectedLayer": -1,
+            "viewCenter": {
+                "x": 1119.1118160190326,
+                "y": 1438.8580491673276
+            }
+        },
+        "Map1Ges.json#Sonnenuntergang": {
+            "scaleInDock": 1
+        },
+        "Map1Ges.json#terrain_tiles_v2": {
+            "scaleInDock": 1
+        }
     },
     "last.exportedFilePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Code/Tiled",
     "last.imagePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Graphics",

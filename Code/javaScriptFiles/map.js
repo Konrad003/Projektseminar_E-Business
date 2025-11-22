@@ -1,21 +1,6 @@
 import { Player } from "./player.js";
 export class Map {
-    mapWidthTile //in Kacheln/Tile (Muss ungerade sein, solange wir in dem Karo muster sind)
-    mapHeightTile //in Kacheln/Tile
-    tilelength=32 //in Pixel
-    leftBorder 
-    topBorder 
-    rightBorder 
-    bottomBorder
-    tileRow = Math.floor(50 / 32)
-    tileColumn = Math.floor(50 / 32)
-    tilePicture = "-----.json" 
-    FOV
-    ctx
-    map1
-    mapDataTiles
-    tileSetX
-    tileSetY
+  
     constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx, mapDataTiles) {
         this.mapWidthTile = mapWidthTile
         this.mapHeightTile = mapHeightTile
@@ -30,17 +15,7 @@ export class Map {
             this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)-1
             
         };
-        this.tilesetImage.src = './Graphics/OIP (1).jpg'; 
-    }
-    
-
-    drawSquare(x, y, width, height, color) {
-    this.ctx.beginPath()
-    this.ctx.rect(x, y, width, height)
-    this.ctx.fillStyle = color
-    this.ctx.fill()
-    this.ctx.strokeStyle = color;
-    this.ctx.stroke();
+        this.tilesetImage.src = './Graphics/terrain_tiles_v2.png'; 
     }
 
     isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
@@ -127,7 +102,6 @@ export class Map {
             }
             this.tileColumnWalker++              //nächste Spalte
         }   
-        this.drawSquare(0, 0, this.offsetToBorder(this.leftBorder), this.offsetToBorder(this.topBorder), 'Yellow')   //erstes Tile oben links
         //console.log(this.offsetToBorder(this.topBorder))
         //this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY)
     }
