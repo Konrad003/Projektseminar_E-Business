@@ -1,6 +1,6 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import { Enemy, checkPlayerEnemyCollision} from "/Code/javaScriptFiles/enemy.js" // spawnEnemyAtEdge zusätzlich importiert
-// import { Entity } from "/Code/javaScriptFiles/entity.js"
+import { Enemy, checkPlayerEnemyCollision} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import { Map } from "./map.js"
@@ -76,7 +76,7 @@ export class game {
                 this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
             if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
                 this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
-                if (this.leftPressed != this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
+                if (this.leftPressed !== this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
                     if (this.leftPressed){ 
                         this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
                         this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
@@ -89,7 +89,7 @@ export class game {
             }
             if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight){         // smoothe diagonale bewegung runter
                 this.PlayerOne.playerGlobalY += this.PlayerOne.speed
-                if (this.leftPressed != this.rightPressed && !(this.upPressed)){
+                if (this.leftPressed !== this.rightPressed && !(this.upPressed)){
                     if (this.leftPressed){ 
                         this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
                         this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
