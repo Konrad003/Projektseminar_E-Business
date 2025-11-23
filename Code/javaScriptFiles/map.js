@@ -9,9 +9,9 @@ export class Map {
         this.ctx = ctx
         this.mapDataTiles = mapDataTiles
         this.tilesetImage = new Image();
-        this.tilesLoaded= false
+        let tilesLoaded= false
         this.tilesetImage.onload = () => {
-            this.tilesLoaded = true;
+         tilesLoaded = true;
             
             this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)
         };
@@ -27,9 +27,9 @@ export class Map {
 
     getTileNr(column, row) {
        
-        return row * this.mapWidthTile + column /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip    1  2   3   4
-                                                                                                                            5  6   7   8
-                                                                                                                            9  10  11  12  */
+        return row * this.mapWidthTile + column /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip   1  2   3   4
+                                                                                                            5  6   7   8
+                                                                                                            9  10  11  12  */
     
     }
 
@@ -39,74 +39,57 @@ export class Map {
          
         return this.tilelength - holder;
     }
+    
+    drawTile(tileColumnWalker, tileRowWalker, leftBorder, topBorder, i, j) {
+        
+        i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
+        j = Math.floor(j);  
+        if (!(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))) {                                        
+            let tileSetNr = this.mapDataTiles[this.getTileNr(tileColumnWalker, tileRowWalker) ] - 1     //-1 liegt daran dass json Datei falsch geschrieben ist. Map1.Json fängt bei 1 statt 0 an
+
+            let leftOffset = this.tilelength - this.offsetToBorder(leftBorder)      
+            let topOffset = (this.tilelength - this.offsetToBorder(topBorder))                                //Wie viel von dem TileSetTile gezeichnet werden muss, falls oben am Bildrand nur die hälft z.B. gezeichnet wurde
+            let tileSetX = (tileSetNr % this.tilesPerRow) * this.tilelength + leftOffset                      //Koordinate im TileSet
+            let tileSetY = (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength) + topOffset
+
+        this.ctx.drawImage( this.tilesetImage,                                      //Datei aus der das Tile stammt
+                            tileSetX,                                               //X Koordinate im TileSet
+                            tileSetY,                                               //Y Koordinate im TileSet
+                            this.offsetToBorder(leftBorder),                        //Breite des Ausgeschnittenen Tiles
+                            this.offsetToBorder(topBorder),                         //Höhe des Ausgeschnittenen Tiles
+                            i,                                                      //X Position im Canvas 
+                            j,                                                      //Y Position im Canvas 
+                            this.offsetToBorder(leftBorder),                        //Breite im Canvas
+                            this.offsetToBorder(topBorder))                         //Höhe im Canvas                     
+        }
+    }
 
     draw(playerGlobalX, playerGlobalY) {
-        
-        
-        this.leftBorder = playerGlobalX - this.FOV / 2
-        this.topBorder = playerGlobalY - this.FOV / 2
-        
-        this.rightBorder = playerGlobalX + this.FOV / 2
-        this.bottomBorder = playerGlobalY + this.FOV / 2
-        this.tileRow = Math.floor(this.topBorder / this.tilelength)
-        this.tileRowWalker = this.tileRow
-        this.tileColumn = Math.floor(this.leftBorder / this.tilelength)
-        this.tileColumnWalker = this.tileColumn
-         //console.log(this.offsetToBorder(this.topBorder))
-        
-        for (let i = this.offsetToBorder(this.leftBorder); i < this.FOV; i += this.tilelength) { 
-            this.tileColumnWalker++
-            
-            if (!(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker))) {                                        // obere Reihe an Tiles
-            const tileSetNr=this.mapDataTiles[this.getTileNr(this.tileColumnWalker, this.tileRowWalker) ]-1//-1 liegt daran dass json Datei falsch geschrieben ist. Fängt bei 1 statt 0 an
-            
-            this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
-            this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)+(this.tilelength-this.offsetToBorder(this.topBorder))
-            
-            this.ctx.drawImage( this.tilesetImage,
-                                this.tileSetX,
-                                this.tileSetY, 
-                                this.tilelength, 
-                                this.offsetToBorder(this.topBorder)  ,
-                                i ,
-                                0 ,
-                                this.tilelength, 
-                                this.offsetToBorder(this.topBorder))
-                                //obere Tiles(nicht immer vollständig sichtbar)
-            }
-        }
-        for (let i = this.offsetToBorder(this.topBorder); i < this.FOV; i += this.tilelength) {
-            this.tileRowWalker++                                                                   //Zeilensprung
-            this.tileColumnWalker = this.tileColumn
-            if (!(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker))) {
-            const tileSetNr=this.mapDataTiles[this.getTileNr(this.tileColumnWalker, this.tileRowWalker)]-1
-            this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength+(this.tilelength-this.offsetToBorder(this.leftBorder))
-            this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
-           
-            this.ctx.drawImage( this.tilesetImage,
-                                this.tileSetX,
-                                this.tileSetY, 
-                                this.offsetToBorder(this.leftBorder), 
-                                this.tilelength, 
-                                0 , 
-                                i , 
-                                this.offsetToBorder(this.leftBorder), 
-                                this.tilelength)      //linke Tiles(nicht immer vollständig Sichtbar)
-            }
-            for (let j = this.offsetToBorder(this.leftBorder); j < this.FOV; j += this.tilelength) {
-                this.tileColumnWalker++  
-                
-                if (!(this.isTileOutOfBorder(this.tileColumnWalker, this.tileRowWalker))) {                                               //nächste Spalte
-                const tileSetNr=this.mapDataTiles[this.getTileNr(this.tileColumnWalker, this.tileRowWalker)]-1
-                this.tileSetX=(tileSetNr%this.tilesPerRow)*this.tilelength
-                this.tileSetY=(Math.floor(tileSetNr/this.tilesPerRow) * this.tilelength)
-                
-                this.ctx.drawImage(this.tilesetImage,this.tileSetX,this.tileSetY, this.tilelength, this.tilelength, j , i , this.tilelength, this.tilelength)                         //innere Tiles(vollständig Sichtbare)
-                }
-            }
-            this.tileColumnWalker++              //nächste Spalte
-        }   
 
-        //this.ctx.drawImage(this.tilesetImage,0,0)
+        let leftBorder = playerGlobalX - this.FOV / 2
+        let topBorder = playerGlobalY - this.FOV / 2
+        let tileRow = Math.floor(topBorder / this.tilelength)
+        let tileRowWalker = tileRow
+        let tileColumn = Math.floor(leftBorder / this.tilelength)
+        let tileColumnWalker = tileColumn
+
+        this.drawTile(tileColumnWalker, tileRowWalker,  leftBorder, topBorder, 0, 0)                //Zeichnen des obersten Tiles
+
+        for (let i = this.offsetToBorder(leftBorder); i < this.FOV; i += this.tilelength) {         
+            tileColumnWalker++
+            this.drawTile(tileColumnWalker, tileRowWalker, 0, topBorder, i, 0)                      //Zeichnen der obersten Reihe
+        }
+
+        for (let j = this.offsetToBorder(topBorder); j < this.FOV; j += this.tilelength) {
+            tileRowWalker++
+            tileColumnWalker = tileColumn                                                                 
+            this.drawTile(tileColumnWalker, tileRowWalker, leftBorder, 0, 0, j)                     //Zeichnen der linken Reihe
+        
+            for (let i = this.offsetToBorder(leftBorder); i < this.FOV; i += this.tilelength) {
+                tileColumnWalker++  
+                this.drawTile(tileColumnWalker, tileRowWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
+            }
+            tileColumnWalker++          
+        }   
     }
 }
