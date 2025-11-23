@@ -1,6 +1,6 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
 import { Enemy, checkPlayerEnemyCollision} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
-import { Entity } from "./entity.js"
+// import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import { Map } from "./map.js"
