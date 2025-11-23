@@ -22,13 +22,21 @@ export class game {
     downPressed = false
     leftPressed = false
     rightPressed = false
-
-    constructor() {
+    mapData
+    constructor() { 
         this.MapOne = null
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
     }
 
+    loadMap(file) {
+    return fetch(file)
+        .then(response => response.json())
+        .then(jsondata => {
+            this.mapData.push(jsondata); // JSON als ein Element im Array speichern
+        })
+    }
+    
     keyDownHandler(e) { // liest Input der Tastatur aus
         if ((e.key === "ArrowUp") || (e.key === 'w')) {
             this.upPressed = true;
@@ -99,23 +107,22 @@ export class game {
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
-        let mwt = 57; //mapWithTiles for creating the map
-        let mht = 52; //mapHeightTiles for creating the map
-        let tl = 32; //tileLength for creating the map
 
-        const mapPixelWidth = mwt * tl
-        const mapPixelHeight = mht * tl
+        
 
-        const playerHitbox = 32;
-
-        this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
-        this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
-
-        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx)
-
-        this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
-
-        setInterval(() => this.render(), 5);
+        this.mapData = []
+        this.loadMap("./Code/Tiled/Map1.json").then(() => {
+            this.mapData = this.mapData[0];
+            //console.log(this.mapData.layers[0].data)
+            this.mapDataTiles=this.mapData.layers[0].data
+            
+            this.MapOne = new Map(this.mapData.width, this.mapData.height, this.mapData.tilewidth, canvas.width, ctx, this.mapDataTiles)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height*this.mapData.tilewidth / 2, 100, null, 3.5, 32, 0, 0, 1, ctx)
+            setInterval(() => this.render(), 5);
+            });
+            
+        
+        //setInterval(spawnEnemy, 100
 
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength,this.MapOne.mapHeightTile * this.MapOne.tilelength), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
 
