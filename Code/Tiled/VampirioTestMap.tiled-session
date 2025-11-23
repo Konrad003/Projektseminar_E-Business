@@ -1,0 +1,56 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "exportAsImage.useCurrentScale": true,
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "Map1.json": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 612.6666666666666,
+                "y": 110
+            }
+        },
+        "Map1.json#Sonnenuntergang": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Map1.json#terrain_tiles_v2": {
+            "scaleInDock": 1
+        },
+        "Map1Ges.json": {
+            "scale": 0.4159548611111111,
+            "selectedLayer": -1,
+            "viewCenter": {
+                "x": 1119.1118160190326,
+                "y": 1388.3718018281231
+            }
+        },
+        "Map1Ges.json#Sonnenuntergang": {
+            "scaleInDock": 1
+        },
+        "Map1Ges.json#terrain_tiles_v2": {
+            "scaleInDock": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Code/Tiled",
+    "last.imagePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Graphics",
+    "map.height": 90,
+    "map.lastUsedExportFilter": "JSON-Kartendateien (*.tmj *.json)",
+    "map.lastUsedFormat": "json",
+    "map.width": 70,
+    "openFiles": [
+    ],
+    "project": "VampirioTestMap.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true
+}
