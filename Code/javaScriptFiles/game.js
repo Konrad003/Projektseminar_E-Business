@@ -1,11 +1,11 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import { Enemy } from "/Code/javaScriptFiles/enemy.js"
-import { Entity } from "/Code/javaScriptFiles/entity.js"
+import { Enemy, checkPlayerEnemyCollision} from "/Code/javaScriptFiles/enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+// import { Entity } from "/Code/javaScriptFiles/entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
-import { Map } from "/Code/javaScriptFiles/map.js"
+import { Map } from "./map.js"
 //import { Obstacles } from "./obstacles.js"
-import { Player } from "/Code/javaScriptFiles/player.js"
+import { Player } from "./player.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -26,7 +26,7 @@ export class game {
     constructor() { 
         this.MapOne = null
         this.PlayerOne = null
-        
+        this.enemies = []   // CHANGE: Array für alle aktiven Gegner
     }
 
     loadMap(file) {
@@ -124,6 +124,7 @@ export class game {
         
         //setInterval(spawnEnemy, 100
 
+        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength,this.MapOne.mapHeightTile * this.MapOne.tilelength), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
     }
 
     stop() {
@@ -144,17 +145,20 @@ export class game {
         this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
         this.PlayerOne.drawPlayer(canvas.width/2, canvas.height/2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
-        //enemy.draw()
+        // Gegner bewegen, zeichnen und bei Collision entfernen
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+            const enemy = this.enemies[i]
+
+            enemy.chasePlayer(this.PlayerOne)                   // Gegner läuft auf den Spieler zu
+
+            if (checkPlayerEnemyCollision(this.PlayerOne, enemy)) {        // Treffer?
+                enemy.die()
+                this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
+            } else {
+                enemy.draw(ctx, this.MapOne.leftBorder, this.MapOne.topBorder) // Gegner im Sichtbereich zeichnen
+            }
+        }
     }
-
-    spawnEnemy() {
-        //Enemy = new enemy(map.leftBorder, map.topBorder, 100, "a.png", 10, 5, 0, 5, false)
-    }
-
-
-
-
-
 }
 
 
