@@ -1,5 +1,5 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import { Enemy, checkPlayerEnemyCollision} from "/Code/javaScriptFiles/enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+import { Enemy, RangedEnemy, checkPlayerEnemyCollision} from "/Code/javaScriptFiles/enemy.js" // spawnEnemyAtEdge zusätzlich importiert
 // import { Entity } from "/Code/javaScriptFiles/entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -26,7 +26,7 @@ export class game {
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
-        this.enemies = []   // CHANGE: Array für alle aktiven Gegner
+        this.enemies = [] // Array für alle aktiven Gegner
     }
 
     keyDownHandler(e) { // liest Input der Tastatur aus
@@ -62,36 +62,36 @@ export class game {
     handleInput() {
         let mapLength=this.MapOne.mapWidthTile * this.MapOne.tilelength
         let mapHeight=this.MapOne.mapHeightTile * this.MapOne.tilelength
-            if (this.rightPressed && this.PlayerOne.playerGlobalX <= mapLength) 
-                this.PlayerOne.playerGlobalX += this.PlayerOne.speed
-            if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0) 
-                this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
-            if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
-                this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
-                if (this.leftPressed != this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
-                    if (this.leftPressed){ 
-                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
-                    }
-                    if (this.rightPressed){
-                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
-                    }
+        if (this.rightPressed && this.PlayerOne.playerGlobalX <= mapLength) 
+            this.PlayerOne.playerGlobalX += this.PlayerOne.speed
+        if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0) 
+            this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
+        if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
+            this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
+            if (this.leftPressed != this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
+                if (this.leftPressed){ 
+                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
+                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
+                }
+                if (this.rightPressed){
+                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
+                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
                 }
             }
-            if (this.downPressed && this.PlayerOne.playerGlobalY <= mapHeight){         // smoothe diagonale bewegung runter
-                this.PlayerOne.playerGlobalY += this.PlayerOne.speed
-                if (this.leftPressed != this.rightPressed && !(this.upPressed)){
-                    if (this.leftPressed){ 
-                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
-                    }
-                    if (this.rightPressed){
-                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
-                    }
+        }
+        if (this.downPressed && this.PlayerOne.playerGlobalY <= mapHeight){         // smoothe diagonale bewegung runter
+            this.PlayerOne.playerGlobalY += this.PlayerOne.speed
+            if (this.leftPressed != this.rightPressed && !(this.upPressed)){
+                if (this.leftPressed){ 
+                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
+                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
+                }
+                if (this.rightPressed){
+                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
+                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
                 }
             }
+        }
     }
 
     start() {
@@ -118,6 +118,8 @@ export class game {
         setInterval(() => this.render(), 5);
 
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength,this.MapOne.mapHeightTile * this.MapOne.tilelength), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+
+        setInterval(() => RangedEnemy.spawnRangedEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength,this.MapOne.mapHeightTile * this.MapOne.tilelength), 4000);
     }
 
     stop() {

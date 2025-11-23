@@ -79,6 +79,81 @@ export class Enemy extends Entity {
     }
 }
 
+
+export class RangedEnemy extends Enemy { //Fernkampfgegner, der stehen bleibt wenn er nah genug ist
+
+    constructor(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite){
+        super(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite)
+        this.stopDistance = 200 // Entfernung, ab der er stehen bleibt
+    }
+
+    static spawnRangedEnemyAtEdge(enemiesArray, mapWidth, mapHeight) {
+        const side = Math.floor(Math.random() * 4)
+        let x, y
+
+        switch (side) {
+            case 0:
+                x = Math.random() * mapWidth
+                y = 0
+                break
+            case 1:
+                x = mapWidth
+                y = Math.random() * mapHeight
+                break
+            case 2:
+                x = Math.random() * mapWidth
+                y = mapHeight
+                break
+            case 3:
+                x = 0
+                y = Math.random() * mapHeight
+                break
+        }
+
+        const hp = 8
+        const png = null
+        const speed = 1.0
+        const hitbox = { width: 32, height: 32 }
+        const level = 1
+        const xpDrop = 3
+        const elite = false
+
+        enemiesArray.push(new RangedEnemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite))
+    }
+
+    chasePlayer(player) {
+
+        let distanceX = player.playerGlobalX - this.enemyX
+        let distanceY = player.playerGlobalY - this.enemyY
+
+        let distance = Math.sqrt(distanceX*distanceX + distanceY*distanceY)
+        if (distance <= 0) return
+
+        if (distance <= this.stopDistance) { //bleibt stehen, wenn er in Schussreichweite ist
+            return
+        }
+
+        distanceX /= distance
+        distanceY /= distance
+
+        this.enemyX += distanceX * this.speed
+        this.enemyY += distanceY * this.speed
+    }
+
+    draw(ctx, mapLeftBorder, mapTopBorder) {
+        const screenX = this.enemyX - mapLeftBorder
+        const screenY = this.enemyY - mapTopBorder
+
+        ctx.fillStyle = "yellow"  
+        ctx.fillRect(screenX, screenY, this.hitbox.width, this.hitbox.height)
+    }
+
+    die() {
+        console.log("Ranged Enemy ist gestorben! XP gedroppt:", this.xpDrop);
+    }
+}
+
+
 //einfache AABB-Kollision zwischen Spieler und einem Enemy
 export function checkPlayerEnemyCollision(player, enemy) {
     const pLeft = player.playerGlobalX;
