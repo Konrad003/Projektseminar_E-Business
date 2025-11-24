@@ -1,21 +1,51 @@
 import { Player } from "./player.js";
 export class Map {
   
-    constructor(mapWidthTile, mapHeightTile, tilelength, FOV, ctx, mapDataTiles) {
-        this.mapWidthTile = mapWidthTile
-        this.mapHeightTile = mapHeightTile
-        this.tilelength = tilelength
+    constructor(mapData, FOV, ctx) {
+        this.mapWidthTile = mapData.width
+        this.mapHeightTile = mapData.height
+        this.tilelength = mapData.tilewidth
         this.FOV = FOV
         this.ctx = ctx
-        this.mapDataTiles = mapDataTiles
+        this.mapDataTiles = mapData.layers
         this.tilesetImage = new Image();
         let tilesLoaded= false
+        this.tileData=[]
         this.tilesetImage.onload = () => {
          tilesLoaded = true;
             
             this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)
+            this.loadTileData()
+            
+            
         };
-        this.tilesetImage.src = './Graphics/terrain_tiles_v2.png'; 
+        this.tilesetImage.src = './Graphics/terrain_tiles_v2.png';
+        
+        
+    }
+
+    loadTileData(){
+        for (let i = 0; i<this.mapHeightTile*this.tilelength;i++){
+            for (let j = 0; j<this.mapWidthTile*this.tilelength;j++){
+                let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(i, j) ]
+                let tileHeight = 0
+                let walkable = true
+                
+                if (this.mapDataTiles[1].data[this.getTileNr(i, j) ]>0)
+                    walkable = false
+                else if (this.mapDataTiles[2].data[this.getTileNr(i, j) ]>0)
+                    tileHeight = 1
+                else if (this.mapDataTiles[3].data[this.getTileNr(i, j) ]>0)
+                    tileHeight = 2
+                this.tileData[i*this.tilelength+j]=[]
+                this.tileData[i][j] = {
+                walkable: walkable,
+                height: tileHeight,
+                tileSetX: (tileSetNr % this.tilesPerRow) * this.tilelength,
+                tileSetY: (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength)
+                }
+            }
+        }
     }
 
     isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
@@ -45,7 +75,7 @@ export class Map {
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);  
         if (!(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))) {                                        
-            let tileSetNr = this.mapDataTiles[this.getTileNr(tileColumnWalker, tileRowWalker) ] - 1     //-1 liegt daran dass json Datei falsch geschrieben ist. Map1.Json fängt bei 1 statt 0 an
+            let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(tileColumnWalker, tileRowWalker) ] - 1     //-1 liegt daran dass json Datei falsch geschrieben ist. Map1.Json fängt bei 1 statt 0 an
 
             let leftOffset = this.tilelength - this.offsetToBorder(leftBorder)      
             let topOffset = (this.tilelength - this.offsetToBorder(topBorder))                                //Wie viel von dem TileSetTile gezeichnet werden muss, falls oben am Bildrand nur die hälft z.B. gezeichnet wurde
