@@ -70,11 +70,17 @@ export class game {
     handleInput() {
         let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
         let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
-        if (this.rightPressed && this.PlayerOne.playerGlobalX < mapLength)
+        let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
+        let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
+        let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        
+        if (this.rightPressed && this.PlayerOne.playerGlobalX < mapLength && mapTileNO.walkable && mapTileSO.walkable)
             this.PlayerOne.playerGlobalX += this.PlayerOne.speed
-        if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0)
+        if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0 && mapTileNW.walkable &&  mapTileSW.walkable)
             this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
-        if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
+        if (this.upPressed && this.PlayerOne.playerGlobalY >= 0 && mapTileNO.walkable && mapTileNW.walkable) {
+            
             this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
             if (this.leftPressed !== this.rightPressed && !(this.downPressed)) {      // smoothe diagonale bewegung hoch
                 if (this.leftPressed) {
@@ -87,7 +93,8 @@ export class game {
                 }
             }
         }
-        if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight) {         // smoothe diagonale bewegung runter
+        if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight && mapTileSO.walkable && mapTileSW.walkable) {         // smoothe diagonale bewegung runter
+            console.log("22")
             this.PlayerOne.playerGlobalY += this.PlayerOne.speed
             if (this.leftPressed !== this.rightPressed && !(this.upPressed)) {
                 if (this.leftPressed) {
@@ -99,6 +106,38 @@ export class game {
                     this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
                 }
             }
+        }
+
+        let newMapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
+        if (!(newMapTileNW.walkable) && mapTileNW != newMapTileNW){
+            if (this.upPressed)
+                this.PlayerOne.playerGlobalY += this.MapOne.tilelength - this.PlayerOne.playerGlobalY % this.MapOne.tilelength
+            if (this.leftPressed)
+                this.PlayerOne.playerGlobalX += this.MapOne.tilelength - this.PlayerOne.playerGlobalX % this.MapOne.tilelength 
+        }
+
+        let newMapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
+        if (!(newMapTileNO.walkable) && mapTileNO != newMapTileNO){
+            if (this.upPressed)
+                this.PlayerOne.playerGlobalY += this.MapOne.tilelength - this.PlayerOne.playerGlobalY % this.MapOne.tilelength
+            if (this.rightPressed)
+                this.PlayerOne.playerGlobalX -= this.PlayerOne.playerGlobalX % this.MapOne.tilelength +1
+        }
+
+        let newMapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        if (!(newMapTileSW.walkable) && mapTileSW != newMapTileSW){
+            if (this.downPressed)
+                this.PlayerOne.playerGlobalY -= this.PlayerOne.playerGlobalY % this.MapOne.tilelength +1
+            if (this.leftPressed)
+                this.PlayerOne.playerGlobalX += this.MapOne.tilelength - this.PlayerOne.playerGlobalX % this.MapOne.tilelength 
+        }
+
+        let newMapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        if (!(newMapTileSO.walkable) && mapTileSO != newMapTileSO){
+            if (this.downPressed)
+                this.PlayerOne.playerGlobalY -= this.PlayerOne.playerGlobalY % this.MapOne.tilelength +1
+            if (this.rightPressed)
+                this.PlayerOne.playerGlobalX -= this.PlayerOne.playerGlobalX % this.MapOne.tilelength +1
         }
     }
 
@@ -112,17 +151,17 @@ export class game {
         this.loadMap("./Code/Tiled/Map1.json").then(() => {
             this.mapData = this.mapData[0];
             //console.log(this.mapData.layers[0].data)
-            this.mapDataTiles = this.mapData.layers[0].data
+            //this.mapDataTiles = this.mapData.layers[0].data
 
-            this.MapOne = new Map(this.mapData.width, this.mapData.height, this.mapData.tilewidth, canvas.width, ctx, this.mapDataTiles)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 3.5, 32, 0, 0, 1, ctx)
+            this.MapOne = new Map(this.mapData, canvas.width, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.0, 32, 0, 0, 1, ctx)
             setInterval(() => this.render(), 5);
         });
 
 
         //setInterval(spawnEnemy, 100
 
-        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength, this.MapOne.mapHeightTile * this.MapOne.tilelength), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
     }
 
     stop() {
