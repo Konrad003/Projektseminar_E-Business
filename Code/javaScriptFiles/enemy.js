@@ -48,9 +48,9 @@ export class Enemy extends Entity {
         const xpDrop = 2;
         const elite = false;
 
-        const ranged = Math.random() < 0.3; // CHANGE: 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
+        const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
 
-        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged));  // CHANGE: "ranged" mit übergeben
+        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged));  
     }
 
     // Gegner bewegt sich in Richtung Player
@@ -62,7 +62,7 @@ export class Enemy extends Entity {
         let distance = Math.sqrt(distanceX*distanceX + distanceY*distanceY) //Hypotenuse von Enemy zu Player berechnet distance
         if (distance <= 0) return //bleibt stehen bei distance = 0
 
-        const stopDistance = 200 // Ranged-Enemy bleibt ab bestimmter Distanz stehen (z.B. 150px)
+        const stopDistance = 200 // Ranged-Enemy bleibt ab bestimmter Distanz stehen (z.B. 200px)
         if (this.ranged && distance <= stopDistance) {
             return
         }
