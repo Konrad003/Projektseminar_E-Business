@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
 body, html {
     height: auto;
     width: auto;
@@ -9,7 +11,32 @@ body, html {
     gap: 20px;
     background-color: #f8f6f6;
     padding: 20px;
-    font-family: "Space Grotesk", sans-serif;
+    font-family: 'Pixelify Sans', sans-serif;
     font-weight: bold;
     overflow: hidden;
+}
+
+h1 {
+    font-size: 128px;
+    color: #333;
+    margin: 0;
+}
+
+.screen {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.screen.active {
+    display: flex;
+}
+
+#gameScreen {
+
 }

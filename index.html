@@ -7,12 +7,23 @@
       <link rel="stylesheet" href="./Code/cssFiles/style.css">
   </head>
   <body>
-    <canvas id="game" width="800" height="800"></canvas>
-    
-    <div id="Startscreen">
-      <h1>Vampirio</h1>
-      <!-- hahaahahaha -->
-    </div>
+    <section class="screen" id="gameScreen">
+        <canvas id="game" width="800" height="800"></canvas>
+    </section>
+
+    <section class="screen active" id="startScreen">
+        <h1>Vampirio.io</h1>
+
+        <div class="menu">
+            <button id="startButton">Start Game</button>
+            <button id="settingsButton">Settings</button>
+        </div>
+    </section>
+
+
+
+
+
     <script type="module" src ="./Code/javaScriptFiles/game.js"></script>
   </body>
 </html>
