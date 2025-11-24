@@ -3,8 +3,9 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "Map1.json",
     "expandedProjectPaths": [
+        "."
     ],
     "exportAsImage.useCurrentScale": true,
     "fileStates": {
@@ -12,11 +13,11 @@
             "scaleInDock": 1
         },
         "Map1.json": {
-            "scale": 0.75,
-            "selectedLayer": 0,
+            "scale": 1,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 612.6666666666666,
-                "y": 110
+                "x": 1884.5,
+                "y": 721.5
             }
         },
         "Map1.json#Sonnenuntergang": {
@@ -48,9 +49,11 @@
     "map.lastUsedFormat": "json",
     "map.width": 70,
     "openFiles": [
+        "Map1.json"
     ],
     "project": "VampirioTestMap.tiled-project",
     "recentFiles": [
+        "Map1.json"
     ],
     "tileset.embedInMap": true
 }
