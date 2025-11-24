@@ -9,24 +9,28 @@ body, html {
     align-items: center;
     flex-direction: column;
     gap: 20px;
-    background-color: #f8f6f6;
+    background-color: #333;
     padding: 20px;
     font-family: 'Pixelify Sans', sans-serif;
     font-weight: bold;
     overflow: hidden;
+    image-rendering: pixelated;
 }
 
 h1 {
     font-size: 128px;
-    color: #333;
+    color: red;
     margin: 0;
 }
 
+/* Screen Styles */
+
 .screen {
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -39,4 +43,78 @@ h1 {
 
 #gameScreen {
 
+}
+
+/* Button Styles */
+
+.btn {
+    background-color: red;
+    border: 4px solid yellow;
+    color: yellow;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 36px;
+    padding: 15px 20px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-shadow: 2px 2px 0px #000;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.6);
+    transition: all 0.1s;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: yellow;
+    color: red;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.6);
+}
+
+/* Title Styles */
+
+.gameTitle {
+    color: red;
+    margin-bottom: 50px;
+    text-shadow: 4px 4px 0px yellow;
+    text-align: center;
+}
+
+.screenTitle {
+    font-size: 64px;
+    color: yellow;
+    margin-bottom: 30px;
+    text-shadow: 4px 4px 0px red;
+    text-align: center;
+}
+
+/* Layout Styles */
+
+.menu {
+    width: 350px;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.panel {
+    padding: 20px;
+    width: auto;
+    max-width: 90%;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border: 4px solid yellow;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.6);
+    padding: 40px;
 }

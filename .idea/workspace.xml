@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;">
+    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Add game and start screens to index.html and update styles for improved layout">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/cssFiles/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/cssFiles/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
@@ -118,6 +118,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "JavaScript Debug.index.html.executor": "Debug",
+    "Node.js.game.js.executor": "Run",
     "Node.js.index.js.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -160,7 +161,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-WS-252.28238.10" />
       </set>
     </attachedChunks>
   </component>
@@ -182,6 +183,8 @@
       <workItem from="1763406959040" duration="25000" />
       <workItem from="1763406998161" duration="2386000" />
       <workItem from="1763559306357" duration="513000" />
+      <workItem from="1763983171314" duration="12000" />
+      <workItem from="1763983190396" duration="3611000" />
     </task>
     <task id="LOCAL-00001" summary="Add style.css for styling the application">
       <option name="closed" value="true" />
@@ -239,7 +242,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763400150879</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add game and start screens to index.html and update styles for improved layout">
+      <option name="closed" value="true" />
+      <created>1763942903405</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1763942903405</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -276,7 +287,8 @@
     <MESSAGE value="Refactor import paths and improve code clarity in game.js, enemy.js, and index.html&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
     <MESSAGE value="Add GitToolBox project settings for commit message validation overrides&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;" />
     <MESSAGE value="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
+    <MESSAGE value="Add game and start screens to index.html and update styles for improved layout" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add game and start screens to index.html and update styles for improved layout" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
