@@ -1,11 +1,11 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import { Enemy } from "./enemy.js"
-import { Entity } from "./entity.js"
+import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+//import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
-import { Map } from "./map.js"
+import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
-import { Player } from "./player.js"
+import {Player} from "./player.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -15,17 +15,26 @@ const ctx = canvas.getContext('2d')
 export class game {
 
 
-
-    difficulty=1
+    difficulty = 1
     timestamp
     upPressed = false
     downPressed = false
     leftPressed = false
     rightPressed = false
+    mapData
 
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
+        this.enemies = []   // CHANGE: Array für alle aktiven Gegner
+    }
+
+    loadMap(file) {
+        return fetch(file)
+            .then(response => response.json())
+            .then(jsondata => {
+                this.mapData.push(jsondata); // JSON als ein Element im Array speichern
+            })
     }
 
     keyDownHandler(e) { // liest Input der Tastatur aus
@@ -59,38 +68,38 @@ export class game {
     }
 
     handleInput() {
-        let mapLength=this.MapOne.mapWidthTile * this.MapOne.tilelength
-        let mapHeight=this.MapOne.mapHeightTile * this.MapOne.tilelength
-            if (this.rightPressed && this.PlayerOne.playerGlobalX <= mapLength) 
-                this.PlayerOne.playerGlobalX += this.PlayerOne.speed
-            if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0) 
-                this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
-            if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
-                this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
-                if (this.leftPressed != this.rightPressed && !(this.downPressed)){      // smoothe diagonale bewegung hoch
-                    if (this.leftPressed){ 
-                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
-                    }
-                    if (this.rightPressed){
-                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY += this.PlayerOne.speed/3
-                    }
+        let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
+        let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
+        if (this.rightPressed && this.PlayerOne.playerGlobalX < mapLength)
+            this.PlayerOne.playerGlobalX += this.PlayerOne.speed
+        if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0)
+            this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
+        if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
+            this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
+            if (this.leftPressed !== this.rightPressed && !(this.downPressed)) {      // smoothe diagonale bewegung hoch
+                if (this.leftPressed) {
+                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed / 3
+                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed / 3
+                }
+                if (this.rightPressed) {
+                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed / 3
+                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed / 3
                 }
             }
-            if (this.downPressed && this.PlayerOne.playerGlobalY <= mapHeight){         // smoothe diagonale bewegung runter
-                this.PlayerOne.playerGlobalY += this.PlayerOne.speed
-                if (this.leftPressed != this.rightPressed && !(this.upPressed)){
-                    if (this.leftPressed){ 
-                        this.PlayerOne.playerGlobalX += this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
-                    }
-                    if (this.rightPressed){
-                        this.PlayerOne.playerGlobalX -= this.PlayerOne.speed/3
-                        this.PlayerOne.playerGlobalY -= this.PlayerOne.speed/3
-                    }
+        }
+        if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight) {         // smoothe diagonale bewegung runter
+            this.PlayerOne.playerGlobalY += this.PlayerOne.speed
+            if (this.leftPressed !== this.rightPressed && !(this.upPressed)) {
+                if (this.leftPressed) {
+                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed / 3
+                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
+                }
+                if (this.rightPressed) {
+                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed / 3
+                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
                 }
             }
+        }
     }
 
     start() {
@@ -98,34 +107,30 @@ export class game {
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
-        let mwt = 57; //mapWithTiles for creating the map
-        let mht = 52; //mapHeightTiles for creating the map
-        let tl = 32; //tileLength for creating the map
 
-        const mapPixelWidth = mwt * tl
-        const mapPixelHeight = mht * tl
+        this.mapData = []
+        this.loadMap("./Code/Tiled/Map1.json").then(() => {
+            this.mapData = this.mapData[0];
+            //console.log(this.mapData.layers[0].data)
+            this.mapDataTiles = this.mapData.layers[0].data
 
-        const playerHitbox = 32;
+            this.MapOne = new Map(this.mapData.width, this.mapData.height, this.mapData.tilewidth, canvas.width, ctx, this.mapDataTiles)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 3.5, 32, 0, 0, 1, ctx)
+            setInterval(() => this.render(), 5);
+        });
 
-        this.screenX = Math.floor(canvas.width / 2 - playerHitbox / 2);
-        this.screenY = Math.floor(canvas.height / 2 - playerHitbox / 2);
-
-        this.MapOne = new Map(mwt, mht, tl, canvas.width, ctx)
-
-        this.PlayerOne = new Player(this.screenX, this.screenY, 100, null, 1.5, 32, 0, 0, 1, ctx)
-
-        setInterval(() => this.render(), 5);
 
         //setInterval(spawnEnemy, 100
 
+        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength, this.MapOne.mapHeightTile * this.MapOne.tilelength), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
     }
 
     stop() {
-        
+
     }
 
     resume() {
-        
+
     }
 
     end() {
@@ -136,19 +141,24 @@ export class game {
         this.handleInput()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        this.PlayerOne.drawPlayer(canvas.width/2, canvas.height/2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.PlayerOne.drawPlayer(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
-        //enemy.draw()
+        // Gegner bewegen, zeichnen und bei Collision entfernen
+        for (let i = this.enemies.length - 1; i >= 0; i--) {
+            const enemy = this.enemies[i]
+
+            enemy.chasePlayer(this.PlayerOne)                   // Gegner läuft auf den Spieler zu
+
+            if (checkPlayerEnemyCollision(this.PlayerOne, enemy)) {        // Treffer?
+                enemy.die()
+                this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
+            } else {
+                let leftBorder = this.PlayerOne.playerGlobalX - this.MapOne.FOV / 2
+                let topBorder = this.PlayerOne.playerGlobalY - this.MapOne.FOV / 2
+                enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
+            }
+        }
     }
-
-    spawnEnemy() {
-        //Enemy = new enemy(map.leftBorder, map.topBorder, 100, "a.png", 10, 5, 0, 5, false)
-    }
-
-
-
-
-
 }
 
 
