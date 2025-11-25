@@ -70,10 +70,10 @@ export class game {
     handleInput() {
         let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
         let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
-        let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
-        let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
-        let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
-        let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
+        let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength, this.PlayerOne.playerGlobalY)
+        let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
+        let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
         
         if (this.rightPressed && this.PlayerOne.playerGlobalX < mapLength && mapTileNO.walkable && mapTileSO.walkable)
             this.PlayerOne.playerGlobalX += this.PlayerOne.speed
@@ -94,7 +94,6 @@ export class game {
             }
         }
         if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight && mapTileSO.walkable && mapTileSW.walkable) {         // smoothe diagonale bewegung runter
-            console.log("22")
             this.PlayerOne.playerGlobalY += this.PlayerOne.speed
             if (this.leftPressed !== this.rightPressed && !(this.upPressed)) {
                 if (this.leftPressed) {
@@ -108,7 +107,7 @@ export class game {
             }
         }
 
-        let newMapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
+        let newMapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
         if (!(newMapTileNW.walkable) && mapTileNW != newMapTileNW){
             if (this.upPressed)
                 this.PlayerOne.playerGlobalY += this.MapOne.tilelength - this.PlayerOne.playerGlobalY % this.MapOne.tilelength
@@ -116,7 +115,7 @@ export class game {
                 this.PlayerOne.playerGlobalX += this.MapOne.tilelength - this.PlayerOne.playerGlobalX % this.MapOne.tilelength 
         }
 
-        let newMapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY - this.MapOne.tilelength / 2)
+        let newMapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength, this.PlayerOne.playerGlobalY)
         if (!(newMapTileNO.walkable) && mapTileNO != newMapTileNO){
             if (this.upPressed)
                 this.PlayerOne.playerGlobalY += this.MapOne.tilelength - this.PlayerOne.playerGlobalY % this.MapOne.tilelength
@@ -124,7 +123,7 @@ export class game {
                 this.PlayerOne.playerGlobalX -= this.PlayerOne.playerGlobalX % this.MapOne.tilelength +1
         }
 
-        let newMapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX - this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        let newMapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
         if (!(newMapTileSW.walkable) && mapTileSW != newMapTileSW){
             if (this.downPressed)
                 this.PlayerOne.playerGlobalY -= this.PlayerOne.playerGlobalY % this.MapOne.tilelength +1
@@ -132,7 +131,7 @@ export class game {
                 this.PlayerOne.playerGlobalX += this.MapOne.tilelength - this.PlayerOne.playerGlobalX % this.MapOne.tilelength 
         }
 
-        let newMapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength / 2, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength / 2)
+        let newMapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
         if (!(newMapTileSO.walkable) && mapTileSO != newMapTileSO){
             if (this.downPressed)
                 this.PlayerOne.playerGlobalY -= this.PlayerOne.playerGlobalY % this.MapOne.tilelength +1

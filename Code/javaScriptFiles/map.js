@@ -23,7 +23,11 @@ export class Map {
         
         
     }
-
+    findTile(x,y){
+        let tileColumn = Math.floor(x / this.tilelength)
+        let tileRow = Math.floor(y / this.tilelength)
+        return this.tileData[tileColumn][tileRow]
+    }
     loadTileData(){
         for (let i = 0; i<this.mapHeightTile*this.tilelength;i++){
             for (let j = 0; j<this.mapWidthTile*this.tilelength;j++){
