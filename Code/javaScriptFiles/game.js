@@ -68,77 +68,17 @@ export class game {
     }
 
     handleInput() {
-        let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
-        let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
-        let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength, this.PlayerOne.playerGlobalY)
-        let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
-        let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
-        
-        if (this.rightPressed && this.PlayerOne.playerGlobalX < mapLength && mapTileNO.walkable && mapTileSO.walkable)
-            this.PlayerOne.playerGlobalX += this.PlayerOne.speed
-        if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0 && mapTileNW.walkable &&  mapTileSW.walkable)
-            this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
-        if (this.upPressed && this.PlayerOne.playerGlobalY >= 0 && mapTileNO.walkable && mapTileNW.walkable) {
-            
-            this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
-            if (this.leftPressed !== this.rightPressed && !(this.downPressed)) {      // smoothe diagonale bewegung hoch
-                if (this.leftPressed) {
-                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed / 3
-                }
-                if (this.rightPressed) {
-                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed / 3
-                }
-            }
-        }
-        if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight && mapTileSO.walkable && mapTileSW.walkable) {         // smoothe diagonale bewegung runter
-            this.PlayerOne.playerGlobalY += this.PlayerOne.speed
-            if (this.leftPressed !== this.rightPressed && !(this.upPressed)) {
-                if (this.leftPressed) {
-                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
-                }
-                if (this.rightPressed) {
-                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
-                }
-            }
-        }
-
-        let newMapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        if (!(newMapTileNW.walkable) && mapTileNW != newMapTileNW){
-            if (this.upPressed)
-                this.PlayerOne.playerGlobalY += this.MapOne.tilelength - this.PlayerOne.playerGlobalY % this.MapOne.tilelength
-            if (this.leftPressed)
-                this.PlayerOne.playerGlobalX += this.MapOne.tilelength - this.PlayerOne.playerGlobalX % this.MapOne.tilelength 
-        }
-
-        let newMapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength, this.PlayerOne.playerGlobalY)
-        if (!(newMapTileNO.walkable) && mapTileNO != newMapTileNO){
-            if (this.upPressed)
-                this.PlayerOne.playerGlobalY += this.MapOne.tilelength - this.PlayerOne.playerGlobalY % this.MapOne.tilelength
-            if (this.rightPressed)
-                this.PlayerOne.playerGlobalX -= this.PlayerOne.playerGlobalX % this.MapOne.tilelength +1
-        }
-
-        let newMapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
-        if (!(newMapTileSW.walkable) && mapTileSW != newMapTileSW){
-            if (this.downPressed)
-                this.PlayerOne.playerGlobalY -= this.PlayerOne.playerGlobalY % this.MapOne.tilelength +1
-            if (this.leftPressed)
-                this.PlayerOne.playerGlobalX += this.MapOne.tilelength - this.PlayerOne.playerGlobalX % this.MapOne.tilelength 
-        }
-
-        let newMapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
-        if (!(newMapTileSO.walkable) && mapTileSO != newMapTileSO){
-            if (this.downPressed)
-                this.PlayerOne.playerGlobalY -= this.PlayerOne.playerGlobalY % this.MapOne.tilelength +1
-            if (this.rightPressed)
-                this.PlayerOne.playerGlobalX -= this.PlayerOne.playerGlobalX % this.MapOne.tilelength +1
-        }
-    }
+    let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
+    let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
+    let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
+    let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength, this.PlayerOne.playerGlobalY)
+    let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
+    let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
+    if (this.rightPressed)  this.PlayerOne.playerGlobalX = this.MapOne.rightFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
+    if (this.upPressed)  this.PlayerOne.playerGlobalY = this.MapOne.topFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
+    if (this.leftPressed)  this.PlayerOne.playerGlobalX = this.MapOne.leftFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
+    if (this.downPressed)  this.PlayerOne.playerGlobalY = this.MapOne.downFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
+    }   
 
     start() {
         const timestamp = Date.now();

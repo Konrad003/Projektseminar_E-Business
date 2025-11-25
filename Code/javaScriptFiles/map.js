@@ -23,15 +23,59 @@ export class Map {
         
         
     }
+    maxAbs(x, y) {
+    return Math.abs(x) >= Math.abs(y) ? x : y;
+    }   
     findTile(x,y){
-        let tileColumn = Math.floor(x / this.tilelength)
-        let tileRow = Math.floor(y / this.tilelength)
-        return this.tileData[tileColumn][tileRow]
+        let column = Math.floor(x/this.tilelength)
+        let row =  Math.floor(y/this.tilelength)
+        return (this.tileData[column][row])
+    }
+    checkIfFree(mainEntityKoord, entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY){
+        let mapLong = mapLengthOrWidth * this.tilelength - this.tilelength
+        let mainEntityKoordInt                                                                  // Welche Koordinate bewegt werden soll
+        let moveLength = this.maxAbs(moveLengthHoriz, moveLengthVert)
+        if (mainEntityKoord=="x") {
+            mainEntityKoordInt = entityX
+        } else mainEntityKoordInt = entityY
+
+        if (mainEntityKoordInt + moveLength>mapLong) return mapLong                             // MapBorder collision abfrage
+        if (mainEntityKoordInt + moveLength<0) return 0
+
+        let mapTile1 = this.findTile(entityX + directionX, entityY + directionY)                // Feld auf dem die jeweils interessierte Ecke ist: left up = NordWest  right = NO Down = SW
+        let newMapTile1 = this.findTile(entityX + moveLengthHoriz + directionX, entityY + moveLengthVert + directionY) // Feld auf das sich der Spieler bewegen würde
+
+        let newMapTile2                                                                                               // Feld2 auf das sich der Spieler bewegen würde, Spieler kann auf 2 Feldern stehen und soll sich auch nur dann bewegen wenn die Gesamte Hitbox nicht clippen würde
+        if (mainEntityKoord=="x")
+            newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX, entityY + moveLengthVert + directionY + this.tilelength)
+        else 
+            newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX + this.tilelength, + entityY + moveLengthVert + directionY)
+
+        if (mapTile1 == newMapTile1 || (newMapTile1.walkable && newMapTile2.walkable)){
+            return mainEntityKoordInt+moveLength //Falls die Bewegung erlaubt ist
+        }else 
+            return mainEntityKoordInt  //Falls man mit der Bewegung in die Wand gehen würde
+            
+    }
+    rightFree(entityX, entityY, moveLength){
+        return (this.checkIfFree("x", entityX, entityY,moveLength, 0,  this.mapWidthTile, this.tilelength, 0))
+    }
+
+    topFree(entityX, entityY, moveLength){
+        return (this.checkIfFree("y", entityX, entityY, 0 , -moveLength, this.mapHeightTile, 0, 0))
+    }
+
+    leftFree(entityX, entityY, moveLength){
+        return (this.checkIfFree("x", entityX, entityY, -moveLength, 0, this.mapWidthTile, 0, 0))
+    }
+
+    downFree(entityX, entityY, moveLength){
+        return (this.checkIfFree("y", entityX, entityY, 0, moveLength, this.mapHeightTile, 0, this.tilelength))
     }
     loadTileData(){
         for (let i = 0; i<this.mapHeightTile*this.tilelength;i++){
             for (let j = 0; j<this.mapWidthTile*this.tilelength;j++){
-                let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(i, j) ]
+                let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(i, j) ] -1
                 let tileHeight = 0
                 let walkable = true
                 
@@ -46,7 +90,9 @@ export class Map {
                 walkable: walkable,
                 height: tileHeight,
                 tileSetX: (tileSetNr % this.tilesPerRow) * this.tilelength,
-                tileSetY: (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength)
+                tileSetY: (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength),
+                tileMapX: j * this.tilelength,
+                tileMapY: i * this.tilelength
                 }
             }
         }
@@ -79,22 +125,17 @@ export class Map {
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);  
         if (!(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))) {                                        
-            let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(tileColumnWalker, tileRowWalker) ] - 1     //-1 liegt daran dass json Datei falsch geschrieben ist. Map1.Json fängt bei 1 statt 0 an
-
             let leftOffset = this.tilelength - this.offsetToBorder(leftBorder)      
             let topOffset = (this.tilelength - this.offsetToBorder(topBorder))                                //Wie viel von dem TileSetTile gezeichnet werden muss, falls oben am Bildrand nur die hälft z.B. gezeichnet wurde
-            let tileSetX = (tileSetNr % this.tilesPerRow) * this.tilelength + leftOffset                      //Koordinate im TileSet
-            let tileSetY = (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength) + topOffset
-
-        this.ctx.drawImage( this.tilesetImage,                                      //Datei aus der das Tile stammt
-                            tileSetX,                                               //X Koordinate im TileSet
-                            tileSetY,                                               //Y Koordinate im TileSet
-                            this.offsetToBorder(leftBorder),                        //Breite des Ausgeschnittenen Tiles
-                            this.offsetToBorder(topBorder),                         //Höhe des Ausgeschnittenen Tiles
-                            i,                                                      //X Position im Canvas 
-                            j,                                                      //Y Position im Canvas 
-                            this.offsetToBorder(leftBorder),                        //Breite im Canvas
-                            this.offsetToBorder(topBorder))                         //Höhe im Canvas                     
+            this.ctx.drawImage( this.tilesetImage,                                      //Datei aus der das Tile stammt
+                                this.tileData[tileColumnWalker][tileRowWalker].tileSetX + leftOffset,                                               //X Koordinate im TileSet
+                                this.tileData[tileColumnWalker][tileRowWalker].tileSetY + topOffset,                                               //Y Koordinate im TileSet
+                                this.offsetToBorder(leftBorder),                        //Breite des Ausgeschnittenen Tiles
+                                this.offsetToBorder(topBorder),                         //Höhe des Ausgeschnittenen Tiles
+                                i,                                                      //X Position im Canvas 
+                                j,                                                      //Y Position im Canvas 
+                                this.offsetToBorder(leftBorder),                        //Breite im Canvas
+                                this.offsetToBorder(topBorder))                         //Höhe im Canvas                     
         }
     }
 
@@ -123,7 +164,6 @@ export class Map {
                 tileColumnWalker++  
                 this.drawTile(tileColumnWalker, tileRowWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
             }
-            tileColumnWalker++          
         }   
     }
 }
