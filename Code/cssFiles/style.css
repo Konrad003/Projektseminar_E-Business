@@ -106,7 +106,7 @@ h1 {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 100px;
 }
 
@@ -118,3 +118,117 @@ h1 {
     box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.6);
     padding: 40px;
 }
+
+.statsPanel p {
+    font-size: 36px;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+    color: yellow;
+}
+
+.stat-val {
+    color: yellow;
+}
+
+.flex-row-gap {
+    display: flex;
+    gap: 15px;
+    max-width: 90%;
+    width: auto;
+}
+
+.flex-row-gap .btn {
+    margin-bottom: 0; /* Margin im Flex-Container entfernen */
+}
+
+.overlay-dark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 10;
+
+    display: none;
+}
+
+/*HUD Styles*/
+/* --- 8-BIT HUD TOP PANEL STYLES (FLEX VERSION) --- */
+
+.hud-top-panel-flex {
+    /* Wir nutzen jetzt Flexbox */
+    display: flex;
+    align-items: center; /* Vertikale Zentrierung */
+    /* justify-content ist hier eigentlich egal, da die Kinder flex: 1 haben */
+
+    /* Positionierung ganz oben (gleich wie vorher) */
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+
+    /* 8-Bit Panel Look (gleich wie vorher) */
+    background-color: brown;
+    border-bottom: 4px solid #7c5e35;
+    box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.4);
+
+    /* Typografie Basis (gleich wie vorher) */
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 28px;
+    color: #ffffff;
+    text-transform: uppercase;
+    /* Verhindert, dass die Zeit/XP umbrechen, wenn es eng wird */
+    white-space: nowrap;
+}
+
+/* --- Die Magie der perfekten Zentrierung --- */
+
+/* Alle 3 Sektionen bekommen exakt den gleichen Platzanteil */
+.hud-section {
+    flex: 1;
+    display: flex; /* Damit wir den Inhalt darin ausrichten können */
+}
+
+/* Inhalte in den Sektionen ausrichten */
+.section-left {
+    justify-content: center;
+}
+
+.section-center {
+    justify-content: center;
+}
+
+.section-right {
+    justify-content: center
+}
+
+
+/* --- Styling der eigentlichen Inhalte (fast gleich wie vorher) --- */
+
+.hud-title {
+    color: yellow;
+    font-size: 36px;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.hud-xp {
+    color: yellow;
+}
+
+.hud-item span {
+    color: #ffffff;
+}
+/* Ende HUD Styles */
