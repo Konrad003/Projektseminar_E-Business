@@ -1,5 +1,5 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // checkPlayerEnemyCollision zusätzlich importiert, weil exportierte Funktion
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -70,33 +70,33 @@ export class game {
     handleInput() {
         let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
         let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
-        if (this.rightPressed && this.PlayerOne.playerGlobalX < mapLength)
-            this.PlayerOne.playerGlobalX += this.PlayerOne.speed
-        if (this.leftPressed && this.PlayerOne.playerGlobalX >= 0)
-            this.PlayerOne.playerGlobalX -= this.PlayerOne.speed
-        if (this.upPressed && this.PlayerOne.playerGlobalY >= 0) {
-            this.PlayerOne.playerGlobalY -= this.PlayerOne.speed
+        if (this.rightPressed && this.PlayerOne.playerX < mapLength)
+            this.PlayerOne.playerX += this.PlayerOne.speed
+        if (this.leftPressed && this.PlayerOne.playerX >= 0)
+            this.PlayerOne.playerX -= this.PlayerOne.speed
+        if (this.upPressed && this.PlayerOne.playerY >= 0) {
+            this.PlayerOne.playerY -= this.PlayerOne.speed
             if (this.leftPressed !== this.rightPressed && !(this.downPressed)) {      // smoothe diagonale bewegung hoch
                 if (this.leftPressed) {
-                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed / 3
+                    this.PlayerOne.playerX += this.PlayerOne.speed / 3
+                    this.PlayerOne.playerY += this.PlayerOne.speed / 3
                 }
                 if (this.rightPressed) {
-                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY += this.PlayerOne.speed / 3
+                    this.PlayerOne.playerX -= this.PlayerOne.speed / 3
+                    this.PlayerOne.playerY += this.PlayerOne.speed / 3
                 }
             }
         }
-        if (this.downPressed && this.PlayerOne.playerGlobalY < mapHeight) {         // smoothe diagonale bewegung runter
-            this.PlayerOne.playerGlobalY += this.PlayerOne.speed
+        if (this.downPressed && this.PlayerOne.playerY < mapHeight) {         // smoothe diagonale bewegung runter
+            this.PlayerOne.playerY += this.PlayerOne.speed
             if (this.leftPressed !== this.rightPressed && !(this.upPressed)) {
                 if (this.leftPressed) {
-                    this.PlayerOne.playerGlobalX += this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
+                    this.PlayerOne.playerX += this.PlayerOne.speed / 3
+                    this.PlayerOne.playerY -= this.PlayerOne.speed / 3
                 }
                 if (this.rightPressed) {
-                    this.PlayerOne.playerGlobalX -= this.PlayerOne.speed / 3
-                    this.PlayerOne.playerGlobalY -= this.PlayerOne.speed / 3
+                    this.PlayerOne.playerX -= this.PlayerOne.speed / 3
+                    this.PlayerOne.playerY -= this.PlayerOne.speed / 3
                 }
             }
         }
@@ -140,8 +140,8 @@ export class game {
     render() {
         this.handleInput()
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        this.PlayerOne.drawPlayer(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.MapOne.draw(this.PlayerOne.playerX, this.PlayerOne.playerY)
+        this.PlayerOne.draw(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -153,8 +153,8 @@ export class game {
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
-                let leftBorder = this.PlayerOne.playerGlobalX - this.MapOne.FOV / 2
-                let topBorder = this.PlayerOne.playerGlobalY - this.MapOne.FOV / 2
+                let leftBorder = this.PlayerOne.playerX - this.MapOne.FOV / 2
+                let topBorder = this.PlayerOne.playerY - this.MapOne.FOV / 2
                 enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
             }
         }

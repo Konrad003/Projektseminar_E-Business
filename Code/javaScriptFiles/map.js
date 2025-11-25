@@ -64,10 +64,10 @@ export class Map {
         }
     }
 
-    draw(playerGlobalX, playerGlobalY) {
+    draw(playerX, playerY) {
 
-        let leftBorder = playerGlobalX - this.FOV / 2
-        let topBorder = playerGlobalY - this.FOV / 2
+        let leftBorder = playerX - this.FOV / 2
+        let topBorder = playerY - this.FOV / 2
         let tileRow = Math.floor(topBorder / this.tilelength)
         let tileRowWalker = tileRow
         let tileColumn = Math.floor(leftBorder / this.tilelength)

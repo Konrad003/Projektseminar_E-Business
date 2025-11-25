@@ -1,27 +1,25 @@
-class Projectile {
-    piercing
-    speed
-    size
-    globalX
-    globalY
-    direction
-    dmg
+import { MovingEntity } from "./MovingEntity.js"
+export class projectile extends MovingEntity {
 
-    constructor(piercing, speed, size, globalX, globalY, direction, dmg) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg) {
+        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.piercing = piercing
         this.speed = speed
         this.size = size
-        this.globalX = globalX
-        this.globalY = globalY
+        this.globalEntityX = globalEntityX
+        this.globalEntityY = globalEntityY
         this.direction = direction
-        this.dmg  = dmg 
+        this.dmg  = dmg
+        this.hp = hp
+        this.png = png
+        this.hitbox = hitbox
     }
 
     checkCollision() {
 
     }
 
-    move() {
+    move() { // wird noch implementiert
         
     }
 }
