@@ -1,13 +1,14 @@
 import { Entity } from "./entity.js"
 export class Enemy extends Entity {
     
-    constructor(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite){
+    constructor(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false){ 
         super(globalX, globalY, hp, png, speed, hitbox)
         this.level = level
         this.xpDrop = xpDrop
         this.elite = elite
-        this.enemyX = globalX   // CHANGE: eigene Positionsvariable für Enemy
-        this.enemyY = globalY   // CHANGE: eigene Positionsvariable für Enemy
+        this.enemyX = globalX   // eigene Positionsvariable für Enemy
+        this.enemyY = globalY   // eigene Positionsvariable für Enemy
+        this.ranged = ranged    
     }
 
     // Gegner zufällig am Kartenrand spawnen
@@ -47,9 +48,12 @@ export class Enemy extends Entity {
         const xpDrop = 2;
         const elite = false;
 
-        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite));          // in Gegnerliste speichern
+        const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
+
+        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged));  
     }
 
+    // Gegner bewegt sich in Richtung Player
     chasePlayer(player) {
         
         let distanceX = player.playerGlobalX - this.enemyX
@@ -57,6 +61,11 @@ export class Enemy extends Entity {
 
         let distance = Math.sqrt(distanceX*distanceX + distanceY*distanceY) //Hypotenuse von Enemy zu Player berechnet distance
         if (distance <= 0) return //bleibt stehen bei distance = 0
+
+        const stopDistance = 200 // Ranged-Enemy bleibt ab bestimmter Distanz stehen (z.B. 200px)
+        if (this.ranged && distance <= stopDistance) {
+            return
+        }
 
         distanceX /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         distanceY /= distance;
@@ -70,7 +79,7 @@ export class Enemy extends Entity {
         const screenX = this.enemyX - mapLeftBorder
         const screenY = this.enemyY - mapTopBorder
 
-        ctx.fillStyle = "red"
+        ctx.fillStyle = this.ranged ? "yellow" : "red"
         ctx.fillRect(screenX, screenY, this.hitbox.width, this.hitbox.height)
     }
 

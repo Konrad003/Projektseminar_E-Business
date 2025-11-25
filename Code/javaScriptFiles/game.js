@@ -26,7 +26,7 @@ export class game {
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
-        this.enemies = []   // CHANGE: Array für alle aktiven Gegner
+        this.enemies = [] // Array für alle aktiven Gegner
     }
 
     loadMap(file) {
