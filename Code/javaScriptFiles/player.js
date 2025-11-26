@@ -20,13 +20,6 @@ export class Player extends MovingEntity {
 
     
     handleInput(map, inputState) {
-        let mapLength = map.mapWidthTile * map.tilelength - map.tilelength;
-        let mapHeight = map.mapHeightTile * map.tilelength - map.tilelength;
-        let mapTileNW = map.findTile(this.playerX, this.playerY);
-        let mapTileNO = map.findTile(this.playerX + map.tilelength, this.playerY);
-        let mapTileSO = map.findTile(this.playerX + map.tilelength, this.playerY + map.tilelength);
-        let mapTileSW = map.findTile(this.playerX, this.playerY + map.tilelength);
-
         if (inputState.rightPressed)
             this.playerX = map.rightFree(this.playerX, this.playerY, this.speed);
         if (inputState.upPressed)
