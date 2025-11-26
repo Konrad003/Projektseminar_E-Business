@@ -67,20 +67,6 @@ export class game {
         }
     }
 
-    handleInput() {
-        let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
-        let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
-        let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerX, this.PlayerOne.playerY)
-        let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerX  + this.MapOne.tilelength, this.PlayerOne.playerY)
-        let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerX + this.MapOne.tilelength, this.PlayerOne.playerY  + this.MapOne.tilelength)
-        let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerX, this.PlayerOne.playerY  + this.MapOne.tilelength)
-        if (this.rightPressed)  this.PlayerOne.playerX = this.MapOne.rightFree(this.PlayerOne.playerX, this.PlayerOne.playerY, this.PlayerOne.speed)
-        if (this.upPressed)  this.PlayerOne.playerY = this.MapOne.topFree(this.PlayerOne.playerX, this.PlayerOne.playerY, this.PlayerOne.speed)
-        if (this.leftPressed)  this.PlayerOne.playerX = this.MapOne.leftFree(this.PlayerOne.playerX, this.PlayerOne.playerY, this.PlayerOne.speed)
-        if (this.downPressed)  this.PlayerOne.playerY = this.MapOne.downFree(this.PlayerOne.playerX, this.PlayerOne.playerY, this.PlayerOne.speed)
-    }
-    
-
     start() {
         const timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
@@ -117,7 +103,14 @@ export class game {
     }
 
     render() {
-        this.handleInput()
+        
+        this.PlayerOne.handleInput(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed
+        })
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne.playerX, this.PlayerOne.playerY)
         this.PlayerOne.draw(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')

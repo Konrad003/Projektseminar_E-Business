@@ -15,10 +15,6 @@ export class projectile extends MovingEntity {
         this.hitbox = hitbox
     }
 
-    checkCollision() {
-
-    }
-
     move() { // wird noch implementiert
         
     }
