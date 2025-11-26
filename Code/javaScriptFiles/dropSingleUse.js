@@ -9,7 +9,7 @@ export class DropSingleUse  {
         
     }
 
-    // Item zeichnen als kleines grünes Quadrat
+    // Item zeichnen als kleines pinkes Quadrat
     draw(ctx, leftBorder, topBorder) {
         const screenX = this.globalX - leftBorder
         const screenY = this.globalY - topBorder
