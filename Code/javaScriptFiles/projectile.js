@@ -1,5 +1,5 @@
 import { MovingEntity } from "./movingEntity.js"
-export class projectile extends MovingEntity {
+export class Projectile extends MovingEntity {
 
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
