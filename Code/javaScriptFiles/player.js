@@ -1,4 +1,4 @@
-import { MovingEntity } from "./MovingEntity.js"
+import { MovingEntity } from "./movingEntity.js"
 export class Player extends MovingEntity {
     ctx
       
