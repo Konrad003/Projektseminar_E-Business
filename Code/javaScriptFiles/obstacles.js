@@ -1,5 +1,5 @@
 import { StaticEntity } from "./staticEntity.js"
-export class Item extends StaticEntity {
+export class Obstacles extends StaticEntity {
 
     constructor(globalX, globalY, hitbox, png) {
     super(globalX, globalY, hitbox, png)
