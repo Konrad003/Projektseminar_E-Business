@@ -58,7 +58,7 @@ export class Enemy extends MovingEntity {
     }
 
     // Gegner bewegt sich in Richtung Player
-    chasePlayer(player) {
+    chasePlayer(map, player) {
         
         let distanceX = player.playerX - this.enemyX
         let distanceY = player.playerY - this.enemyY
@@ -73,9 +73,15 @@ export class Enemy extends MovingEntity {
 
         distanceX /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         distanceY /= distance;
-
-        this.enemyX += distanceX * this.speed //Gegner läuft in Richtung des Players
-        this.enemyY += distanceY * this.speed
+    
+        if (distanceX>0)
+            this.enemyX = map.rightFree(this.enemyX, this.enemyY, distanceX * this.speed);
+        if (distanceY<0)
+            this.enemyY = map.topFree(this.enemyX, this.enemyY, -distanceY * this.speed);
+        if (distanceX<0)
+            this.enemyX = map.leftFree(this.enemyX, this.enemyY, -distanceX * this.speed);
+        if (distanceY>0)
+            this.enemyY = map.downFree(this.enemyX, this.enemyY, distanceY * this.speed);
     }
 
     // Gegner als Rechteck im Sichtfeld zeichnen

@@ -80,7 +80,7 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.0, 32, 0, 0, 1, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, 32, 0, 0, 1, ctx)
             setInterval(() => this.render(), 5);
         });
 
@@ -119,7 +119,7 @@ export class game {
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]
 
-            enemy.chasePlayer(this.PlayerOne)                   // Gegner läuft auf den Spieler zu
+            enemy.chasePlayer(this.MapOne, this.PlayerOne)                   // Gegner läuft auf den Spieler zu
 
             if (checkPlayerEnemyCollision(this.PlayerOne, enemy)) {        // Treffer?
                 enemy.die()
