@@ -1,5 +1,5 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+import {Enemy, checkPlayerEnemyCollision, drawEnemyItems} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -136,6 +136,8 @@ export class game {
                 enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
             }
         }
+
+        drawEnemyItems(ctx, this.PlayerOne, this.MapOne) // NEU: Items zeichnen
     }
 }
 

@@ -1,4 +1,6 @@
 import { Entity } from "./entity.js"
+import { DropSingleUse } from "./dropSingleUse.js" 
+
 export class Enemy extends Entity {
     
     constructor(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false){ 
@@ -85,6 +87,22 @@ export class Enemy extends Entity {
 
     die() {
         console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
+        
+        const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
+        if (Math.random() < dropChance) {
+            enemyItemDrops.push(new DropSingleUse(this.enemyX, this.enemyY))
+        }                      // Drop in globales Array eintragen
+    }
+}
+
+export const enemyItemDrops = []
+
+export function drawEnemyItems(ctx, player, map) {
+    const leftBorder = player.playerGlobalX - map.FOV / 2
+    const topBorder  = player.playerGlobalY - map.FOV / 2
+
+    for (const drop of enemyItemDrops) {
+        drop.draw(ctx, leftBorder, topBorder)
     }
 }
 
