@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./Code/cssFiles/style.css">
 </head>
 <body>
-<section class="screen active" id="gameScreen">
+<section class="screen" id="gameScreen">
     <div class="hud-top-panel-flex">
 
         <div class="hud-section section-left">
@@ -38,8 +38,8 @@
     <h1 class="gameTitle">Vampirio.io</h1>
 
     <div class="menu">
-        <button class="btn" id="startButton">Start Game</button>
-        <button class="btn" id="settingsButton">Settings</button>
+        <button class="btn" id="startButton" onclick="Game.start()">Start Game</button>
+        <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
     </div>
 </section>
 
@@ -74,17 +74,17 @@
         </div>
 
         <div class="menu">
-            <button class="btn" id="startMenuButton">Back</button>
+            <button class="btn" id="startMenuButton" onclick="Game.home()">Back</button>
         </div>
     </div>
 </section>
 
-<section id="pause-screen" class="screen overlay-dark">
+<section id="pauseScreen" class="screen overlay-dark">
     <h1 class="screenTitle">PAUSED</h1>
     <div class="menu">
-        <button class="btn">RESUME</button>
-        <button class="btn">SETTINGS</button>
-        <button class="btn">MAIN MENU</button>
+        <button class="btn" onclick="Game.resumeGame()">RESUME</button>
+        <button class="btn" onclick="Game.settings()">SETTINGS</button>
+        <button class="btn" onclick="Game.home()">MAIN MENU</button>
     </div>
 </section>
 
@@ -121,6 +121,6 @@
 </section>
 
 
-<script type="module" src="./Code/javaScriptFiles/game.js"></script>
+<script type="module" src="./Code/javaScriptFiles/game.js" defer></script>
 </body>
 </html>

@@ -23,6 +23,8 @@ export class game {
     rightPressed = false
     mapData
 
+    gamePaused = false // Flag, ob das Spiel pausiert ist
+
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
@@ -49,6 +51,9 @@ export class game {
         }
         if ((e.key === "ArrowDown") || (e.key === 's')) {
             this.downPressed = true;
+        }
+        if (e.key === "Escape") {
+            this.pauseGame()
         }
     }
 
@@ -86,23 +91,50 @@ export class game {
 
 
         //setInterval(spawnEnemy, 100
-
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+
+        document.getElementById("gameScreen").style.display = "flex";
+        document.getElementById("startScreen").style.display = "none";
     }
 
-    stop() {
+    pauseGame() {
+        this.gamePaused = true; //flag boolean for render function
 
+        document.getElementById("pauseScreen").style.display = "flex";
     }
 
-    resume() {
+    resumeGame() {
+        this.gamePaused = false; //flag boolean for render function
 
+        document.getElementById("pauseScreen").style.display = "none";
+    }
+
+    settings() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "flex";
+    }
+
+    home() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "flex";
     }
 
     end() {
         //myLife();
     }
 
+    endWin() {
+        //myWin();
+    }
+
     render() {
+        if (this.gamePaused) {
+            return; // Spiel ist pausiert, keine Aktualisierung, prüft auf true
+        }
         
         this.PlayerOne.handleInput(this.MapOne, {
             upPressed: this.upPressed,
@@ -133,6 +165,5 @@ export class game {
     }
 }
 
-
-const Game = new game()
-Game.start()
+document.getElementById("startScreen").style.display = "flex";
+window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
