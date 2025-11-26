@@ -1,4 +1,4 @@
-import { MovingEntity } from "./MovingEntity.js"
+import { MovingEntity } from "./movingEntity.js"
 export class Enemy extends MovingEntity {
     
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false){ 
