@@ -1,4 +1,4 @@
-import { MovingEntity } from "./MovingEntity.js"
+import { MovingEntity } from "./movingEntity.js"
 export class projectile extends MovingEntity {
 
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg) {
