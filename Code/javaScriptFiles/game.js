@@ -1,5 +1,5 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // checkPlayerEnemyCollision zusätzlich importiert, weil exportierte Funktion
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -67,19 +67,6 @@ export class game {
         }
     }
 
-    handleInput() {
-    let mapLength = this.MapOne.mapWidthTile * this.MapOne.tilelength - this.MapOne.tilelength
-    let mapHeight = this.MapOne.mapHeightTile * this.MapOne.tilelength - this.MapOne.tilelength
-    let mapTileNW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-    let mapTileNO = this.MapOne.findTile(this.PlayerOne.playerGlobalX  + this.MapOne.tilelength, this.PlayerOne.playerGlobalY)
-    let mapTileSO = this.MapOne.findTile(this.PlayerOne.playerGlobalX + this.MapOne.tilelength, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
-    let mapTileSW = this.MapOne.findTile(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY  + this.MapOne.tilelength)
-    if (this.rightPressed)  this.PlayerOne.playerGlobalX = this.MapOne.rightFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
-    if (this.upPressed)  this.PlayerOne.playerGlobalY = this.MapOne.topFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
-    if (this.leftPressed)  this.PlayerOne.playerGlobalX = this.MapOne.leftFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
-    if (this.downPressed)  this.PlayerOne.playerGlobalY = this.MapOne.downFree(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY, this.PlayerOne.speed)
-    }   
-
     start() {
         const timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
@@ -116,10 +103,17 @@ export class game {
     }
 
     render() {
-        this.handleInput()
+        
+        this.PlayerOne.handleInput(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed
+        })
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.MapOne.draw(this.PlayerOne.playerGlobalX, this.PlayerOne.playerGlobalY)
-        this.PlayerOne.drawPlayer(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.MapOne.draw(this.PlayerOne.playerX, this.PlayerOne.playerY)
+        this.PlayerOne.draw(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -131,8 +125,8 @@ export class game {
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
-                let leftBorder = this.PlayerOne.playerGlobalX - this.MapOne.FOV / 2
-                let topBorder = this.PlayerOne.playerGlobalY - this.MapOne.FOV / 2
+                let leftBorder = this.PlayerOne.playerX - this.MapOne.FOV / 2
+                let topBorder = this.PlayerOne.playerY - this.MapOne.FOV / 2
                 enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
             }
         }
