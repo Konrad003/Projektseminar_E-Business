@@ -27,14 +27,11 @@ export class Map {
     maxAbs(x, y) {
     return Math.abs(x) >= Math.abs(y) ? x : y;
     }   
-    
-    findTile(x, y) {
-        let column = Math.floor(x / this.tilelength);
-        let row = Math.floor(y / this.tilelength);
-
-        return this.tileData[column][row];
+    findTile(x,y){
+        let column = Math.floor(x/this.tilelength)
+        let row =  Math.floor(y/this.tilelength)
+        return (this.tileData[column][row])
     }
-
     checkIfFree(mainEntityKoord, entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY){
         let mapLong = mapLengthOrWidth * this.tilelength - this.tilelength
         let mainEntityKoordInt                                                                  // Welche Koordinate bewegt werden soll
@@ -76,31 +73,30 @@ export class Map {
     downFree(entityX, entityY, moveLength){
         return (this.checkIfFree("y", entityX, entityY, 0, moveLength, this.mapHeightTile, 0, this.tilelength))
     }
-    
     loadTileData(){
-            for (let i = 0; i<this.mapHeightTile*this.tilelength;i++){
-                for (let j = 0; j<this.mapWidthTile*this.tilelength;j++){
-                    let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(i, j) ] -1
-                    let tileHeight = 0
-                    let walkable = true
-                    
-                    if (this.mapDataTiles[1].data[this.getTileNr(i, j) ]>0)
-                        walkable = false
-                    else if (this.mapDataTiles[2].data[this.getTileNr(i, j) ]>0)
-                        tileHeight = 1
-                    else if (this.mapDataTiles[3].data[this.getTileNr(i, j) ]>0)
-                        tileHeight = 2
-                    this.tileData[i*this.tilelength+j]=[]
-                    this.tileData[i][j] = {
-                    walkable: walkable,
-                    height: tileHeight,
-                    tileSetX: (tileSetNr % this.tilesPerRow) * this.tilelength,
-                    tileSetY: (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength),
-                    tileMapX: j * this.tilelength,
-                    tileMapY: i * this.tilelength
-                    }
+        for (let i = 0; i<this.mapHeightTile*this.tilelength;i++){
+            for (let j = 0; j<this.mapWidthTile*this.tilelength;j++){
+                let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(i, j) ] -1
+                let tileHeight = 0
+                let walkable = true
+                
+                if (this.mapDataTiles[1].data[this.getTileNr(i, j) ]>0)
+                    walkable = false
+                else if (this.mapDataTiles[2].data[this.getTileNr(i, j) ]>0)
+                    tileHeight = 1
+                else if (this.mapDataTiles[3].data[this.getTileNr(i, j) ]>0)
+                    tileHeight = 2
+                this.tileData[i*this.tilelength+j]=[]
+                this.tileData[i][j] = {
+                walkable: walkable,
+                height: tileHeight,
+                tileSetX: (tileSetNr % this.tilesPerRow) * this.tilelength,
+                tileSetY: (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength),
+                tileMapX: j * this.tilelength,
+                tileMapY: i * this.tilelength
                 }
             }
+        }
     }
 
 

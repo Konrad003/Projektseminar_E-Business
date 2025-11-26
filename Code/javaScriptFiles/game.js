@@ -80,14 +80,14 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1, 32, 0, 0, 1, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.0, 32, 0, 0, 1, ctx)
             setInterval(() => this.render(), 5);
         });
 
 
         //setInterval(spawnEnemy, 100
 
-        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.MapOne.mapWidthTile * this.MapOne.tilelength, this.MapOne.mapHeightTile * this.MapOne.tilelength), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
     }
 
     stop() {
