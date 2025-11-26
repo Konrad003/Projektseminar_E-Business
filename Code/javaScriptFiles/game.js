@@ -137,7 +137,7 @@ export class game {
             }
         }
 
-        drawEnemyItems(ctx, this.PlayerOne, this.MapOne) // NEU: Items zeichnen
+        drawEnemyItems(ctx, this.PlayerOne, this.MapOne)
     }
 }
 
