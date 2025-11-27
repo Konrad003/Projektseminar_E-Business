@@ -1,4 +1,5 @@
 import { Player } from "./player.js";
+
 export class Map {
   
     constructor(mapData, FOV, ctx) {
@@ -98,6 +99,7 @@ export class Map {
         }
     }
 
+
     isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
     return (
         tileColumnWalker < 0 || tileColumnWalker >= this.mapWidthTile ||
@@ -139,10 +141,10 @@ export class Map {
         }
     }
 
-    draw(playerGlobalX, playerGlobalY) {
+    draw(playerX, playerY) {
 
-        let leftBorder = playerGlobalX - this.FOV / 2
-        let topBorder = playerGlobalY - this.FOV / 2
+        let leftBorder = playerX - this.FOV / 2
+        let topBorder = playerY - this.FOV / 2
         let tileRow = Math.floor(topBorder / this.tilelength)
         let tileRowWalker = tileRow
         let tileColumn = Math.floor(leftBorder / this.tilelength)

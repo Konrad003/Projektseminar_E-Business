@@ -1,16 +1,19 @@
-import { Entity } from "./entity.js"
 import { DropSingleUse } from "./dropSingleUse.js" 
-
-export class Enemy extends Entity {
+import { MovingEntity } from "./movingEntity.js"
+export class Enemy extends MovingEntity {
     
-    constructor(globalX, globalY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false){ 
-        super(globalX, globalY, hp, png, speed, hitbox)
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false){ 
+        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.level = level
         this.xpDrop = xpDrop
         this.elite = elite
-        this.enemyX = globalX   // eigene Positionsvariable für Enemy
-        this.enemyY = globalY   // eigene Positionsvariable für Enemy
-        this.ranged = ranged    
+        this.enemyX = globalEntityX   // eigene Positionsvariable für Enemy
+        this.enemyY = globalEntityY   // eigene Positionsvariable für Enemy
+        this.ranged = ranged   
+        this.hp = hp
+        this.png = png
+        this.hitbox = hitbox
+        this.speed = speed
     }
 
     // Gegner zufällig am Kartenrand spawnen
@@ -56,10 +59,10 @@ export class Enemy extends Entity {
     }
 
     // Gegner bewegt sich in Richtung Player
-    chasePlayer(player) {
+    chasePlayer(map, player) {
         
-        let distanceX = player.playerGlobalX - this.enemyX
-        let distanceY = player.playerGlobalY - this.enemyY
+        let distanceX = player.playerX - this.enemyX
+        let distanceY = player.playerY - this.enemyY
 
         let distance = Math.sqrt(distanceX*distanceX + distanceY*distanceY) //Hypotenuse von Enemy zu Player berechnet distance
         if (distance <= 0) return //bleibt stehen bei distance = 0
@@ -71,9 +74,15 @@ export class Enemy extends Entity {
 
         distanceX /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         distanceY /= distance;
-
-        this.enemyX += distanceX * this.speed //Gegner läuft in Richtung des Players
-        this.enemyY += distanceY * this.speed
+    
+        if (distanceX>0)
+            this.enemyX = map.rightFree(this.enemyX, this.enemyY, distanceX * this.speed);
+        if (distanceY<0)
+            this.enemyY = map.topFree(this.enemyX, this.enemyY, -distanceY * this.speed);
+        if (distanceX<0)
+            this.enemyX = map.leftFree(this.enemyX, this.enemyY, -distanceX * this.speed);
+        if (distanceY>0)
+            this.enemyY = map.downFree(this.enemyX, this.enemyY, distanceY * this.speed);
     }
 
     // Gegner als Rechteck im Sichtfeld zeichnen
@@ -108,8 +117,8 @@ export function drawEnemyItem(ctx, player, map) {
 
 //einfache AABB-Kollision zwischen Spieler und einem Enemy
 export function checkPlayerEnemyCollision(player, enemy) {
-    const pLeft = player.playerGlobalX;
-    const pTop = player.playerGlobalY;
+    const pLeft = player.playerX;
+    const pTop = player.playerY;
     const pRight = pLeft + player.hitbox;
     const pBottom = pTop + player.hitbox;
 

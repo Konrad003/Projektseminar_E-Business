@@ -1,12 +1,13 @@
-class Item{
+import { StaticEntity } from "./staticEntity.js"
+export class Item extends StaticEntity {
 
-    icon
-    description
-    picture
-
-    constructor(icon, description, picture) {
+    constructor(globalX, globalY, hitbox, png, icon, description) {
+        super(globalX, globalY, hitbox, png)
+        this.globalX = globalX
+        this.globalY = globalY
+        this.hitbox = hitbox
+        this.png = png
         this.icon = icon
         this.description = description
-        this.picture = picture
     }
 }
