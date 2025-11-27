@@ -112,7 +112,7 @@ export class game {
         })
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.MapOne.draw(this.PlayerOne.playerX, this.PlayerOne.playerY)
+        this.MapOne.draw(this.PlayerOne)
         this.PlayerOne.draw(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
         // Gegner bewegen, zeichnen und bei Collision entfernen
@@ -120,7 +120,7 @@ export class game {
             const enemy = this.enemies[i]
 
             enemy.chasePlayer(this.MapOne, this.PlayerOne)                   // Gegner läuft auf den Spieler zu
-
+            this.MapOne.drawMiniEnemy(enemy)
             if (checkPlayerEnemyCollision(this.PlayerOne, enemy)) {        // Treffer?
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
