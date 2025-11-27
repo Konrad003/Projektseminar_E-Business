@@ -90,18 +90,18 @@ export class Enemy extends Entity {
         
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
-            enemyItemDrops.push(new DropSingleUse(this.enemyX, this.enemyY))
+            enemyItemDrop.push(new DropSingleUse(this.enemyX, this.enemyY))
         }                      // Drop in globales Array eintragen
     }
 }
 
-export const enemyItemDrops = []
+export const enemyItemDrop = []
 
-export function drawEnemyItems(ctx, player, map) {
+export function drawEnemyItem(ctx, player, map) {
     const leftBorder = player.playerGlobalX - map.FOV / 2
     const topBorder  = player.playerGlobalY - map.FOV / 2
 
-    for (const drop of enemyItemDrops) {
+    for (const drop of enemyItemDrop) {
         drop.draw(ctx, leftBorder, topBorder)
     }
 }

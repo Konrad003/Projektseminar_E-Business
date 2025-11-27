@@ -1,5 +1,5 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision, drawEnemyItems} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
+import {Enemy, checkPlayerEnemyCollision, drawEnemyItem} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -137,7 +137,7 @@ export class game {
             }
         }
 
-        drawEnemyItems(ctx, this.PlayerOne, this.MapOne)
+        drawEnemyItem(ctx, this.PlayerOne, this.MapOne)
     }
 }
 
