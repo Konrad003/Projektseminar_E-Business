@@ -23,8 +23,8 @@ export class Map {
             
             
         };
-        this.tilesetImage.src = './Graphics/terrain_tiles_v2.png';
-        this.map1Image.src = './Graphics/map1.png'
+        this.tilesetImage.src = '../Graphics/terrain_tiles_v2.png';
+        this.map1Image.src = '../Graphics/map1.png'
         
         
     }
