@@ -20,7 +20,7 @@ export class Player extends MovingEntity {
 
     
     handleInput(map, inputState) {
-        let speed=this.speed
+        let speed = this.speed
         if ((inputState.rightPressed || inputState.leftPressed)         //Diagonalbewegung smoother
             && (inputState.upPressed || inputState.downPressed))
         speed/=1.8
