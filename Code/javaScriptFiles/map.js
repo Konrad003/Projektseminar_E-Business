@@ -11,13 +11,15 @@ export class Map {
         this.ctx = ctx
         this.mapDataTiles = mapData.layers
         this.map1Image = new Image()
+        this.map1Loaded= false
         this.tilesetImage = new Image()
-        let tilesLoaded= false
+        this.tilesLoaded= false
         this.tileData=[]
-        this.map1Image.onload= () =>  {}
+        this.map1Image.onload= () =>  {
+            this.map1Loaded= true
+        }
         this.tilesetImage.onload = () => {
-        tilesLoaded = true;
-            
+            this.tilesLoaded = true;
             this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)
             this.loadTileData()
             
@@ -146,7 +148,7 @@ export class Map {
     }
 
     draw(player) {
-    
+    if (this.map1Loaded && this.tilesLoaded){
         let leftBorder = player.playerX - this.FOV / 2
         let topBorder = player.playerY - this.FOV / 2
         let tileRow = Math.floor(topBorder / this.tilelength)
@@ -193,4 +195,5 @@ export class Map {
         this.ctx.strokeStyle = color;
         this.ctx.stroke();
     }
+}
 }
