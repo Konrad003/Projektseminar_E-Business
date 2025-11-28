@@ -107,8 +107,8 @@ export class Enemy extends MovingEntity {
 export const enemyItemDrop = []
 
 export function drawEnemyItem(ctx, player, map) {
-    const leftBorder = player.playerGlobalX - map.FOV / 2
-    const topBorder  = player.playerGlobalY - map.FOV / 2
+    const leftBorder = player.playerX - map.FOV / 2
+    const topBorder  = player.playerY - map.FOV / 2
 
     for (const drop of enemyItemDrop) {
         drop.draw(ctx, leftBorder, topBorder)
