@@ -111,7 +111,7 @@ export class Map {
         tileColumnWalker < 0 || tileColumnWalker >= this.mapWidthTile ||
         tileRowWalker < 0 || tileRowWalker >= this.mapHeightTile
     );
-}
+    }
 
     getTileNr(column, row) {
        
@@ -148,13 +148,14 @@ export class Map {
     }
 
     draw(player) {
-    if (this.map1Loaded && this.tilesLoaded){
-        let leftBorder = player.playerX - this.FOV / 2
-        let topBorder = player.playerY - this.FOV / 2
-        let tileRow = Math.floor(topBorder / this.tilelength)
-        let tileRowWalker = tileRow
-        let tileColumn = Math.floor(leftBorder / this.tilelength)
-        let tileColumnWalker = tileColumn
+        if (this.map1Loaded && this.tilesLoaded){
+            let leftBorder = player.playerX - this.FOV / 2
+            let topBorder = player.playerY - this.FOV / 2
+            let tileRow = Math.floor(topBorder / this.tilelength)
+            let tileRowWalker = tileRow
+            let tileColumn = Math.floor(leftBorder / this.tilelength)
+            let tileColumnWalker = tileColumn
+        }
 
         this.drawTile(tileColumnWalker, tileRowWalker,  leftBorder, topBorder, 0, 0)                //Zeichnen des obersten Tiles
 
@@ -165,7 +166,7 @@ export class Map {
 
         for (let j = this.offsetToBorder(topBorder); j < this.FOV; j += this.tilelength) {
             tileRowWalker++
-            tileColumnWalker = tileColumn                                                                 
+            this.tileColumnWalker = tileColumn
             this.drawTile(tileColumnWalker, tileRowWalker, leftBorder, 0, 0, j)                     //Zeichnen der linken Reihe
         
             for (let i = this.offsetToBorder(leftBorder); i < this.FOV; i += this.tilelength) {
