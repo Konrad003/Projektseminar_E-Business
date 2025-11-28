@@ -11,12 +11,12 @@ export class Map {
         this.ctx = ctx
         this.mapDataTiles = mapData.layers
         this.map1Image = new Image()
-        this.mpa1Loaded= false
+        this.map1Loaded= false
         this.tilesetImage = new Image()
         this.tilesLoaded= false
         this.tileData=[]
         this.map1Image.onload= () =>  {
-            this.mpa1Loaded= true
+            this.map1Loaded= true
         }
         this.tilesetImage.onload = () => {
             this.tilesLoaded = true;
@@ -148,7 +148,7 @@ export class Map {
     }
 
     draw(player) {
-    if (this.map1Loaded && this.tiledLoaded){
+    if (this.map1Loaded && this.tilesLoaded){
         let leftBorder = player.playerX - this.FOV / 2
         let topBorder = player.playerY - this.FOV / 2
         let tileRow = Math.floor(topBorder / this.tilelength)
