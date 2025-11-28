@@ -1,7 +1,8 @@
 import { Player } from "./player.js";
+import { Entity } from "./entity.js";
 
 export class Map {
-  
+    
     constructor(mapData, FOV, ctx) {
         this.mapWidthTile = mapData.width
         this.mapHeightTile = mapData.height
@@ -9,11 +10,13 @@ export class Map {
         this.FOV = FOV
         this.ctx = ctx
         this.mapDataTiles = mapData.layers
-        this.tilesetImage = new Image();
+        this.map1Image = new Image()
+        this.tilesetImage = new Image()
         let tilesLoaded= false
         this.tileData=[]
+        this.map1Image.onload= () =>  {}
         this.tilesetImage.onload = () => {
-         tilesLoaded = true;
+        tilesLoaded = true;
             
             this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)
             this.loadTileData()
@@ -21,6 +24,7 @@ export class Map {
             
         };
         this.tilesetImage.src = './Graphics/terrain_tiles_v2.png';
+        this.map1Image.src = './Graphics/map1.png'
         
         
     }
@@ -141,10 +145,10 @@ export class Map {
         }
     }
 
-    draw(playerX, playerY) {
-
-        let leftBorder = playerX - this.FOV / 2
-        let topBorder = playerY - this.FOV / 2
+    draw(player) {
+    
+        let leftBorder = player.playerX - this.FOV / 2
+        let topBorder = player.playerY - this.FOV / 2
         let tileRow = Math.floor(topBorder / this.tilelength)
         let tileRowWalker = tileRow
         let tileColumn = Math.floor(leftBorder / this.tilelength)
@@ -167,5 +171,26 @@ export class Map {
                 this.drawTile(tileColumnWalker, tileRowWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
             }
         }   
+      this.drawMiniMap(player)
+    }
+
+    drawMiniMap(player){
+    let multipliyer =1
+    this.drawSqr(0,0, 72, 92, "black")
+    this.ctx.drawImage(this.map1Image,1,1,this.mapWidthTile*multipliyer,this.mapHeightTile*multipliyer)
+    this.drawSqr(player.playerX, player.playerY, 1, 1, "blue")
+    
+    }
+    drawMiniEnemy(enemy){
+        this.drawSqr(enemy.enemyX , enemy.enemyY, 1, 1, "red")
+    }
+    drawSqr(x, y, width, height, color) {
+        let multipliyer = 1
+        this.ctx.beginPath()
+        this.ctx.rect(x/ this.tilelength * multipliyer, y / this.tilelength * multipliyer, width * multipliyer, height * multipliyer)
+        this.ctx.fillStyle = color
+        this.ctx.fill()
+        this.ctx.strokeStyle = color;
+        this.ctx.stroke();
     }
 }
