@@ -20,14 +20,18 @@ export class Player extends MovingEntity {
 
     
     handleInput(map, inputState) {
+        let speed = this.speed
+        if ((inputState.rightPressed || inputState.leftPressed)         //Diagonalbewegung smoother
+            && (inputState.upPressed || inputState.downPressed))
+        speed /= 1.8
         if (inputState.rightPressed)
-            this.playerX = map.rightFree(this.playerX, this.playerY, this.speed);
+            this.playerX = map.rightFree(this.playerX, this.playerY, speed);
         if (inputState.upPressed)
-            this.playerY = map.topFree(this.playerX, this.playerY, this.speed);
+            this.playerY = map.topFree(this.playerX, this.playerY, speed);
         if (inputState.leftPressed)
-            this.playerX = map.leftFree(this.playerX, this.playerY, this.speed);
+            this.playerX = map.leftFree(this.playerX, this.playerY, speed);
         if (inputState.downPressed)
-            this.playerY = map.downFree(this.playerX, this.playerY, this.speed);
+            this.playerY = map.downFree(this.playerX, this.playerY, speed);
     }
     
 
