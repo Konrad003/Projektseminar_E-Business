@@ -155,7 +155,7 @@ export class Map {
             let tileRowWalker = tileRow
             let tileColumn = Math.floor(leftBorder / this.tilelength)
             let tileColumnWalker = tileColumn
-        }
+        
 
         this.drawTile(tileColumnWalker, tileRowWalker,  leftBorder, topBorder, 0, 0)                //Zeichnen des obersten Tiles
 
@@ -176,7 +176,7 @@ export class Map {
         }   
       this.drawMiniMap(player)
     }
-
+}
     drawMiniMap(player){
     let multipliyer =1
     this.drawSqr(0,0, 72, 92, "black")
