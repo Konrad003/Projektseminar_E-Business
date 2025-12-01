@@ -25,10 +25,9 @@ export class Map {
             
             
         };
-        this.tilesetImage.src = '../Graphics/terrain_tiles_v2.png';
-        this.map1Image.src = '../Graphics/map1.png'
-        
-        
+
+        this.tilesetImage.src = 'Graphics/terrain_tiles_v2.png'
+        this.map1Image.src = 'Graphics/map1.png'
     }
     maxAbs(x, y) {
     return Math.abs(x) >= Math.abs(y) ? x : y;
@@ -38,7 +37,11 @@ export class Map {
         let row =  Math.floor(y/this.tilelength)
         if (row < 0 || row >= this.mapHeightTile || column < 0 || column >= this.mapWidthTile)
         return { walkable: false, height: 0 };
-    
+
+        if (!this.tileData[row]) {
+            return { walkable: false, height: 0 };
+        }
+
         return (this.tileData[row][column])
     }
     checkIfFree(mainEntityKoord, entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY){
@@ -61,7 +64,7 @@ export class Map {
         else 
             newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX + this.tilelength, + entityY + moveLengthVert + directionY)
 
-        if (mapTile1 == newMapTile1 || (newMapTile1.walkable && newMapTile2.walkable)){
+        if (mapTile1 === newMapTile1 || (newMapTile1.walkable && newMapTile2.walkable)){
             return mainEntityKoordInt+moveLength //Falls die Bewegung erlaubt ist
         }else 
             return mainEntityKoordInt  //Falls man mit der Bewegung in die Wand gehen würde
