@@ -10,9 +10,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2025_00_49_[Changes]/shelved.patch" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2025_00_49__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/cssFiles/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/cssFiles/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <list id="7e083025-43d6-4dda-8202-1a48e360a4e3" name="Changes by ampbn" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="113-bug-diagonalbewegung" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -65,20 +62,20 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="65-feat-screen-implementierung" />
-                    <option name="lastUsedInstant" value="1764179215" />
+                    <option name="branchName" value="111-feat-minimap" />
+                    <option name="lastUsedInstant" value="1764335713" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="64-feat-erstellen-aller-screens-v1" />
-                    <option name="lastUsedInstant" value="1763941778" />
+                    <option name="branchName" value="113-bug-diagonalbewegung" />
+                    <option name="lastUsedInstant" value="1764335221" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="61-feat-refactoring-aller-js-datein-neu!!!!!!" />
-                    <option name="lastUsedInstant" value="1763390817" />
+                    <option name="branchName" value="103-feat-add-random-item-drop" />
+                    <option name="lastUsedInstant" value="1764334268" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="64-feat-erstellen-aller-screens" />
-                    <option name="lastUsedInstant" value="1763384435" />
+                    <option name="branchName" value="103-feat-add-random-item-dropNEW" />
+                    <option name="lastUsedInstant" value="1764334035" />
                   </RecentBranch>
                 </list>
               </option>
@@ -133,7 +130,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "app.teamhub.selectedTeam": "https://github.com/Der-Mehlmann/Projektseminar_E-Business",
-    "git-widget-placeholder": "65-feat-screen-implementierung",
+    "git-widget-placeholder": "111-feat-minimap",
     "ignore.virus.scanning.warn.message": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -141,8 +138,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.sourceCode.CSS",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "spentTimePerTaskStorage.store": "{}",
     "timeTracker.activityTracker": "null",
     "timeTracker.comment": "",

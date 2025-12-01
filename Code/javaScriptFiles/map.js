@@ -1,7 +1,8 @@
 import { Player } from "./player.js";
+import { Entity } from "./entity.js";
 
 export class Map {
-  
+    
     constructor(mapData, FOV, ctx) {
         this.mapWidthTile = mapData.width
         this.mapHeightTile = mapData.height
@@ -9,18 +10,23 @@ export class Map {
         this.FOV = FOV
         this.ctx = ctx
         this.mapDataTiles = mapData.layers
-        this.tilesetImage = new Image();
-        let tilesLoaded= false
+        this.map1Image = new Image()
+        this.map1Loaded= false
+        this.tilesetImage = new Image()
+        this.tilesLoaded= false
         this.tileData=[]
+        this.map1Image.onload= () =>  {
+            this.map1Loaded= true
+        }
         this.tilesetImage.onload = () => {
-         tilesLoaded = true;
-            
+            this.tilesLoaded = true;
             this.tilesPerRow= Math.round(this.tilesetImage.width / this.tilelength)
             this.loadTileData()
             
             
         };
-        this.tilesetImage.src = './Graphics/terrain_tiles_v2.png';
+        this.tilesetImage.src = '../Graphics/terrain_tiles_v2.png';
+        this.map1Image.src = '../Graphics/map1.png'
         
         
     }
@@ -30,7 +36,10 @@ export class Map {
     findTile(x,y){
         let column = Math.floor(x/this.tilelength)
         let row =  Math.floor(y/this.tilelength)
-        return (this.tileData[column][row])
+        if (row < 0 || row >= this.mapHeightTile || column < 0 || column >= this.mapWidthTile)
+        return { walkable: false, height: 0 };
+    
+        return (this.tileData[row][column])
     }
     checkIfFree(mainEntityKoord, entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY){
         let mapLong = mapLengthOrWidth * this.tilelength - this.tilelength
@@ -74,19 +83,18 @@ export class Map {
         return (this.checkIfFree("y", entityX, entityY, 0, moveLength, this.mapHeightTile, 0, this.tilelength))
     }
     loadTileData(){
-        for (let i = 0; i<this.mapHeightTile*this.tilelength;i++){
-            for (let j = 0; j<this.mapWidthTile*this.tilelength;j++){
+        for (let i = 0; i<this.mapHeightTile;i++){
+            this.tileData[i] = []
+            for (let j = 0; j<this.mapWidthTile;j++){
                 let tileSetNr = this.mapDataTiles[0].data[this.getTileNr(i, j) ] -1
                 let tileHeight = 0
                 let walkable = true
-                
                 if (this.mapDataTiles[1].data[this.getTileNr(i, j) ]>0)
                     walkable = false
                 else if (this.mapDataTiles[2].data[this.getTileNr(i, j) ]>0)
                     tileHeight = 1
-                else if (this.mapDataTiles[3].data[this.getTileNr(i, j) ]>0)
+                else if (this.mapDataTiles[3].data[this.getTileNr(i, j ) ]>0)
                     tileHeight = 2
-                this.tileData[i*this.tilelength+j]=[]
                 this.tileData[i][j] = {
                 walkable: walkable,
                 height: tileHeight,
@@ -95,19 +103,20 @@ export class Map {
                 tileMapX: j * this.tilelength,
                 tileMapY: i * this.tilelength
                 }
+                this.tileData[i][j]
             }
         }
     }
 
 
-    isTileOutOfBorder(tileColumnWalker, tileRowWalker) {
+    isTileOutOfBorder(tileRowWalker, tileColumnWalker, ) {
     return (
         tileColumnWalker < 0 || tileColumnWalker >= this.mapWidthTile ||
         tileRowWalker < 0 || tileRowWalker >= this.mapHeightTile
     );
-}
+    }
 
-    getTileNr(column, row) {
+    getTileNr(row, column) {
        
         return row * this.mapWidthTile + column /* jedes Tile/Kachel hat eine eigene Nr  nach dem Prinzip   1  2   3   4
                                                                                                             5  6   7   8
@@ -122,16 +131,16 @@ export class Map {
         return this.tilelength - holder;
     }
     
-    drawTile(tileColumnWalker, tileRowWalker, leftBorder, topBorder, i, j) {
+    drawTile(tileRowWalker, tileColumnWalker, leftBorder, topBorder, i, j) {
         
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);  
-        if (!(this.isTileOutOfBorder(tileColumnWalker, tileRowWalker))) {                                        
+        if (!(this.isTileOutOfBorder(tileRowWalker, tileColumnWalker))) {   
             let leftOffset = this.tilelength - this.offsetToBorder(leftBorder)      
             let topOffset = (this.tilelength - this.offsetToBorder(topBorder))                                //Wie viel von dem TileSetTile gezeichnet werden muss, falls oben am Bildrand nur die hälft z.B. gezeichnet wurde
             this.ctx.drawImage( this.tilesetImage,                                      //Datei aus der das Tile stammt
-                                this.tileData[tileColumnWalker][tileRowWalker].tileSetX + leftOffset,                                               //X Koordinate im TileSet
-                                this.tileData[tileColumnWalker][tileRowWalker].tileSetY + topOffset,                                               //Y Koordinate im TileSet
+                                this.tileData[tileRowWalker][tileColumnWalker].tileSetX + leftOffset,                                               //X Koordinate im TileSet
+                                this.tileData[tileRowWalker][tileColumnWalker].tileSetY + topOffset,                                               //Y Koordinate im TileSet
                                 this.offsetToBorder(leftBorder),                        //Breite des Ausgeschnittenen Tiles
                                 this.offsetToBorder(topBorder),                         //Höhe des Ausgeschnittenen Tiles
                                 i,                                                      //X Position im Canvas 
@@ -141,31 +150,53 @@ export class Map {
         }
     }
 
-    draw(playerX, playerY) {
+    draw(player) {
+        if (this.map1Loaded && this.tilesLoaded){
+            let leftBorder = player.playerX - this.FOV / 2
+            let topBorder = player.playerY - this.FOV / 2
+            let tileRow = Math.floor(topBorder / this.tilelength)
+            let tileRowWalker = tileRow
+            let tileColumn = Math.floor(leftBorder / this.tilelength)
+            let tileColumnWalker = tileColumn
+        
 
-        let leftBorder = playerX - this.FOV / 2
-        let topBorder = playerY - this.FOV / 2
-        let tileRow = Math.floor(topBorder / this.tilelength)
-        let tileRowWalker = tileRow
-        let tileColumn = Math.floor(leftBorder / this.tilelength)
-        let tileColumnWalker = tileColumn
-
-        this.drawTile(tileColumnWalker, tileRowWalker,  leftBorder, topBorder, 0, 0)                //Zeichnen des obersten Tiles
+        this.drawTile(tileRowWalker, tileColumnWalker,  leftBorder, topBorder, 0, 0)                //Zeichnen des obersten Tiles
 
         for (let i = this.offsetToBorder(leftBorder); i < this.FOV; i += this.tilelength) {         
             tileColumnWalker++
-            this.drawTile(tileColumnWalker, tileRowWalker, 0, topBorder, i, 0)                      //Zeichnen der obersten Reihe
+            this.drawTile(tileRowWalker,tileColumnWalker , 0, topBorder, i, 0)                      //Zeichnen der obersten Reihe
         }
 
         for (let j = this.offsetToBorder(topBorder); j < this.FOV; j += this.tilelength) {
             tileRowWalker++
-            tileColumnWalker = tileColumn                                                                 
-            this.drawTile(tileColumnWalker, tileRowWalker, leftBorder, 0, 0, j)                     //Zeichnen der linken Reihe
+            tileColumnWalker = tileColumn
+            this.drawTile(tileRowWalker, tileColumnWalker , leftBorder, 0, 0, j)                     //Zeichnen der linken Reihe
         
             for (let i = this.offsetToBorder(leftBorder); i < this.FOV; i += this.tilelength) {
                 tileColumnWalker++  
-                this.drawTile(tileColumnWalker, tileRowWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
+                this.drawTile(tileRowWalker, tileColumnWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
             }
         }   
+      this.drawMiniMap(player)
+    }
+}
+    drawMiniMap(player){
+    let multipliyer =1
+    this.drawSqr(0,0, 72, 92, "black")
+    this.ctx.drawImage(this.map1Image,1,1,this.mapWidthTile*multipliyer,this.mapHeightTile*multipliyer)
+    this.drawSqr(player.playerX, player.playerY, 1, 1, "blue")
+    
+    }
+    drawMiniEnemy(enemy){
+        this.drawSqr(enemy.enemyX , enemy.enemyY, 1, 1, "red")
+    }
+    drawSqr(x, y, width, height, color) {
+        let multipliyer = 1
+        this.ctx.beginPath()
+        this.ctx.rect(x/ this.tilelength * multipliyer, y / this.tilelength * multipliyer, width * multipliyer, height * multipliyer)
+        this.ctx.fillStyle = color
+        this.ctx.fill()
+        this.ctx.strokeStyle = color;
+        this.ctx.stroke();
     }
 }
