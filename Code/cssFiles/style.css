@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
+:root {
+    --red: #ff0000;
+    --yellow: #ffff00;
+    --brown: #8b4513;
+    --dark-brown: #5c3317;
+    --black: #000000;
+    --white: #ffffff;
+}
+
 body, html {
     height: auto;
     width: auto;
@@ -231,4 +240,5 @@ h1 {
 .hud-item span {
     color: #ffffff;
 }
+
 /* Ende HUD Styles */
