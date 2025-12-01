@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Add settings screen and update styles in index.html and style.css for improved user experience">
+    <list default="true" id="6db50c12-f734-4db6-9134-5b4974641645" name="Changes" comment="Implement game pause and resume functionality, add settings and home navigation, and update HTML structure for improved user interaction">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_11_2025_15_10_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_20_11_2025_15_10__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2025_00_49_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_11_2025_00_49__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/cssFiles/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/Code/cssFiles/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" beforeDir="false" afterPath="$PROJECT_DIR$/Code/javaScriptFiles/game.js" afterDir="false" />
@@ -60,6 +64,10 @@
             <RecentBranchesForRepo>
               <option name="branches">
                 <list>
+                  <RecentBranch>
+                    <option name="branchName" value="65-feat-screen-implementierung" />
+                    <option name="lastUsedInstant" value="1764179215" />
+                  </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="64-feat-erstellen-aller-screens-v1" />
                     <option name="lastUsedInstant" value="1763941778" />
@@ -125,7 +133,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "app.teamhub.selectedTeam": "https://github.com/Der-Mehlmann/Projektseminar_E-Business",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "65-feat-screen-implementierung",
     "ignore.virus.scanning.warn.message": "true",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
@@ -133,7 +141,8 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.sourceCode.CSS",
     "spentTimePerTaskStorage.store": "{}",
     "timeTracker.activityTracker": "null",
     "timeTracker.comment": "",
@@ -187,6 +196,7 @@
       <workItem from="1763983171314" duration="12000" />
       <workItem from="1763983190396" duration="4194000" />
       <workItem from="1764072788369" duration="3227000" />
+      <workItem from="1764594281357" duration="1222000" />
     </task>
     <task id="LOCAL-00001" summary="Add style.css for styling the application">
       <option name="closed" value="true" />
@@ -260,7 +270,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763986994830</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Implement game pause and resume functionality, add settings and home navigation, and update HTML structure for improved user interaction">
+      <option name="closed" value="true" />
+      <created>1764179246455</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1764179246455</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -299,7 +317,8 @@
     <MESSAGE value="Refactor game.js and entity.js for improved code clarity and variable initialization&#10;Co-authored-by: Niklas Mehlis &lt;75626426+der-mehlmann@users.noreply.github.com&gt;&#10;Co-authored-by: linusknauer &lt;linus.knauer@gmail.com&gt;" />
     <MESSAGE value="Add game and start screens to index.html and update styles for improved layout" />
     <MESSAGE value="Add settings screen and update styles in index.html and style.css for improved user experience" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add settings screen and update styles in index.html and style.css for improved user experience" />
+    <MESSAGE value="Implement game pause and resume functionality, add settings and home navigation, and update HTML structure for improved user interaction" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement game pause and resume functionality, add settings and home navigation, and update HTML structure for improved user interaction" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
