@@ -1,20 +1,13 @@
-export class DropSingleUse  {
+import { StaticEntity } from "./staticEntity.js"
+export class DropSingleUse extends StaticEntity {
 
-    constructor(globalX, globalY) {
-        this.globalX = globalX
-        this.globalY = globalY
+    constructor(globalEntityX, globalEntityY) {
+        super(globalEntityX, globalEntityY)
+        this.globalEntityX = globalEntityX
+        this.globalEntityY = globalEntityY
     }
 
     use() {   // kommt später 
         
-    }
-
-    // Item zeichnen als pinkes Quadrat
-    draw(ctx, leftBorder, topBorder) {
-        const screenX = this.globalX - leftBorder
-        const screenY = this.globalY - topBorder
-
-        ctx.fillStyle = "pink"
-        ctx.fillRect(screenX, screenY, 13, 13)
     }
 }

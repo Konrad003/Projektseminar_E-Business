@@ -85,15 +85,6 @@ export class Enemy extends MovingEntity {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed);
     }
 
-    // Gegner als Rechteck im Sichtfeld zeichnen
-    draw(ctx, mapLeftBorder, mapTopBorder) {
-        const screenX = this.globalEntityX - mapLeftBorder
-        const screenY = this.globalEntityY - mapTopBorder
-
-        ctx.fillStyle = this.ranged ? "yellow" : "red"
-        ctx.fillRect(screenX, screenY, this.hitbox.width, this.hitbox.height)
-    }
-
     die() {
         console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         
@@ -111,6 +102,8 @@ export function drawEnemyItem(ctx, player, map) {
     const topBorder  = player.globalEntityY - map.FOV / 2
 
     for (const drop of enemyItemDrop) {
-        drop.draw(ctx, leftBorder, topBorder)
+        const screenX = drop.globalEntityX - leftBorder;
+        const screenY = drop.globalEntityY - topBorder;
+        drop.draw(ctx, screenX, screenY, 13, 13, "pink")
     }
 }

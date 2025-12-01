@@ -1,4 +1,4 @@
-class Weapons extends Item {
+class Weapon extends Item {
     dmg
     cooldown
     focus

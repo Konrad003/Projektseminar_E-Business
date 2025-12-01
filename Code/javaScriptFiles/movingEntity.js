@@ -15,42 +15,23 @@ export class MovingEntity extends Entity{
     // Prüft, ob zwei Entities kollidieren (AABB-Kollision)
     
     checkCollision(other) {
-        const pLeft = this.globalEntityX;
-        const pTop = this.globalEntityY;
-        const pRight = pLeft + this.hitbox;
-        const pBottom = pTop + this.hitbox;
+        const aLeft = this.globalEntityX;
+        const aTop = this.globalEntityY;
+        const aRight = aLeft + this.hitbox;
+        const aBottom = aTop + this.hitbox;
 
-        const eLeft = other.globalEntityX;
-        const eTop = other.globalEntityY;
-        const eRight = eLeft + other.hitbox.width;
-        const eBottom = eTop + other.hitbox.height;
+        const bLeft = other.globalEntityX;
+        const bTop = other.globalEntityY;
+        const bRight = bLeft + other.hitbox.width;
+        const bBottom = bTop + other.hitbox.height;
 
-        if (pRight < eLeft) return false
-        if (pLeft > eRight) return false
-        if (pBottom < eTop) return false
-        if (pTop > eBottom) return false
+        if (aRight < bLeft) return false
+        if (aLeft > bRight) return false
+        if (aBottom < bTop) return false
+        if (aTop > bBottom) return false
 
         return true
     }
-
-    /*export function checkPlayerEnemyCollision(player, enemy) {
-        const pLeft = this.globalEntityX;
-        const pTop = this.globalEntityY;
-        const pRight = pLeft + this.hitbox;
-        const pBottom = pTop + this.hitbox;
-
-        const eLeft = other.globalEntityX;
-        const eTop = other.globalEntityY;
-        const eRight = eLeft + other.hitbox.width;
-        const eBottom = eTop + other.hitbox.height;
-
-        if (pRight < eLeft) return false
-        if (pLeft > eRight) return false
-        if (pBottom < eTop) return false
-        if (pTop > eBottom) return false
-
-        return true
-    }*/
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
     takeDmg(amount) {

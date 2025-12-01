@@ -163,7 +163,7 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne)
-        this.PlayerOne.draw(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.PlayerOne.draw(ctx, canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -177,7 +177,7 @@ export class game {
             } else {
                 let leftBorder = this.PlayerOne.globalEntityX - this.MapOne.FOV / 2
                 let topBorder = this.PlayerOne.globalEntityY - this.MapOne.FOV / 2
-                enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
+                enemy.draw(ctx, enemy.globalEntityX - leftBorder, enemy.globalEntityY - topBorder, enemy.hitbox.width, enemy.hitbox.height, enemy.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
             }
         }
 

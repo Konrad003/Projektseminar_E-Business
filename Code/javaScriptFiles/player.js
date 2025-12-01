@@ -53,13 +53,4 @@ export class Player extends MovingEntity {
         if (!item) return;
         item.apply(this);
     }
-
-    draw(x, y, width, height, color) {
-        this.ctx.beginPath()
-        this.ctx.rect(x, y, width, height)
-        this.ctx.fillStyle = color
-        this.ctx.fill()
-        this.ctx.strokeStyle = color;
-        this.ctx.stroke();
-    }
 }

@@ -12,10 +12,12 @@ export class Entity {
     this.png = png
     }
 
-    checkCollision() { // wird in Subklassen implementiert   
+    draw(ctx, x, y, width, height, color) {
+        ctx.beginPath();
+        ctx.rect(x, y, width, height);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = color;
+        ctx.stroke();    
     }
-
-    draw() { // wird in Subklassen implementiert
-    }
-
 }
