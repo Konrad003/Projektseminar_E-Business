@@ -1,11 +1,12 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision, drawEnemyItem} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
+import { Enemy } from "./enemy.js"
+import  {drawEnemyItem} from "./enemy.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -162,7 +163,7 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne)
-        this.PlayerOne.draw(canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.PlayerOne.draw(ctx, canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
 
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -170,13 +171,13 @@ export class game {
 
             enemy.chasePlayer(this.MapOne, this.PlayerOne)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
-            if (checkPlayerEnemyCollision(this.PlayerOne, enemy)) {        // Treffer?
+            if (this.PlayerOne.checkCollision(enemy)) {        // Treffer?
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
-                let leftBorder = this.PlayerOne.playerX - this.MapOne.FOV / 2
-                let topBorder = this.PlayerOne.playerY - this.MapOne.FOV / 2
-                enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
+                let leftBorder = this.PlayerOne.globalEntityX - this.MapOne.FOV / 2
+                let topBorder = this.PlayerOne.globalEntityY - this.MapOne.FOV / 2
+                enemy.draw(ctx, enemy.globalEntityX - leftBorder, enemy.globalEntityY - topBorder, enemy.hitbox.width, enemy.hitbox.height, enemy.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
             }
         }
 

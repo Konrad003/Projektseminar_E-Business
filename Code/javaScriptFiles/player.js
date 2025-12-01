@@ -4,8 +4,8 @@ export class Player extends MovingEntity {
       
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-        this.playerX = globalEntityX
-        this.playerY = globalEntityY
+        this.globalEntityX = globalEntityX
+        this.globalEntityY = globalEntityY
         this.xp = 0;
         this.level = 1;
         this.ausrüstung = ausrüstung;
@@ -25,13 +25,13 @@ export class Player extends MovingEntity {
             && (inputState.upPressed || inputState.downPressed))
         speed /= 1.8
         if (inputState.rightPressed)
-            this.playerX = map.rightFree(this.playerX, this.playerY, speed);
+            this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, speed);
         if (inputState.upPressed)
-            this.playerY = map.topFree(this.playerX, this.playerY, speed);
+            this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, speed);
         if (inputState.leftPressed)
-            this.playerX = map.leftFree(this.playerX, this.playerY, speed);
+            this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, speed);
         if (inputState.downPressed)
-            this.playerY = map.downFree(this.playerX, this.playerY, speed);
+            this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed);
     }
     
 
@@ -52,14 +52,5 @@ export class Player extends MovingEntity {
     collectPickup(item) { //wird von game aufgerufen wenn collision mit item, übergibt logik an itemklasse
         if (!item) return;
         item.apply(this);
-    }
-
-    draw(x, y, width, height, color) {
-        this.ctx.beginPath()
-        this.ctx.rect(x, y, width, height)
-        this.ctx.fillStyle = color
-        this.ctx.fill()
-        this.ctx.strokeStyle = color;
-        this.ctx.stroke();
     }
 }

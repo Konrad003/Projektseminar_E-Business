@@ -13,25 +13,24 @@ export class MovingEntity extends Entity{
     }
 
     // Prüft, ob zwei Entities kollidieren (AABB-Kollision)
+    
     checkCollision(other) {
-        if (!other || !other.hitbox) return false;
+        const aLeft = this.globalEntityX;
+        const aTop = this.globalEntityY;
+        const aRight = aLeft + this.hitbox;
+        const aBottom = aTop + this.hitbox;
 
-        const thisLeft   = this.globalEntityX;
-        const thisRight  = this.globalEntityX + this.hitbox.width;
-        const thisTop    = this.globalEntityY;
-        const thisBottom = this.globalEntityY + this.hitbox.height;
+        const bLeft = other.globalEntityX;
+        const bTop = other.globalEntityY;
+        const bRight = bLeft + other.hitbox.width;
+        const bBottom = bTop + other.hitbox.height;
 
-        const otherLeft   = other.globalEntityX;
-        const otherRight  = other.globalEntityX + other.hitbox.width;
-        const otherTop    = other.globalEntityY;
-        const otherBottom = other.globalEntityY + other.hitbox.height;
+        if (aRight < bLeft) return false
+        if (aLeft > bRight) return false
+        if (aBottom < bTop) return false
+        if (aTop > bBottom) return false
 
-        return !(
-            thisRight < otherLeft ||
-            thisLeft > otherRight ||
-            thisBottom < otherTop ||
-            thisTop > otherBottom
-        );
+        return true
     }
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
