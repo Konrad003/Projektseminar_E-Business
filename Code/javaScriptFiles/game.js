@@ -1,5 +1,5 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision} from "./enemy.js" // checkPlayerEnemyCollision zusätzlich importiert, weil exportierte Funktion
+import {Enemy, checkPlayerEnemyCollision, drawEnemyItem} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -179,6 +179,8 @@ export class game {
                 enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
             }
         }
+
+        drawEnemyItem(ctx, this.PlayerOne, this.MapOne)
     }
 }
 

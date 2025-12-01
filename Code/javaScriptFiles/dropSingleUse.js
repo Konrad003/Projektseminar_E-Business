@@ -1,18 +1,20 @@
-class DropSingleUse  {
-    
-    globalX
-    globalY
+export class DropSingleUse  {
 
     constructor(globalX, globalY) {
         this.globalX = globalX
         this.globalY = globalY
     }
 
-    use() {
-
+    use() {   // kommt später 
+        
     }
 
-    draw() {
+    // Item zeichnen als pinkes Quadrat
+    draw(ctx, leftBorder, topBorder) {
+        const screenX = this.globalX - leftBorder
+        const screenY = this.globalY - topBorder
 
+        ctx.fillStyle = "pink"
+        ctx.fillRect(screenX, screenY, 13, 13)
     }
 }
