@@ -7,8 +7,8 @@ export class Enemy extends MovingEntity {
         this.level = level
         this.xpDrop = xpDrop
         this.elite = elite
-        this.enemyX = globalEntityX   // eigene Positionsvariable für Enemy
-        this.enemyY = globalEntityY   // eigene Positionsvariable für Enemy
+        this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
+        this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
         this.ranged = ranged   
         this.hp = hp
         this.png = png
@@ -61,8 +61,8 @@ export class Enemy extends MovingEntity {
     // Gegner bewegt sich in Richtung Player
     chasePlayer(map, player) {
         
-        let distanceX = player.playerX - this.enemyX
-        let distanceY = player.playerY - this.enemyY
+        let distanceX = player.globalEntityX - this.globalEntityX
+        let distanceY = player.globalEntityY - this.globalEntityY
 
         let distance = Math.sqrt(distanceX*distanceX + distanceY*distanceY) //Hypotenuse von Enemy zu Player berechnet distance
         if (distance <= 0) return //bleibt stehen bei distance = 0
@@ -76,19 +76,19 @@ export class Enemy extends MovingEntity {
         distanceY /= distance;
     
         if (distanceX>0)
-            this.enemyX = map.rightFree(this.enemyX, this.enemyY, distanceX * this.speed);
+            this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed);
         if (distanceY<0)
-            this.enemyY = map.topFree(this.enemyX, this.enemyY, -distanceY * this.speed);
+            this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, -distanceY * this.speed);
         if (distanceX<0)
-            this.enemyX = map.leftFree(this.enemyX, this.enemyY, -distanceX * this.speed);
+            this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, -distanceX * this.speed);
         if (distanceY>0)
-            this.enemyY = map.downFree(this.enemyX, this.enemyY, distanceY * this.speed);
+            this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed);
     }
 
     // Gegner als Rechteck im Sichtfeld zeichnen
     draw(ctx, mapLeftBorder, mapTopBorder) {
-        const screenX = this.enemyX - mapLeftBorder
-        const screenY = this.enemyY - mapTopBorder
+        const screenX = this.globalEntityX - mapLeftBorder
+        const screenY = this.globalEntityY - mapTopBorder
 
         ctx.fillStyle = this.ranged ? "yellow" : "red"
         ctx.fillRect(screenX, screenY, this.hitbox.width, this.hitbox.height)
@@ -99,7 +99,7 @@ export class Enemy extends MovingEntity {
         
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
-            enemyItemDrop.push(new DropSingleUse(this.enemyX, this.enemyY))
+            enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
         }                      // Drop in globales Array eintragen
     }
 }
@@ -107,30 +107,10 @@ export class Enemy extends MovingEntity {
 export const enemyItemDrop = []
 
 export function drawEnemyItem(ctx, player, map) {
-    const leftBorder = player.playerX - map.FOV / 2
-    const topBorder  = player.playerY - map.FOV / 2
+    const leftBorder = player.globalEntityX - map.FOV / 2
+    const topBorder  = player.globalEntityY - map.FOV / 2
 
     for (const drop of enemyItemDrop) {
         drop.draw(ctx, leftBorder, topBorder)
     }
-}
-
-//einfache AABB-Kollision zwischen Spieler und einem Enemy
-export function checkPlayerEnemyCollision(player, enemy) {
-    const pLeft = player.playerX;
-    const pTop = player.playerY;
-    const pRight = pLeft + player.hitbox;
-    const pBottom = pTop + player.hitbox;
-
-    const eLeft = enemy.enemyX;
-    const eTop = enemy.enemyY;
-    const eRight = eLeft + enemy.hitbox.width;
-    const eBottom = eTop + enemy.hitbox.height;
-
-    if (pRight < eLeft) return false
-    if (pLeft > eRight) return false
-    if (pBottom < eTop) return false
-    if (pTop > eBottom) return false
-
-    return true
 }

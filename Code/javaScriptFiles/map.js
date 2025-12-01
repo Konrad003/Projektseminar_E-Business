@@ -155,8 +155,8 @@ export class Map {
 
     draw(player) {
         if (this.map1Loaded && this.tilesLoaded){
-            let leftBorder = player.playerX - this.FOV / 2
-            let topBorder = player.playerY - this.FOV / 2
+            let leftBorder = player.globalEntityX - this.FOV / 2
+            let topBorder = player.globalEntityY - this.FOV / 2
             let tileRow = Math.floor(topBorder / this.tilelength)
             let tileRowWalker = tileRow
             let tileColumn = Math.floor(leftBorder / this.tilelength)
@@ -187,11 +187,11 @@ export class Map {
     let multipliyer =1
     this.drawSqr(0,0, 72, 92, "black")
     this.ctx.drawImage(this.map1Image,1,1,this.mapWidthTile*multipliyer,this.mapHeightTile*multipliyer)
-    this.drawSqr(player.playerX, player.playerY, 1, 1, "blue")
+    this.drawSqr(player.globalEntityX, player.globalEntityY, 1, 1, "blue")
     
     }
     drawMiniEnemy(enemy){
-        this.drawSqr(enemy.enemyX , enemy.enemyY, 1, 1, "red")
+        this.drawSqr(enemy.globalEntityX , enemy.globalEntityY, 1, 1, "red")
     }
     drawSqr(x, y, width, height, color) {
         let multipliyer = 1

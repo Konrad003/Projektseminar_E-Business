@@ -1,11 +1,12 @@
 //import { DropSingleUse } from "./dropSingleUse.js"
-import {Enemy, checkPlayerEnemyCollision, drawEnemyItem} from "./enemy.js" // spawnEnemyAtEdge zusätzlich importiert
 //import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
+import { Enemy } from "./enemy.js"
+import  {drawEnemyItem} from "./enemy.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -170,12 +171,12 @@ export class game {
 
             enemy.chasePlayer(this.MapOne, this.PlayerOne)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
-            if (checkPlayerEnemyCollision(this.PlayerOne, enemy)) {        // Treffer?
+            if (this.PlayerOne.checkCollision(enemy)) {        // Treffer?
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
-                let leftBorder = this.PlayerOne.playerX - this.MapOne.FOV / 2
-                let topBorder = this.PlayerOne.playerY - this.MapOne.FOV / 2
+                let leftBorder = this.PlayerOne.globalEntityX - this.MapOne.FOV / 2
+                let topBorder = this.PlayerOne.globalEntityY - this.MapOne.FOV / 2
                 enemy.draw(ctx, leftBorder, topBorder) // Gegner im Sichtbereich zeichnen
             }
         }

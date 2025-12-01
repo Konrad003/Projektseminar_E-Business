@@ -13,26 +13,44 @@ export class MovingEntity extends Entity{
     }
 
     // Prüft, ob zwei Entities kollidieren (AABB-Kollision)
+    
     checkCollision(other) {
-        if (!other || !other.hitbox) return false;
+        const pLeft = this.globalEntityX;
+        const pTop = this.globalEntityY;
+        const pRight = pLeft + this.hitbox;
+        const pBottom = pTop + this.hitbox;
 
-        const thisLeft   = this.globalEntityX;
-        const thisRight  = this.globalEntityX + this.hitbox.width;
-        const thisTop    = this.globalEntityY;
-        const thisBottom = this.globalEntityY + this.hitbox.height;
+        const eLeft = other.globalEntityX;
+        const eTop = other.globalEntityY;
+        const eRight = eLeft + other.hitbox.width;
+        const eBottom = eTop + other.hitbox.height;
 
-        const otherLeft   = other.globalEntityX;
-        const otherRight  = other.globalEntityX + other.hitbox.width;
-        const otherTop    = other.globalEntityY;
-        const otherBottom = other.globalEntityY + other.hitbox.height;
+        if (pRight < eLeft) return false
+        if (pLeft > eRight) return false
+        if (pBottom < eTop) return false
+        if (pTop > eBottom) return false
 
-        return !(
-            thisRight < otherLeft ||
-            thisLeft > otherRight ||
-            thisBottom < otherTop ||
-            thisTop > otherBottom
-        );
+        return true
     }
+
+    /*export function checkPlayerEnemyCollision(player, enemy) {
+        const pLeft = this.globalEntityX;
+        const pTop = this.globalEntityY;
+        const pRight = pLeft + this.hitbox;
+        const pBottom = pTop + this.hitbox;
+
+        const eLeft = other.globalEntityX;
+        const eTop = other.globalEntityY;
+        const eRight = eLeft + other.hitbox.width;
+        const eBottom = eTop + other.hitbox.height;
+
+        if (pRight < eLeft) return false
+        if (pLeft > eRight) return false
+        if (pBottom < eTop) return false
+        if (pTop > eBottom) return false
+
+        return true
+    }*/
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
     takeDmg(amount) {
