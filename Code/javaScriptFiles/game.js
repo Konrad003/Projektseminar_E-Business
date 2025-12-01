@@ -14,7 +14,6 @@ const ctx = canvas.getContext('2d')
 
 export class game {
 
-
     difficulty = 1
     timestamp
     upPressed = false
@@ -22,6 +21,8 @@ export class game {
     leftPressed = false
     rightPressed = false
     mapData
+
+    gamePaused = false // Flag, ob das Spiel pausiert ist
 
     constructor() {
         this.MapOne = null
@@ -50,6 +51,14 @@ export class game {
         if ((e.key === "ArrowDown") || (e.key === 's')) {
             this.downPressed = true;
         }
+        // Escape zum Pausieren
+        if (e.key === "Escape") {
+            if (document.getElementById("gameScreen").style.display === "flex") {
+                this.pauseGame() // Spiel nur pausieren, wenn Game läuft
+            }
+
+            return;
+        }
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
@@ -72,7 +81,6 @@ export class game {
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
-
         this.mapData = []
         this.loadMap("./Code/Tiled/Map1.json").then(() => {
             this.mapData = this.mapData[0];
@@ -84,26 +92,67 @@ export class game {
             setInterval(() => this.render(), 5);
         });
 
-
         //setInterval(spawnEnemy, 100
-
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+
+        // Screen-Wechsel zu Game-Screen
+        document.getElementById("defeatScreen").style.display = "none";
+        document.getElementById("winScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "flex";
     }
 
-    stop() {
+// Beginn der Screen-Wechsel-Funktionen
+    pauseGame() {
+        this.gamePaused = true; //flag boolean for render function
 
+        document.getElementById("pauseScreen").style.display = "flex";
     }
 
-    resume() {
+    resumeGame() {
+        this.gamePaused = false; //flag boolean for render function
 
+        document.getElementById("pauseScreen").style.display = "none";
+    }
+
+    settings() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "flex";
+    }
+
+    home() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("defeatScreen").style.display = "none";
+        document.getElementById("winScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "flex";
     }
 
     end() {
-        //myLife();
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("defeatScreen").style.display = "flex";
     }
 
+    endWin() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("winScreen").style.display = "flex";
+    }
+// Ende der Screen-Wechsel-Funktionen
+
     render() {
-        
+        if (this.gamePaused) {
+            return; // Spiel ist pausiert, keine Aktualisierung, prüft auf true
+        }
+
         this.PlayerOne.handleInput(this.MapOne, {
             upPressed: this.upPressed,
             downPressed: this.downPressed,
@@ -135,6 +184,5 @@ export class game {
     }
 }
 
-
-const Game = new game()
-Game.start()
+document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
+window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
