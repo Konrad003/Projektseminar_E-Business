@@ -1,3 +1,4 @@
+import { DropSingleUse } from "./dropSingleUse.js" 
 import { MovingEntity } from "./movingEntity.js"
 export class Enemy extends MovingEntity {
     
@@ -95,6 +96,22 @@ export class Enemy extends MovingEntity {
 
     die() {
         console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
+        
+        const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
+        if (Math.random() < dropChance) {
+            enemyItemDrop.push(new DropSingleUse(this.enemyX, this.enemyY))
+        }                      // Drop in globales Array eintragen
+    }
+}
+
+export const enemyItemDrop = []
+
+export function drawEnemyItem(ctx, player, map) {
+    const leftBorder = player.playerX - map.FOV / 2
+    const topBorder  = player.playerY - map.FOV / 2
+
+    for (const drop of enemyItemDrop) {
+        drop.draw(ctx, leftBorder, topBorder)
     }
 }
 
