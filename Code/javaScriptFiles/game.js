@@ -169,7 +169,7 @@ export class game {
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]
 
-            enemy.chasePlayer(this.MapOne, this.PlayerOne)                   // Gegner läuft auf den Spieler zu
+            enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
             if (this.PlayerOne.checkCollision(enemy)) {        // Treffer?
                 enemy.die()

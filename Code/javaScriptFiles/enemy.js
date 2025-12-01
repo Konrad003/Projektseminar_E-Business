@@ -59,7 +59,7 @@ export class Enemy extends MovingEntity {
     }
 
     // Gegner bewegt sich in Richtung Player
-    chasePlayer(map, player) {
+    chasePlayer(map, player, enemyArray = null) {
         
         let distanceX = player.globalEntityX - this.globalEntityX
         let distanceY = player.globalEntityY - this.globalEntityY
@@ -74,7 +74,40 @@ export class Enemy extends MovingEntity {
 
         distanceX /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         distanceY /= distance;
-    
+
+        // NEU: Bewegungsschritt berechnen
+        const moveStepX = distanceX * this.speed
+        const moveStepY = distanceY * this.speed
+
+    // NEU: zukünftige Position dieses Gegners
+        const proposedPositionX = this.globalEntityX + moveStepX
+        const proposedPositionY = this.globalEntityY + moveStepY
+
+        if (Array.isArray(enemyArray)) {
+        const minimalDistance = this.hitbox.width // einfacher Radius für Abstand
+
+        for (const other of enemyArray) {
+            if (other === this) continue // sich selbst überspringen
+
+            // aktueller Abstand
+            const dxCurrent = other.globalEntityX - this.globalEntityX
+            const dyCurrent = other.globalEntityY - this.globalEntityY
+            const distanceCurrent = Math.sqrt(dxCurrent * dxCurrent + dyCurrent * dyCurrent)
+
+            // Abstand nach der geplanten Bewegung
+            const dxProposed = other.globalEntityX - proposedPositionX
+            const dyProposed = other.globalEntityY - proposedPositionY
+            const distanceProposed = Math.sqrt(dxProposed * dxProposed + dyProposed * dyProposed)
+
+            // Nur blockieren, wenn:
+            // 1) er in den "Verbotsradius" reinlaufen würde
+            // 2) er damit näher als vorher an den anderen Gegner herankommt
+            if (distanceProposed < minimalDistance && distanceProposed < distanceCurrent) {
+                return // in diesem Frame nicht bewegen
+            }
+        }
+    }
+
         if (distanceX>0)
             this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed);
         if (distanceY<0)
