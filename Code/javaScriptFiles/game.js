@@ -23,6 +23,9 @@ export class game {
     rightPressed = false
     mapData
 
+    gameTimer = 0
+    timerInterval = null
+
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
     constructor() {
@@ -77,6 +80,34 @@ export class game {
         }
     }
 
+    updateTimerDisplay() { // Aktualisiert die Anzeige des Timers im Format mm:ss
+        const minutes = Math.floor(this.gameTimer / 60)
+        const seconds = this.gameTimer % 60
+        // Format mm:ss
+        document.getElementById("time-value").textContent =
+            `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+    }
+
+    startGameTimer() { // Startet den Spieltimer
+        this.updateTimerDisplay()
+        this.timerInterval = setInterval(() => {
+            this.gameTimer++
+            this.updateTimerDisplay()
+        }, 1000)
+    }
+
+    resetTimer() { // Setzt den Spieltimer zurück
+        this.gameTimer = 0
+        this.updateTimerDisplay()
+    }
+
+    stopGameTimer() { // Stoppt den Spieltimer
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval)
+            this.timerInterval = null
+        }
+    }
+
     start() {
         const timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
@@ -96,6 +127,9 @@ export class game {
         //setInterval(spawnEnemy, 100
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
 
+        this.startGameTimer()
+        this.resetTimer()
+
         // Screen-Wechsel zu Game-Screen
         document.getElementById("defeatScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
@@ -107,11 +141,15 @@ export class game {
     pauseGame() {
         this.gamePaused = true; //flag boolean for render function
 
+        this.stopGameTimer()
+
         document.getElementById("pauseScreen").style.display = "flex";
     }
 
     resumeGame() {
         this.gamePaused = false; //flag boolean for render function
+
+        this.startGameTimer()
 
         document.getElementById("pauseScreen").style.display = "none";
     }
@@ -133,6 +171,9 @@ export class game {
     }
 
     end() {
+        this.stopGameTimer()
+        this.resetTimer()
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
@@ -141,6 +182,9 @@ export class game {
     }
 
     endWin() {
+        this.stopGameTimer()
+        this.resetTimer()
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
@@ -152,6 +196,11 @@ export class game {
     render() {
         if (this.gamePaused) {
             return; // Spiel ist pausiert, keine Aktualisierung, prüft auf true
+        }
+
+        if (this.gameTimer === 600 ) { //Minuten überleben (in Sekunden)
+            this.endWin()
+            this.stopGameTimer() // Spiel gewinnen nach 10 Minuten
         }
 
         this.PlayerOne.handleInput(this.MapOne, {
