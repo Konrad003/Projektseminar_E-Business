@@ -24,23 +24,23 @@ export class Enemy extends MovingEntity {
 
         switch (side) {
             case 0: // oben
-                x = Math.random() * mapWidth;   // spawnt Enemy an random Stelle am oberen Rand
-                y = 0;
+                x = Math.random() * (mapWidth-32);   // spawnt Enemy an random Stelle am oberen Rand
+                y = 1;
                 break;
 
             case 1: // rechts
-                x = mapWidth;
-                y = Math.random() * mapHeight;
+                x = mapWidth-1;
+                y = Math.random() * (mapHeight-32);
                 break;
 
             case 2: // unten
-                x = Math.random() * mapWidth;
-                y = mapHeight;
+                x = Math.random() * (mapWidth-32);
+                y = mapHeight-1;
                 break;
 
             case 3: // links
-                x = 0;
-                y = Math.random() * mapHeight;
+                x = 1;
+                y = Math.random() * (mapHeight-32);
                 break;
         }
 
@@ -74,48 +74,35 @@ export class Enemy extends MovingEntity {
 
         distanceX /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         distanceY /= distance;
-
         // NEU: Bewegungsschritt berechnen
         const moveStepX = distanceX * this.speed
         const moveStepY = distanceY * this.speed
 
-    // NEU: zukünftige Position dieses Gegners
-        const proposedPositionX = this.globalEntityX + moveStepX
-        const proposedPositionY = this.globalEntityY + moveStepY
-
-        if (Array.isArray(enemyArray)) {
-        const minimalDistance = this.hitbox.width // einfacher Radius für Abstand
-
+        let moveXPossible = true
+        let moveYPossible = true
+        
         for (const other of enemyArray) {
             if (other === this) continue // sich selbst überspringen
-
-            // aktueller Abstand
-            const dxCurrent = other.globalEntityX - this.globalEntityX
-            const dyCurrent = other.globalEntityY - this.globalEntityY
-            const distanceCurrent = Math.sqrt(dxCurrent * dxCurrent + dyCurrent * dyCurrent)
-
-            // Abstand nach der geplanten Bewegung
-            const dxProposed = other.globalEntityX - proposedPositionX
-            const dyProposed = other.globalEntityY - proposedPositionY
-            const distanceProposed = Math.sqrt(dxProposed * dxProposed + dyProposed * dyProposed)
-
-            // Nur blockieren, wenn:
-            // 1) er in den "Verbotsradius" reinlaufen würde
-            // 2) er damit näher als vorher an den anderen Gegner herankommt
-            if (distanceProposed < minimalDistance && distanceProposed < distanceCurrent) {
-                return // in diesem Frame nicht bewegen
+            
+            if (this.checkCollisionHorizontal(other, moveStepX) ){
+                moveXPossible = false
             }
+            if (this.checkCollisionVertical(other, moveStepY)){
+                moveYPossible = false
+            }
+        }            
+        if (moveXPossible){
+            if (distanceX>0)
+                this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed)
+            if (distanceX<0)
+                this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, -distanceX * this.speed)
         }
-    }
-
-        if (distanceX>0)
-            this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed);
-        if (distanceY<0)
-            this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, -distanceY * this.speed);
-        if (distanceX<0)
-            this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, -distanceX * this.speed);
-        if (distanceY>0)
-            this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed);
+        if (moveYPossible){
+            if (distanceY<0)
+                this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, -distanceY * this.speed)
+            if (distanceY>0)
+                this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed)
+        }
     }
 
     die() {

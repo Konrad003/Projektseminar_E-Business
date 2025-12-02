@@ -14,24 +14,44 @@ export class MovingEntity extends Entity{
 
     // Prüft, ob zwei Entities kollidieren (AABB-Kollision)
     
-    checkCollision(other) {
-        const aLeft = this.globalEntityX;
-        const aTop = this.globalEntityY;
-        const aRight = aLeft + this.hitbox;
-        const aBottom = aTop + this.hitbox;
-
-        const bLeft = other.globalEntityX;
-        const bTop = other.globalEntityY;
-        const bRight = bLeft + other.hitbox.width;
-        const bBottom = bTop + other.hitbox.height;
-
-        if (aRight < bLeft) return false
-        if (aLeft > bRight) return false
-        if (aBottom < bTop) return false
-        if (aTop > bBottom) return false
-
-        return true
+    checkCollision(other, proposedMoveX, proposedMoveY) {
+        return (this.checkCollisionHorizontal(other, proposedMoveX) &&
+                this.checkCollisionVertical(other, proposedMoveY))
     }
+    checkCollisionHorizontal(other, proposedMoveX){
+        const aLeft = this.globalEntityX + proposedMoveX        // mir geplanter bewegung
+        const aRight = aLeft + this.hitbox.width
+        const bLeft = other.globalEntityX
+        const bRight = bLeft + other.hitbox.width
+
+        const aTop = this.globalEntityY                         // ohne geplante bewegung
+        const aBottom = aTop + this.hitbox.height
+        const bTop = other.globalEntityY
+        const bBottom = bTop + other.hitbox.height
+
+        if (!((aBottom > bTop) && (aTop < bBottom))) return false // keine vertikale Überschneidung --> keine horizontale Kollision
+        if (aRight <= bLeft) return false                           // Prüfe ob horizontale Überschneidung
+        if (aLeft >= bRight) return false                           // Prüfe ob horizontale Überschneidung
+        return true //Keine Überschneidung
+    }
+        
+
+    checkCollisionVertical(other, proposedMoveY){
+    const aTop = this.globalEntityY + proposedMoveY        // mir geplanter bewegung
+    const aBottom = aTop + this.hitbox.height
+    const bTop = other.globalEntityY
+    const bBottom = bTop + other.hitbox.height
+
+    const aLeft = this.globalEntityX                         // ohne geplante bewegung
+    const aRight = aLeft + this.hitbox.width
+    const bLeft = other.globalEntityX
+    const bRight = bLeft + other.hitbox.width
+
+    if (!((aRight > bLeft) && (aLeft < bRight))) return false; // keine horizontale Überschneidung --> keine vertikale Kollision
+    if (aBottom <= bTop) return false                           // Prüfe ob vertikale Überschneidung
+    if (aTop >= bBottom) return false                           // Prüfe ob vertikale Überschneidung
+    return true //keine Überschneidung
+}
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
     takeDmg(amount) {

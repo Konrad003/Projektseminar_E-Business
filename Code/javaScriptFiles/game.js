@@ -89,7 +89,7 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, 32, 0, 0, 1, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, { width: 32, height: 32 }, 0, 0, 1, ctx)
             setInterval(() => this.render(), 5);
         });
 
@@ -163,7 +163,7 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.MapOne.draw(this.PlayerOne)
-        this.PlayerOne.draw(ctx, canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox, this.PlayerOne.hitbox, 'blue')
+        this.PlayerOne.draw(ctx, canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox.width, this.PlayerOne.hitbox.height, 'blue')
 
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -171,7 +171,7 @@ export class game {
 
             enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
-            if (this.PlayerOne.checkCollision(enemy)) {        // Treffer?
+            if (this.PlayerOne.checkCollision(enemy,0,0)) {        // Treffer?
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
