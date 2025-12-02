@@ -89,6 +89,7 @@ export class game {
     }
 
     startGameTimer() { // Startet den Spieltimer
+        this.stopGameTimer()
         this.updateTimerDisplay()
         this.timerInterval = setInterval(() => {
             this.gameTimer++
