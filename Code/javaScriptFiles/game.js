@@ -198,7 +198,7 @@ export class game {
             return; // Spiel ist pausiert, keine Aktualisierung, prüft auf true
         }
 
-        if (this.gameTimer === 600 ) { //Minuten überleben (in Sekunden)
+        if (this.gameTimer === 600) { //Minuten überleben (in Sekunden)
             this.endWin()
             this.stopGameTimer() // Spiel gewinnen nach 10 Minuten
         }
