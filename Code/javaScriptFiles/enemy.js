@@ -112,10 +112,13 @@ export class Enemy extends MovingEntity {
         if (Math.random() < dropChance) {
             enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
         }                      // Drop in globales Array eintragen
+        
+        enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
     }
 }
 
 export const enemyItemDrop = []
+export const enemyXpDrop = []
 
 export function drawEnemyItem(ctx, player, map) {
     const leftBorder = player.globalEntityX - map.FOV / 2
@@ -127,3 +130,14 @@ export function drawEnemyItem(ctx, player, map) {
         drop.draw(ctx, screenX, screenY, 13, 13, "pink")
     }
 }
+
+export function drawEnemyXp(ctx, player, map) {
+    const leftBorder = player.globalEntityX - map.FOV / 2
+    const topBorder  = player.globalEntityY - map.FOV / 2
+
+    for (const drop of enemyXpDrop) {
+        const screenX = drop.globalEntityX - leftBorder;
+        const screenY = drop.globalEntityY - topBorder;
+        drop.draw(ctx, screenX, screenY, 8, 8, "brown")
+    }
+}    
