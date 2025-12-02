@@ -1,4 +1,4 @@
-import { DropSingleUse } from "./dropSingleUse.js" 
+import { DropSingleUse, SpeedBoostDrop } from "./dropSingleUse.js" 
 import { MovingEntity } from "./movingEntity.js"
 export class Enemy extends MovingEntity {
     
@@ -90,8 +90,14 @@ export class Enemy extends MovingEntity {
         
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
+            
+            const speedBoostChance = 0.5 // 50% Speedboost, 50% normales Item
+            if (Math.random() < speedBoostChance) {
+            enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY))
+            } else {
             enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
-        }                      // Drop in globales Array eintragen
+            }
+        }
         
         enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
     }
@@ -107,7 +113,14 @@ export function drawEnemyItem(ctx, player, map) {
     for (const drop of enemyItemDrop) {
         const screenX = drop.globalEntityX - leftBorder;
         const screenY = drop.globalEntityY - topBorder;
-        drop.draw(ctx, screenX, screenY, 13, 13, "pink")
+
+         let color = "pink"
+
+        if (drop instanceof SpeedBoostDrop) {
+            color = "orange"
+        }
+
+        drop.draw(ctx, screenX, screenY, 13, 13, color)
     }
 }
 
