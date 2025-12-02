@@ -127,8 +127,8 @@ export class game {
         //setInterval(spawnEnemy, 100
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
 
-        this.startGameTimer()
         this.resetTimer()
+        this.startGameTimer()
 
         // Screen-Wechsel zu Game-Screen
         document.getElementById("defeatScreen").style.display = "none";
