@@ -32,7 +32,7 @@ export class MovingEntity extends Entity{
         if (!((aBottom > bTop) && (aTop < bBottom))) return false // keine vertikale Überschneidung --> keine horizontale Kollision
         if (aRight <= bLeft) return false                           // Prüfe ob horizontale Überschneidung
         if (aLeft >= bRight) return false                           // Prüfe ob horizontale Überschneidung
-        return true //Keine Überschneidung
+        return true // Überschneidung
     }
         
 
@@ -50,7 +50,7 @@ export class MovingEntity extends Entity{
         if (!((aRight > bLeft) && (aLeft < bRight))) return false; // keine horizontale Überschneidung --> keine vertikale Kollision
         if (aBottom <= bTop) return false                           // Prüfe ob vertikale Überschneidung
         if (aTop >= bBottom) return false                           // Prüfe ob vertikale Überschneidung
-        return true //keine Überschneidung
+        return true // Überschneidung
     }
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück

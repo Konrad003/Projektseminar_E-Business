@@ -24,23 +24,23 @@ export class Enemy extends MovingEntity {
 
         switch (side) {
             case 0: // oben
-                x = Math.random() * (mapWidth-32);   // spawnt Enemy an random Stelle am oberen Rand
+                x = Math.random() * mapWidth - 1 ;   // spawnt Enemy an random Stelle am oberen Rand
                 y = 1;
                 break;
 
             case 1: // rechts
                 x = mapWidth-1;
-                y = Math.random() * (mapHeight-32);
+                y = Math.random() * mapHeight - 1;
                 break;
 
             case 2: // unten
-                x = Math.random() * (mapWidth-32);
+                x = Math.random() * mapWidth - 1;
                 y = mapHeight-1;
                 break;
 
             case 3: // links
                 x = 1;
-                y = Math.random() * (mapHeight-32);
+                y = Math.random() * mapHeight - 1;
                 break;
         }
 
