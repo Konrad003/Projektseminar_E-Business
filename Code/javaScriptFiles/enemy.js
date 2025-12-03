@@ -113,9 +113,9 @@ export class Enemy extends MovingEntity {
             
             const speedBoostChance = 0.5 // 50% Speedboost, 50% normales Item
             if (Math.random() < speedBoostChance) {
-            enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY))
+                enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY))
             } else {
-            enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
+                enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
             }
         }
         
