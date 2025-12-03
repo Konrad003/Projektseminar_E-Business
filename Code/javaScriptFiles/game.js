@@ -201,7 +201,6 @@ export class game {
 
         if (this.gameTimer === 600) { //Minuten überleben (in Sekunden)
             this.endWin()
-            this.stopGameTimer() // Spiel gewinnen nach 10 Minuten
         }
 
         this.PlayerOne.handleInput(this.MapOne, {
