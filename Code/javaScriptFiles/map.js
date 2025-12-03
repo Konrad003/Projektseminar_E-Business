@@ -184,9 +184,9 @@ export class Map {
     }
 }
     drawMiniMap(player){
-    let multipliyer =1
+    let multiplier =1
     this.drawSqr(0,0, 72, 92, "black")
-    this.ctx.drawImage(this.map1Image,1,1,this.mapWidthTile*multipliyer,this.mapHeightTile*multipliyer)
+    this.ctx.drawImage(this.map1Image,1,1,this.mapWidthTile*multiplier,this.mapHeightTile*multiplier)
     this.drawSqr(player.globalEntityX, player.globalEntityY, 1, 1, "blue")
     
     }
@@ -194,9 +194,9 @@ export class Map {
         this.drawSqr(enemy.globalEntityX , enemy.globalEntityY, 1, 1, "red")
     }
     drawSqr(x, y, width, height, color) {
-        let multipliyer = 1
+        let multiplier = 1
         this.ctx.beginPath()
-        this.ctx.rect(x/ this.tilelength * multipliyer, y / this.tilelength * multipliyer, width * multipliyer, height * multipliyer)
+        this.ctx.rect(x/ this.tilelength * multiplier, y / this.tilelength * multiplier, width * multiplier, height * multiplier)
         this.ctx.fillStyle = color
         this.ctx.fill()
         this.ctx.strokeStyle = color;
