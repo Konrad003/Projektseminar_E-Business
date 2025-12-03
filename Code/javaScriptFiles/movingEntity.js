@@ -37,21 +37,21 @@ export class MovingEntity extends Entity{
         
 
     checkCollisionVertical(other, proposedMoveY){
-    const aTop = this.globalEntityY + proposedMoveY        // mir geplanter bewegung
-    const aBottom = aTop + this.hitbox.height
-    const bTop = other.globalEntityY
-    const bBottom = bTop + other.hitbox.height
+        const aTop = this.globalEntityY + proposedMoveY        // mir geplanter bewegung
+        const aBottom = aTop + this.hitbox.height
+        const bTop = other.globalEntityY
+        const bBottom = bTop + other.hitbox.height
 
-    const aLeft = this.globalEntityX                         // ohne geplante bewegung
-    const aRight = aLeft + this.hitbox.width
-    const bLeft = other.globalEntityX
-    const bRight = bLeft + other.hitbox.width
+        const aLeft = this.globalEntityX                         // ohne geplante bewegung
+        const aRight = aLeft + this.hitbox.width
+        const bLeft = other.globalEntityX
+        const bRight = bLeft + other.hitbox.width
 
-    if (!((aRight > bLeft) && (aLeft < bRight))) return false; // keine horizontale Überschneidung --> keine vertikale Kollision
-    if (aBottom <= bTop) return false                           // Prüfe ob vertikale Überschneidung
-    if (aTop >= bBottom) return false                           // Prüfe ob vertikale Überschneidung
-    return true //keine Überschneidung
-}
+        if (!((aRight > bLeft) && (aLeft < bRight))) return false; // keine horizontale Überschneidung --> keine vertikale Kollision
+        if (aBottom <= bTop) return false                           // Prüfe ob vertikale Überschneidung
+        if (aTop >= bBottom) return false                           // Prüfe ob vertikale Überschneidung
+        return true //keine Überschneidung
+    }
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
     takeDmg(amount) {
