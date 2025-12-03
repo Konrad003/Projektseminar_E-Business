@@ -24,23 +24,23 @@ export class Enemy extends MovingEntity {
 
         switch (side) {
             case 0: // oben
-                x = Math.random() * mapWidth;   // spawnt Enemy an random Stelle am oberen Rand
-                y = 0;
+                x = Math.random() * mapWidth - 1 ;   // spawnt Enemy an random Stelle am oberen Rand
+                y = 1;
                 break;
 
             case 1: // rechts
-                x = mapWidth;
-                y = Math.random() * mapHeight;
+                x = mapWidth-1;
+                y = Math.random() * mapHeight - 1;
                 break;
 
             case 2: // unten
-                x = Math.random() * mapWidth;
-                y = mapHeight;
+                x = Math.random() * mapWidth - 1;
+                y = mapHeight-1;
                 break;
 
             case 3: // links
-                x = 0;
-                y = Math.random() * mapHeight;
+                x = 1;
+                y = Math.random() * mapHeight - 1;
                 break;
         }
 
@@ -59,7 +59,7 @@ export class Enemy extends MovingEntity {
     }
 
     // Gegner bewegt sich in Richtung Player
-    chasePlayer(map, player) {
+    chasePlayer(map, player, enemyArray = null) {
         
         let distanceX = player.globalEntityX - this.globalEntityX
         let distanceY = player.globalEntityY - this.globalEntityY
@@ -74,15 +74,35 @@ export class Enemy extends MovingEntity {
 
         distanceX /= distance; // Teilt Entfernung durch sich selbst -> Gegner bewegt sich gleichmäßig
         distanceY /= distance;
-    
-        if (distanceX>0)
-            this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed);
-        if (distanceY<0)
-            this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, -distanceY * this.speed);
-        if (distanceX<0)
-            this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, -distanceX * this.speed);
-        if (distanceY>0)
-            this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed);
+        // NEU: Bewegungsschritt berechnen
+        const moveStepX = distanceX * this.speed
+        const moveStepY = distanceY * this.speed
+
+        let moveXPossible = true
+        let moveYPossible = true
+        
+        for (const other of enemyArray) {
+            if (other === this) continue // sich selbst überspringen
+            
+            if (this.checkCollisionHorizontal(other, moveStepX) ){
+                moveXPossible = false
+            }
+            if (this.checkCollisionVertical(other, moveStepY)){
+                moveYPossible = false
+            }
+        }            
+        if (moveXPossible){
+            if (distanceX>0)
+                this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed)
+            if (distanceX<0)
+                this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, -distanceX * this.speed)
+        }
+        if (moveYPossible){
+            if (distanceY<0)
+                this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, -distanceY * this.speed)
+            if (distanceY>0)
+                this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed)
+        }
     }
 
     die() {
