@@ -6,6 +6,7 @@ export class Player extends MovingEntity {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
+        
         this.xp = 0;
         this.level = 1;
         this.ausrüstung = ausrüstung;
