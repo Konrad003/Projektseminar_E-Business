@@ -45,7 +45,7 @@ export class Map {
 
         return (this.tileData[row][column])
     }
-    checkIfFree(mainEntityKoord, entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY){
+    checkIfFree(mainEntityKoord, entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY, hitbox){
         let mapLong = mapLengthOrWidth * this.tilelength - this.tilelength
         let mainEntityKoordInt                                                                  // Welche Koordinate bewegt werden soll
         let moveLength = this.maxAbs(moveLengthHoriz, moveLengthVert)
@@ -61,30 +61,29 @@ export class Map {
 
         let newMapTile2                                                                                               // Feld2 auf das sich der Spieler bewegen würde, Spieler kann auf 2 Feldern stehen und soll sich auch nur dann bewegen wenn die Gesamte Hitbox nicht clippen würde
         if (mainEntityKoord=="x")
-            newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX, entityY + moveLengthVert + directionY + this.tilelength)
+            newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX, entityY + moveLengthVert + directionY + hitbox.height)
         else 
-            newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX + this.tilelength, + entityY + moveLengthVert + directionY)
-
+            newMapTile2 = this.findTile(entityX + moveLengthHoriz + directionX + hitbox.width, + entityY + moveLengthVert + directionY)
         if (mapTile1 === newMapTile1 || (newMapTile1.walkable && newMapTile2.walkable)){
             return mainEntityKoordInt+moveLength //Falls die Bewegung erlaubt ist
         }else 
             return mainEntityKoordInt  //Falls man mit der Bewegung in die Wand gehen würde
             
     }
-    rightFree(entityX, entityY, moveLength){
-        return (this.checkIfFree("x", entityX, entityY,moveLength, 0,  this.mapWidthTile, this.tilelength, 0))
+    rightFree(entityX, entityY, moveLength, hitbox){
+        return (this.checkIfFree("x", entityX, entityY,moveLength, 0,  this.mapWidthTile, hitbox.width, 0, hitbox))
     }
 
-    topFree(entityX, entityY, moveLength){
-        return (this.checkIfFree("y", entityX, entityY, 0 , -moveLength, this.mapHeightTile, 0, 0))
+    topFree(entityX, entityY, moveLength, hitbox){
+        return (this.checkIfFree("y", entityX, entityY, 0 , -moveLength, this.mapHeightTile, 0, 0, hitbox))
     }
 
-    leftFree(entityX, entityY, moveLength){
-        return (this.checkIfFree("x", entityX, entityY, -moveLength, 0, this.mapWidthTile, 0, 0))
+    leftFree(entityX, entityY, moveLength, hitbox){
+        return (this.checkIfFree("x", entityX, entityY, -moveLength, 0, this.mapWidthTile, 0, 0, hitbox))
     }
 
-    downFree(entityX, entityY, moveLength){
-        return (this.checkIfFree("y", entityX, entityY, 0, moveLength, this.mapHeightTile, 0, this.tilelength))
+    downFree(entityX, entityY, moveLength, hitbox){
+        return (this.checkIfFree("y", entityX, entityY, 0, moveLength, this.mapHeightTile, 0, hitbox.height, hitbox))
     }
     loadTileData(){
         for (let i = 0; i<this.mapHeightTile;i++){

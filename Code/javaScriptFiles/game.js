@@ -121,7 +121,7 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, { width: 32, height: 32 }, 0, 0, 1, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, { width: 16, height: 16 }, 0, 0, 1, ctx)
             console.log(this.mapData.width * this.mapData.tilewidth / 2)
             setInterval(() => this.render(), 5);
         });
