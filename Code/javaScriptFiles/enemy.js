@@ -154,3 +154,14 @@ export function drawEnemyXp(ctx, player, map) {
         drop.draw(ctx, screenX, screenY, 8, 8, "brown")
     }
 }    
+
+export function handleEnemyItemPickups(player) { 
+    for (let i = enemyItemDrop.length - 1; i >= 0; i--) {
+        const drop = enemyItemDrop[i]
+
+        if (player.checkCollision(drop, 0, 0)) {
+            player.collectPickup(drop)
+            enemyItemDrop.splice(i, 1)  //aufgesammelte Item wird gelöscht
+        }
+    }
+}

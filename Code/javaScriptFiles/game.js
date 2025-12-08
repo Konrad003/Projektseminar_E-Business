@@ -6,7 +6,7 @@ import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
 import { Enemy } from "./enemy.js"
-import  {drawEnemyItem, drawEnemyXp} from "./enemy.js"
+import { drawEnemyItem, drawEnemyXp, handleEnemyItemPickups } from "./enemy.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -232,6 +232,8 @@ export class game {
 
         drawEnemyItem(ctx, this.PlayerOne, this.MapOne)
         drawEnemyXp(ctx, this.PlayerOne, this.MapOne) 
+
+        handleEnemyItemPickups(this.PlayerOne)
     }
 }
 
