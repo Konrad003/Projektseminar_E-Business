@@ -115,7 +115,7 @@ export class game {
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
         this.mapData = []
-        this.loadMap("./Code/Tiled/Map1.json").then(() => {
+        this.loadMap("./Code/Tiled/map2Jungle.json").then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             //console.log(this.mapData.layers[0].data)
             //this.mapDataTiles = this.mapData.layers[0].data
