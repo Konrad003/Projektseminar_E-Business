@@ -44,6 +44,22 @@ export class game {
             })
     }
 
+    mapSelect(map) {
+        switch (map) {
+            case 0:
+                this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.start()
+                break;
+            case 1:
+                this.mapChoice = './Code/Tiled/Map1.json';
+                this.start()
+                break;
+            default:
+                this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.start()
+        }
+    }
+
     keyDownHandler(e) { // liest Input der Tastatur aus
         if ((e.key === "ArrowUp") || (e.key === 'w')) {
             this.upPressed = true;
@@ -134,39 +150,20 @@ export class game {
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
         //Map Switch
-        if (this.mapChoice === 0) {
-            this.mapData = []
-            this.loadMap("./Code/Tiled/map2Jungle.json").then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
-                this.mapData = this.mapData[0];
-                //console.log(this.mapData.layers[0].data)
-                //this.mapDataTiles = this.mapData.layers[0].data
+        this.mapData = []
+        this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
+            this.mapData = this.mapData[0];
+            //console.log(this.mapData.layers[0].data)
+            //this.mapDataTiles = this.mapData.layers[0].data
 
-                this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-                this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
-                    width: 16,
-                    height: 16
-                }, 0, 0, 1, ctx)
-                console.log(this.mapData.width * this.mapData.tilewidth / 2)
-                setInterval(() => this.render(), 5);
-            });
-        } else if (this.mapChoice === 1) {
-            this.mapData = []
-            this.loadMap("./Code/Tiled/Map1.json").then(() => {  //andere Map: ./Code/Tiled/map2Jungle.json
-                this.mapData = this.mapData[0];
-                //console.log(this.mapData.layers[0].data)
-                //this.mapDataTiles = this.mapData.layers[0].data
-
-                console.log("Map geändert")
-
-                this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-                this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
-                    width: 16,
-                    height: 16
-                }, 0, 0, 1, ctx)
-                console.log(this.mapData.width * this.mapData.tilewidth / 2)
-                setInterval(() => this.render(), 5);
-            });
-        }
+            this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
+                width: 16,
+                height: 16
+            }, 0, 0, 1, ctx)
+            console.log(this.mapData.width * this.mapData.tilewidth / 2)
+            setInterval(() => this.render(), 5);
+        })
 
         //setInterval(spawnEnemy, 100
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
@@ -178,6 +175,7 @@ export class game {
         document.getElementById("defeatScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
+        document.getElementById("mapScreen").style.display = "none";
         document.getElementById("gameScreen").style.display = "flex";
     }
 
@@ -196,6 +194,12 @@ export class game {
         this.startGameTimer()
 
         document.getElementById("pauseScreen").style.display = "none";
+    }
+
+    chooseMap() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("mapScreen").style.display = "flex";
     }
 
     settings() {

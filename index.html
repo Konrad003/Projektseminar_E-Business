@@ -38,8 +38,15 @@
     <h1 class="gameTitle">Vampirio.io</h1>
 
     <div class="menu">
-        <button class="btn" id="startButton" onclick="Game.start()">Start Game</button>
+        <button class="btn" id="startButton" onclick="Game.chooseMap()">Start Game</button>
         <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
+    </div>
+</section>
+
+<section class="screen" id="mapScreen">
+    <div class="menu">
+        <button class="btn" onclick="Game.mapSelect(0)">Jungle</button>
+        <button class="btn" onclick="Game.mapSelect(1)">Vanilla</button>
     </div>
 </section>
 
