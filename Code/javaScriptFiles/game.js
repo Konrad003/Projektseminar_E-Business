@@ -5,8 +5,8 @@
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import { Enemy } from "./enemy.js"
-import { drawEnemyItem, drawEnemyXp, handleEnemyItemPickups } from "./enemy.js"
+import {Enemy} from "./enemy.js"
+import {drawEnemyItem, drawEnemyXp, handleEnemyItemPickups} from "./enemy.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -22,6 +22,8 @@ export class game {
     leftPressed = false
     rightPressed = false
     mapData
+
+    killCount = 0
 
     gameTimer = 0
     timerInterval = null
@@ -84,7 +86,7 @@ export class game {
         const minutes = Math.floor(this.gameTimer / 60)
         const seconds = this.gameTimer % 60
         // Format mm:ss
-        document.getElementById("time-value").textContent =
+        document.getElementById("hudTime").textContent =
             `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
     }
 
@@ -121,7 +123,10 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, { width: 16, height: 16 }, 0, 0, 1, ctx)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
+                width: 16,
+                height: 16
+            }, 0, 0, 1, ctx)
             console.log(this.mapData.width * this.mapData.tilewidth / 2)
             setInterval(() => this.render(), 5);
         });
@@ -176,6 +181,10 @@ export class game {
         this.stopGameTimer()
         this.resetTimer()
 
+        //document.getElementById("defeatTime")
+        //document.getElementById("defeatXP")
+        document.getElementById("defeatKills").innerHTML = this.killCount
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
@@ -187,12 +196,17 @@ export class game {
         this.stopGameTimer()
         this.resetTimer()
 
+        //document.getElementById("winTime")
+        //document.getElementById("winXP")
+        document.getElementById("winKills").innerHTML = this.killCount
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "flex";
     }
+
 // Ende der Screen-Wechsel-Funktionen
 
     render() {
@@ -221,8 +235,9 @@ export class game {
 
             enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
-            if (this.PlayerOne.checkCollision(enemy,0,0)) {        // Treffer?
+            if (this.PlayerOne.checkCollision(enemy, 0, 0)) {        // Treffer?
                 enemy.die()
+                this.killCount++
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
                 let leftBorder = this.PlayerOne.globalEntityX - this.MapOne.FOVwidth / 2
@@ -232,7 +247,7 @@ export class game {
         }
 
         drawEnemyItem(ctx, this.PlayerOne, this.MapOne)
-        drawEnemyXp(ctx, this.PlayerOne, this.MapOne) 
+        drawEnemyXp(ctx, this.PlayerOne, this.MapOne)
 
         handleEnemyItemPickups(this.PlayerOne)
     }
