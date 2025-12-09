@@ -44,6 +44,8 @@ export class Player extends MovingEntity {
         this.speed += 0.2; // das sind nur beispiele, können wir dann ändern
         this.regeneration += 0.1;
         console.log(`Level Up! Neues Level: ${this.level}`);
+        alert("Level Up! Neues Level: " + this.level);
+        alert("xp bis zum nächsten Level: " + (this.level * 10 - this.xp));
     }
 
     die() {
@@ -55,5 +57,14 @@ export class Player extends MovingEntity {
     collectPickup(item) { //wird von game aufgerufen wenn collision mit item, übergibt logik an itemklasse
         if (!item) return;
         item.apply(this);
+    }
+
+    collectXp(xpAmount) {
+        this.xp += xpAmount;
+        const xpForNextLevel = this.level * 10; // Beispiel: 10 XP pro Level
+        if (this.xp >= xpForNextLevel) {
+            this.xp -= xpForNextLevel; // Überschüssige XP behalten
+            this.lvlUp();
+        }
     }
 }
