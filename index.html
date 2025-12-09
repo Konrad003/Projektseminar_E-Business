@@ -38,45 +38,59 @@
     <h1 class="gameTitle">Vampirio.io</h1>
 
     <div class="menu">
-        <button class="btn" id="startButton" onclick="Game.start()">Start Game</button>
+        <button class="btn" id="startButton" onclick="Game.chooseMap()">Start Game</button>
         <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
+    </div>
+</section>
+
+<section class="screen" id="mapScreen">
+    <div class="menu">
+        <button class="btn" onclick="Game.mapSelect(0)">Jungle</button>
+        <button class="btn" onclick="Game.mapSelect(1)">Vanilla</button>
     </div>
 </section>
 
 <section class="screen" id="settingsScreen">
     <h2 class="screenTitle">Settings</h2>
 
-    <div class="panel ">
-        <div class="settings" id="soundSettings">
-            <input id="volume" max="1" min="0" step="0.01" type="range" value="0.5">
-            <label for="volume">Volume</label>
+    <form id="settingsForm">
+        <div class="panel">
+            <div class="settings" id="soundSettings">
+                <input id="volume" max="1" min="0" step="0.01" type="range" value="0.5">
+                <label for="volume">Volume</label>
 
-            <input checked id="effects" type="checkbox">
-            <label for="effects">Sound effects</label>
+                <input checked id="effects" type="checkbox">
+                <label for="effects">Sound effects</label>
+            </div>
+            <div class="settings" id="gameSettings">
+                <input id="speed" max="1" min="0" step="0.01" type="range" value="0.5">
+                <label for="speed">Game Speed</label>
+
+                <input id="mapChoice" max="1" min="0" step="1" type="number" value="0">
+                <label for="mapChoice">Map Choice (0-1)</label>
+
+            </div>
+            <div class="settings" id="keySettings">
+                <input id="keyUp" type="text" value="W">
+                <label for="keyUp">Move Up Key</label>
+
+                <input id="keyLeft" type="text" value="A">
+                <label for="keyLeft">Move Left Key</label>
+
+                <input id="keyDown" type="text" value="S">
+                <label for="keyDown">Move Down Key</label>
+
+                <input id="keyRight" type="text" value="D">
+                <label for="keyRight">Move Right Key</label>
+            </div>
+
+            <div class="menu">
+                <button class="btn" id="startMenuButton" onclick="Game.home()">Back</button>
+            </div>
+
+            <input class="btn" type="submit" value="Save"/>
         </div>
-        <div class="settings" id="gameSettings">
-            <input id="speed" max="1" min="0" step="0.01" type="range" value="0.5">
-            <label for="speed">Game Speed</label>
-
-        </div>
-        <div class="settings" id="keySettings">
-            <input id="keyUp" type="text" value="W">
-            <label for="keyUp">Move Up Key</label>
-
-            <input id="keyLeft" type="text" value="A">
-            <label for="keyLeft">Move Left Key</label>
-
-            <input id="keyDown" type="text" value="S">
-            <label for="keyDown">Move Down Key</label>
-
-            <input id="keyRight" type="text" value="D">
-            <label for="keyRight">Move Right Key</label>
-        </div>
-
-        <div class="menu">
-            <button class="btn" id="startMenuButton" onclick="Game.home()">Back</button>
-        </div>
-    </div>
+    </form>
 </section>
 
 <section class="screen overlay-dark" id="pauseScreen">
