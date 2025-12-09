@@ -167,6 +167,8 @@ export class game {
     }
 
     home() {
+        this.resetGame()
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
