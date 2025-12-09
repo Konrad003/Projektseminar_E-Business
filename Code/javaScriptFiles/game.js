@@ -23,6 +23,7 @@ export class game {
     rightPressed = false
     mapData
 
+    killCount = 0
     mapChoice = 0 // 0 = Map1, 1 = Map2 Jungle
 
     gameTimer = 0
@@ -122,7 +123,7 @@ export class game {
         const minutes = Math.floor(this.gameTimer / 60)
         const seconds = this.gameTimer % 60
         // Format mm:ss
-        document.getElementById("time-value").textContent =
+        document.getElementById("hudTime").textContent =
             `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
     }
 
@@ -229,6 +230,10 @@ export class game {
         this.stopGameTimer()
         this.resetTimer()
 
+        //document.getElementById("defeatTime")
+        //document.getElementById("defeatXP")
+        document.getElementById("defeatKills").innerHTML = this.killCount
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
@@ -239,6 +244,10 @@ export class game {
     endWin() {
         this.stopGameTimer()
         this.resetTimer()
+
+        //document.getElementById("winTime")
+        //document.getElementById("winXP")
+        document.getElementById("winKills").innerHTML = this.killCount
 
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
@@ -355,6 +364,7 @@ export class game {
             if (this.PlayerOne.checkCollision(enemy, 0, 0)) {        // Treffer?
                 this.PlayerOne.takeDmg(15)
                 enemy.die()
+                this.killCount++
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
                 let leftBorder = this.PlayerOne.globalEntityX - this.MapOne.FOVwidth / 2

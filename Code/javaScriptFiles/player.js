@@ -1,18 +1,20 @@
-import { MovingEntity } from "./movingEntity.js"
+import {MovingEntity} from "./movingEntity.js"
+import {game} from "./game.js"
+
 export class Player extends MovingEntity {
     ctx
-      
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
+
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
-        
+
         this.xp = 0;
         this.level = 1;
         this.ausrüstung = ausrüstung;
         this.weapons = weapons;
         this.regeneration = regeneration;
-        this.ctx = ctx  
+        this.ctx = ctx
         this.hp = hp;
         this.maxHp = hp;
         this.png = png;
@@ -20,12 +22,12 @@ export class Player extends MovingEntity {
         this.onDeath = onDeath;
     }
 
-    
+
     handleInput(map, inputState) {
         let speed = this.speed
         if ((inputState.rightPressed || inputState.leftPressed)         //Diagonalbewegung smoother
             && (inputState.upPressed || inputState.downPressed))
-        speed /= 1.8
+            speed /= 1.8
         if (inputState.rightPressed)
             this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
         if (inputState.upPressed)
@@ -35,7 +37,7 @@ export class Player extends MovingEntity {
         if (inputState.downPressed)
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
     }
-    
+
 
     lvlUp() {
         this.level++;
@@ -51,7 +53,7 @@ export class Player extends MovingEntity {
         console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
         this.onDeath(); 
     }
-    
+
 
     collectPickup(item) { //wird von game aufgerufen wenn collision mit item, übergibt logik an itemklasse
         if (!item) return;
