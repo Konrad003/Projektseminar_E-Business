@@ -78,32 +78,10 @@ export class Enemy extends MovingEntity {
         // NEU: Bewegungsschritt berechnen
         const moveStepX = distanceX * this.speed
         const moveStepY = distanceY * this.speed
-
-        let moveXPossible = true
-        let moveYPossible = true
-
-        for (const other of enemyArray) {
-            if (other === this) continue // sich selbst überspringen
-
-            if (this.checkCollisionHorizontal(other, moveStepX)) {
-                moveXPossible = false
-            }
-            if (this.checkCollisionVertical(other, moveStepY)) {
-                moveYPossible = false
-            }
-        }
-        if (moveXPossible) {
-            if (distanceX > 0)
-                this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, distanceX * this.speed, this.hitbox)
-            if (distanceX < 0)
-                this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, -distanceX * this.speed, this.hitbox)
-        }
-        if (moveYPossible) {
-            if (distanceY < 0)
-                this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, -distanceY * this.speed, this.hitbox)
-            if (distanceY > 0)
-                this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, distanceY * this.speed, this.hitbox)
-        }
+        const visitedForX = new Set()
+        const visitedForY = new Set()
+        const resultX=this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX)
+        const resultY=this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY)
     }
 
     die() {
