@@ -105,7 +105,7 @@ export class Enemy extends MovingEntity {
         
         enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
     }
-
+}
 
 export const enemyItemDrop = []
 export const enemyXpDrop = []
