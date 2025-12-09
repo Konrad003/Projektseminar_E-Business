@@ -24,6 +24,7 @@ export class game {
     mapData
 
     killCount = 0
+    mapChoice = 0 // 0 = Map1, 1 = Map2 Jungle
 
     gameTimer = 0
     timerInterval = null
@@ -42,6 +43,22 @@ export class game {
             .then(jsondata => {
                 this.mapData.push(jsondata); // JSON als ein Element im Array speichern
             })
+    }
+
+    mapSelect(map) {
+        switch (map) {
+            case 0:
+                this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.start()
+                break;
+            case 1:
+                this.mapChoice = './Code/Tiled/Map1.json';
+                this.start()
+                break;
+            default:
+                this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.start()
+        }
     }
 
     keyDownHandler(e) { // liest Input der Tastatur aus
@@ -82,6 +99,23 @@ export class game {
         }
     }
 
+    settingsListener(e) {
+        const form = document.getElementById("settingsForm");
+
+        //check if form exists
+        if (!form) return;
+
+        //submit listener
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            //logic
+            this.mapChoice = parseInt(document.getElementById("mapChoice").value);
+
+            //go to Home Screen
+            this.home();
+        })
+    }
+
     updateTimerDisplay() { // Aktualisiert die Anzeige des Timers im Format mm:ss
         const minutes = Math.floor(this.gameTimer / 60)
         const seconds = this.gameTimer % 60
@@ -116,8 +150,9 @@ export class game {
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
+        //Map Switch
         this.mapData = []
-        this.loadMap("./Code/Tiled/map2Jungle.json").then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
+        this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             //console.log(this.mapData.layers[0].data)
             //this.mapDataTiles = this.mapData.layers[0].data
@@ -126,10 +161,10 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
                 width: 16,
                 height: 16
-            }, 0, 0, 1, ctx)
+            }, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             console.log(this.mapData.width * this.mapData.tilewidth / 2)
             setInterval(() => this.render(), 5);
-        });
+        })
 
         //setInterval(spawnEnemy, 100
         setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
@@ -141,6 +176,7 @@ export class game {
         document.getElementById("defeatScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
+        document.getElementById("mapScreen").style.display = "none";
         document.getElementById("gameScreen").style.display = "flex";
     }
 
@@ -161,7 +197,15 @@ export class game {
         document.getElementById("pauseScreen").style.display = "none";
     }
 
+    chooseMap() {
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("mapScreen").style.display = "flex";
+    }
+
     settings() {
+        this.settingsListener()
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
@@ -207,7 +251,7 @@ export class game {
         document.getElementById("winScreen").style.display = "flex";
     }
 
-// Ende der Screen-Wechsel-Funktionen
+    // Ende der Screen-Wechsel-Funktionen
 
     render() {
         if (this.gamePaused) {
@@ -236,6 +280,7 @@ export class game {
             enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
             if (this.PlayerOne.checkCollision(enemy, 0, 0)) {        // Treffer?
+                this.PlayerOne.takeDmg(15)
                 enemy.die()
                 this.killCount++
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"

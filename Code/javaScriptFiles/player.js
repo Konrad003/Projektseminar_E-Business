@@ -19,6 +19,7 @@ export class Player extends MovingEntity {
         this.maxHp = hp;
         this.png = png;
         this.hitbox = hitbox;
+        this.onDeath = onDeath;
     }
 
 
@@ -50,7 +51,7 @@ export class Player extends MovingEntity {
 
     die() {
         console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
-        game.end()
+        this.onDeath(); 
     }
 
 
