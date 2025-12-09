@@ -55,7 +55,7 @@ export class Enemy extends MovingEntity {
 
         const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
 
-        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged));  
+        enemiesArray.push(new Enemy(x, y, 20, png, speed, hitbox, level, xpDrop, elite, ranged));  
     }
 
     // Gegner bewegt sich in Richtung Player
@@ -120,7 +120,7 @@ export class Enemy extends MovingEntity {
         } else {
             enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
         }
-    }
+        }
         
         enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
     }

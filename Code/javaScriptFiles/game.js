@@ -160,7 +160,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
                 width: 16,
                 height: 16
-            }, 0, 0, 1, ctx)
+            }, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             console.log(this.mapData.width * this.mapData.tilewidth / 2)
             setInterval(() => this.render(), 5);
         })
@@ -271,6 +271,7 @@ export class game {
             enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
             if (this.PlayerOne.checkCollision(enemy, 0, 0)) {        // Treffer?
+                this.PlayerOne.takeDmg(15)
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {

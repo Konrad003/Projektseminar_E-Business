@@ -2,7 +2,7 @@ import { MovingEntity } from "./movingEntity.js"
 export class Player extends MovingEntity {
     ctx
       
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -17,6 +17,7 @@ export class Player extends MovingEntity {
         this.maxHp = hp;
         this.png = png;
         this.hitbox = hitbox;
+        this.onDeath = onDeath;
     }
 
     
@@ -48,7 +49,7 @@ export class Player extends MovingEntity {
 
     die() {
         console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
-        this.game.end();
+        this.onDeath(); 
     }
     
 
