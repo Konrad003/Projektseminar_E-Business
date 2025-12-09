@@ -108,16 +108,12 @@ export class MovingEntity extends Entity{
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
     takeDmg(amount) {
         this.hp -= amount;
-
         if (this.hp <= 0) {
             this.hp = 0;
-            this.die?.(); // optional: Subklasse kann die() definieren
-            return { dead: true, hp: this.hp };
+            this.die();
         }
-
-        return { dead: false, hp: this.hp };
     }
 
-    die() { // Platzhalter, kann in Subklassen überschrieben werden
+    die() {
     }
 }
