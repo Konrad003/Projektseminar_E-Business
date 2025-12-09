@@ -170,3 +170,14 @@ export function handleEnemyItemPickups(player) {
         }
     }
 }
+
+export function handleEnemyXpPickups(player) {
+    for (let i = enemyXpDrop.length - 1; i >= 0; i--) {
+        const drop = enemyXpDrop[i]
+
+        if (player.checkCollision(drop, 0, 0)) {
+            player.collectXp(2) // Jeder XP-Drop gibt 2 XP
+            enemyXpDrop.splice(i, 1)  //aufgesammelte XP wird gelöscht
+        }
+    }
+}
