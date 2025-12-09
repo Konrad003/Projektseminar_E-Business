@@ -5,8 +5,8 @@
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import { Enemy } from "./enemy.js"
-import { drawEnemyItem, drawEnemyXp, handleEnemyItemPickups } from "./enemy.js"
+import {Enemy} from "./enemy.js"
+import {drawEnemyItem, drawEnemyXp, handleEnemyItemPickups} from "./enemy.js"
 //import { Projectile } from "./projectile.js"
 //import { Weapon } from "./weapon.js";
 
@@ -237,6 +237,7 @@ export class game {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "flex";
     }
+
     // Ende der Screen-Wechsel-Funktionen
 
     render() {
@@ -265,7 +266,7 @@ export class game {
 
             enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
             this.MapOne.drawMiniEnemy(enemy)
-            if (this.PlayerOne.checkCollision(enemy,0,0)) {        // Treffer?
+            if (this.PlayerOne.checkCollision(enemy, 0, 0)) {        // Treffer?
                 enemy.die()
                 this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
             } else {
@@ -276,7 +277,7 @@ export class game {
         }
 
         drawEnemyItem(ctx, this.PlayerOne, this.MapOne)
-        drawEnemyXp(ctx, this.PlayerOne, this.MapOne) 
+        drawEnemyXp(ctx, this.PlayerOne, this.MapOne)
 
         handleEnemyItemPickups(this.PlayerOne)
     }
