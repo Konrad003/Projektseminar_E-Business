@@ -26,6 +26,9 @@ export class game {
     gameTimer = 0
     timerInterval = null
 
+    enemySpawnInterval = null // Intervall für Gegner-Spawns
+    renderInterval = null // Intervall für das Rendern
+
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
     constructor() {
@@ -123,11 +126,11 @@ export class game {
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, { width: 16, height: 16 }, 0, 0, 1, ctx)
             console.log(this.mapData.width * this.mapData.tilewidth / 2)
-            setInterval(() => this.render(), 5);
+            this.renderInterval = setInterval(() => this.render(), 5);
         });
 
         //setInterval(spawnEnemy, 100
-        setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+        this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
 
         this.resetTimer()
         this.startGameTimer()
@@ -194,6 +197,83 @@ export class game {
         document.getElementById("winScreen").style.display = "flex";
     }
 // Ende der Screen-Wechsel-Funktionen
+
+    resetGame() {
+
+        // Timer stoppen und zurücksetzen
+        this.stopGameTimer()
+        this.resetTimer()
+
+        // Intervalle für Rendern und Gegner-Spawns stoppen
+        if (this.renderInterval) {
+            clearInterval(this.renderInterval)
+            this.renderInterval = null
+        }
+        if (this.enemySpawnInterval) {
+            clearInterval(this.enemySpawnInterval)
+            this.enemySpawnInterval = null
+        }
+
+        // Gegner-Array leeren
+        this.enemies = []
+
+        // Eingabeflags zurücksetzen
+        this.upPressed = false
+        this.downPressed = false
+        this.leftPressed = false
+        this.rightPressed = false
+
+        // Spiel-status zurücksetzen
+        this.gamePaused = false
+
+        // Canvas leeren
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        // Map und Spieler neu erzeugen
+        if (this.mapData) {
+            this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
+            this.PlayerOne = new Player(
+                this.mapData.width * this.mapData.tilewidth / 2,
+                this.mapData.height * this.mapData.tilewidth / 2,
+                100,
+                null,
+                1.5,
+                {width: 16, height: 16},
+                0,
+                0,
+                1,
+                ctx
+            )
+        }
+
+        // Timer neu starten
+        this.startGameTimer()
+
+        // Render-Intervall neu starten
+        this.renderInterval = setInterval(() => this.render(), 5)
+
+        // Gegner-Spawning neu starten
+        if (this.mapData) {
+            this.enemySpawnInterval = setInterval(
+                () => Enemy.spawnEnemyAtEdge(
+                    this.enemies,
+                    this.mapData.width * this.mapData.tilewidth,
+                    this.mapData.height * this.mapData.tilewidth
+                ),
+                2000
+            )
+        }
+
+        // Screen-Wechsel zu Game-Screen
+        document.getElementById("defeatScreen").style.display = "none";
+        document.getElementById("winScreen").style.display = "none";
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "flex";
+
+
+    }
 
     render() {
         if (this.gamePaused) {
