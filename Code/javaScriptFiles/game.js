@@ -239,11 +239,10 @@ export class game {
     end() {
         this.stopGameTimer()
         this.resetTimer()
-        this.resetGame()
 
-        //document.getElementById("defeatTime")
-        //document.getElementById("defeatXP")
         document.getElementById("defeatKills").innerHTML = this.killCount
+
+        this.resetGame()
 
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
@@ -255,11 +254,10 @@ export class game {
     endWin() {
         this.stopGameTimer()
         this.resetTimer()
-        this.resetGame()
 
-        //document.getElementById("winTime")
-        //document.getElementById("winXP")
         document.getElementById("winKills").innerHTML = this.killCount
+
+        this.resetGame()
 
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
