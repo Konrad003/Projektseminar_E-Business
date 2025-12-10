@@ -5,9 +5,10 @@
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import { drawEnemyItem, drawEnemyXp, handleEnemyItemPickups, handleEnemyXpPickups} from "./enemy.js"
-import { Projectile } from "./projectile.js"
-import { Weapon } from "./weapon.js";
+import {Enemy} from "./enemy.js"
+import {drawEnemyItem, drawEnemyXp, handleEnemyItemPickups, handleEnemyXpPickups} from "./enemy.js"
+import {Projectile} from "./projectile.js"
+import {Weapon} from "./weapon.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -38,7 +39,7 @@ export class game {
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
-        this.weapon = Weapon.create("basic gun")
+        this.weapon = Weapon.create("basic")
     }
 
     loadMap(file) {
@@ -184,7 +185,7 @@ export class game {
         document.getElementById("gameScreen").style.display = "flex";
     }
 
-// Beginn der Screen-Wechsel-Funktionen
+    // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
         this.gamePaused = true; //flag boolean for render function
 
@@ -357,18 +358,18 @@ export class game {
         this.MapOne.draw(this.PlayerOne)
         this.PlayerOne.draw(ctx, canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox.width, this.PlayerOne.hitbox.height, 'blue')
         //WAFFE SCHIESSEN
-        this.weapon.shoot(this.PlayerOne, this.projectiles, performance.now());
+        this.weapon.shoot(this.PlayerOne, this.projectiles, performance.now(), this.enemies);
 
         //PROJEKTILE BEWEGEN + ZEICHNEN
         Projectile.handleProjectiles(
-                ctx,
-                this.projectiles,
-                this.enemies,
-                this.PlayerOne,
-                this.MapOne,
-                () => {
+            ctx,
+            this.projectiles,
+            this.enemies,
+            this.PlayerOne,
+            this.MapOne,
+            () => {
                 this.killCount++;
-                }
+            }
         );
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {

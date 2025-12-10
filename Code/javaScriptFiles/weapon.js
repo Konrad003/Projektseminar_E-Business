@@ -1,6 +1,6 @@
-import { Projectile } from "./projectile.js";
-import { Item } from "./item.js";
-
+import {Projectile} from "./projectile.js";
+import {Item} from "./item.js";
+import {Enemy} from "./enemy.js";
 
 export class Weapon extends Item {
     constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount) {
@@ -16,11 +16,7 @@ export class Weapon extends Item {
     }
 
 
-
-
-
-
-    shoot(player, projectiles, currentTime) {
+    shoot(player, projectiles, currentTime, enemies) {
         // Check if the cooldown has passed
         if (currentTime - this.lastShotTime < this.cooldown) {
             return; // Still on cooldown
@@ -32,8 +28,27 @@ export class Weapon extends Item {
 
         // Create a projectile
         for (let i = 0; i < this.amount; i++) {
-            const angle = Math.random() * Math.PI * 2; // Fires in a random direction
-            const dir = { x: Math.cos(angle), y: Math.sin(angle) };
+            let dir
+            if (this.focus === 1) {
+                let closestEnemy={enemy:null, distance:99999}
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    let enemy = enemies[i]
+                    let distanceX = player.globalEntityX - enemy.globalEntityX
+                    let distanceY = player.globalEntityY - enemy.globalEntityY
+
+                    let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
+                    if (distance < closestEnemy.distance) {
+                        closestEnemy = {enemy: enemy, distance: distance}
+                    }
+                }
+                let distanceX = (closestEnemy.enemy.globalEntityX - player.globalEntityX)
+                let distanceY = (closestEnemy.enemy.globalEntityY - player.globalEntityY)
+                let angle = Math.atan2(distanceY, distanceX);
+                dir = {x: Math.cos(angle), y: Math.sin(angle)};
+            } else if (this.focus === 0) {
+                let angle = Math.random() * Math.PI * 2; // Fires in a random direction
+                dir = {x: Math.cos(angle), y: Math.sin(angle)};
+            }
 
 
             const p = new Projectile(
@@ -42,7 +57,7 @@ export class Weapon extends Item {
                 1, // hp
                 null, // png
                 5, // speed
-                { width: 8, height: 8 }, // hitbox
+                {width: 8, height: 8}, // hitbox
                 false, // piercing
                 8, // size
                 dir, // direction
@@ -53,10 +68,11 @@ export class Weapon extends Item {
             projectiles.push(p); // Add the projectile to the game's array
         }
     }
- static create(type) {
+
+    static create(type) {
         switch (type) {
             case "basic":
-                return new Weapon(null, "Basic Gun", null, 10, 300, 0, 0, 1000, 1, 1);
+                return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1);
 
 
             case "shotgun":
