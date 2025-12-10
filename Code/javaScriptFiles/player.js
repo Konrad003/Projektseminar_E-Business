@@ -4,7 +4,7 @@ import {game} from "./game.js"
 export class Player extends MovingEntity {
     ctx
 
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -14,7 +14,7 @@ export class Player extends MovingEntity {
         this.ausrüstung = ausrüstung;
         this.weapons = weapons;
         this.regeneration = regeneration;
-        this.ctx = ctx
+        this.ctx = ctx;
         this.hp = hp;
         this.maxHp = hp;
         this.png = png;
