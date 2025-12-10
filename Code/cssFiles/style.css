@@ -237,8 +237,26 @@ h1 {
     color: var(--yellow);
 }
 
+.hud-time {
+    color: var(--yellow);
+}
+
 .hud-item span {
     color: var(--white);
 }
+
+progress {
+    height: 20px;
+    width: 200px;
+}
+
+#hudHealthProgress {
+    accent-color: var(--yellow);
+}
+
+#hudXpProgress {
+    accent-color: blue;
+}
+
 
 /* Ende HUD Styles */

@@ -34,6 +34,9 @@ export class game {
 
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
+    hudHealthProgress = document.getElementById("hudHealthProgress")
+    hudXpProgress = document.getElementById("hudXpProgress")
+
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
@@ -104,7 +107,7 @@ export class game {
         }
     }
 
-    settingsListener(e) {
+    settingsListener() {
         const form = document.getElementById("settingsForm");
 
         //check if form exists
@@ -169,6 +172,11 @@ export class game {
             }, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             //console.log(this.mapData.width * this.mapData.tilewidth / 2)
             this.renderInterval = setInterval(() => this.render(), 5);
+
+            this.hudHealthProgress.max = this.PlayerOne.maxHp
+            this.hudHealthProgress.value = this.PlayerOne.hp
+            this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
+            this.hudXpProgress.value = this.PlayerOne.xp
         });
 
         //setInterval(spawnEnemy, 100
@@ -183,6 +191,8 @@ export class game {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("mapScreen").style.display = "none";
         document.getElementById("gameScreen").style.display = "flex";
+
+
     }
 
     // Beginn der Screen-Wechsel-Funktionen
@@ -232,9 +242,9 @@ export class game {
         this.stopGameTimer()
         this.resetTimer()
 
-        //document.getElementById("defeatTime")
-        //document.getElementById("defeatXP")
         document.getElementById("defeatKills").innerHTML = this.killCount
+
+        this.resetGame()
 
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
@@ -247,9 +257,9 @@ export class game {
         this.stopGameTimer()
         this.resetTimer()
 
-        //document.getElementById("winTime")
-        //document.getElementById("winXP")
         document.getElementById("winKills").innerHTML = this.killCount
+
+        this.resetGame()
 
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
@@ -259,12 +269,18 @@ export class game {
     }
 
     // Ende der Screen-Wechsel-Funktionen
+    restart() {
+        this.resetGame()
+        this.start()
+    }
+
 
     resetGame() {
-
         // Timer stoppen und zurücksetzen
         this.stopGameTimer()
         this.resetTimer()
+
+
 
         // Intervalle für Rendern und Gegner-Spawns stoppen
         if (this.renderInterval) {
@@ -278,6 +294,10 @@ export class game {
 
         // Gegner-Array leeren
         this.enemies = []
+        this.MapOne = null
+        this.PlayerOne = null
+        this.mapData = null
+
         // Projektile-Array leeren
         this.projectiles = []
         // Eingabeflags zurücksetzen
@@ -292,50 +312,8 @@ export class game {
         // Canvas leeren
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        // Map und Spieler neu erzeugen
-        if (this.mapData) {
-            this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(
-                this.mapData.width * this.mapData.tilewidth / 2,
-                this.mapData.height * this.mapData.tilewidth / 2,
-                100,
-                null,
-                1.5,
-                {width: 16, height: 16},
-                0,
-                0,
-                1,
-                ctx
-            )
-        }
-
-        // Timer neu starten
-        this.startGameTimer()
-
-        // Render-Intervall neu starten
-        this.renderInterval = setInterval(() => this.render(), 5)
-
-        // Gegner-Spawning neu starten
-        if (this.mapData) {
-            this.enemySpawnInterval = setInterval(
-                () => Enemy.spawnEnemyAtEdge(
-                    this.enemies,
-                    this.mapData.width * this.mapData.tilewidth,
-                    this.mapData.height * this.mapData.tilewidth
-                ),
-                2000
-            )
-        }
-
-        // Screen-Wechsel zu Game-Screen
-        document.getElementById("defeatScreen").style.display = "none";
-        document.getElementById("winScreen").style.display = "none";
-        document.getElementById("pauseScreen").style.display = "none";
-        document.getElementById("startScreen").style.display = "none";
-        document.getElementById("settingsScreen").style.display = "none";
-        document.getElementById("gameScreen").style.display = "flex";
-
-
+        //Andere Variablen
+        this.killCount = 0
     }
 
     render() {
@@ -394,6 +372,9 @@ export class game {
 
         handleEnemyItemPickups(this.PlayerOne)
         handleEnemyXpPickups(this.PlayerOne)
+
+        this.hudHealthProgress.max = this.PlayerOne.maxHp
+        this.hudHealthProgress.value = this.PlayerOne.hp
     }
 }
 
