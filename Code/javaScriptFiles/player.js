@@ -19,6 +19,7 @@ export class Player extends MovingEntity {
         this.maxHp = hp;
         this.png = png;
         this.hitbox = hitbox;
+        this.baseSpeed = speed;
         this.onDeath = onDeath;
     }
 
