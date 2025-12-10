@@ -161,12 +161,15 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 1.5, {
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, null, 1.5, {
                 width: 16,
                 height: 16
             }, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             console.log(this.mapData.width * this.mapData.tilewidth / 2)
             this.renderInterval = setInterval(() => this.render(), 5);
+
+            document.getElementById("hudHealthProgress").style.max = this.PlayerOne.maxHp
+            document.getElementById("hudHealthProgress").style.value = this.PlayerOne.hp
         });
 
         //setInterval(spawnEnemy, 100

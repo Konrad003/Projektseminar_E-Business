@@ -4,7 +4,7 @@ import {game} from "./game.js"
 export class Player extends MovingEntity {
     ctx
 
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -16,7 +16,7 @@ export class Player extends MovingEntity {
         this.regeneration = regeneration;
         this.ctx = ctx;
         this.hp = hp;
-        this.maxHp = hp;
+        this.maxHp = maxHp;
         this.png = png;
         this.hitbox = hitbox;
         this.onDeath = onDeath;
@@ -51,7 +51,7 @@ export class Player extends MovingEntity {
 
     die() {
         console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
-        this.onDeath(); 
+        this.onDeath();
     }
 
 
