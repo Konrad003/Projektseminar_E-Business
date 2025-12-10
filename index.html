@@ -27,7 +27,7 @@
         </div>
 
         <div class="hud-section section-right">
-            <progress id="hudXpProgress" value="50" max="100"></progress>
+            <progress id="hudXpProgress" value="" max=""></progress>
         </div>
 
         <div class="hud-section section-right">
@@ -124,7 +124,7 @@
     </div>
 
     <div class="flex-row-gap" style="margin-top: 20px;">
-        <button class="btn" id="retryButtonDefeat" onclick="Game.resetGame()">Retry</button>
+        <button class="btn" id="retryButtonDefeat" onclick="Game.restart()">Retry</button>
         <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()">Start Menu</button>
     </div>
 </section>
@@ -134,13 +134,13 @@
         You survived!
     </h1>
     <div class="statsPanel">
-        <p>Time: <span class="stat-val" id="winTime">02:13</span></p>
+        <p>Time: <span class="stat-val" id="winTime">10:00</span></p>
         <p>XP: <span class="stat-val" id="winXP">2300</span></p>
         <p>Kills: <span class="stat-val" id="winKills">0</span></p>
     </div>
 
     <div class="flex-row-gap" style="margin-top: 20px;">
-        <button class="btn" id="retryButtonWin" onclick="Game.resetGame()">Retry</button>
+        <button class="btn" id="retryButtonWin" onclick="Game.restart()">Retry</button>
         <button class="btn" id="startMenuButtonWin" onclick="Game.home()">Start Menu</button>
     </div>
 </section>

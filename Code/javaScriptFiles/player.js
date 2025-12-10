@@ -3,13 +3,14 @@ import {game} from "./game.js"
 
 export class Player extends MovingEntity {
     ctx
+    xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
 
-        this.xp = 0;
+        this.xp = xp;
         this.level = 1;
         this.ausrüstung = ausrüstung;
         this.weapons = weapons;
@@ -20,8 +21,9 @@ export class Player extends MovingEntity {
         this.png = png;
         this.hitbox = hitbox;
         this.onDeath = onDeath;
-    }
 
+        this.xpForNextLevel = this.level * 10;
+    }
 
     handleInput(map, inputState) {
         let speed = this.speed
@@ -38,22 +40,17 @@ export class Player extends MovingEntity {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
     }
 
-
     lvlUp() {
         this.level++;
         this.hp = this.maxHp; // volle Heilung bei Level-Up
         this.speed += 0.2; // das sind nur beispiele, können wir dann ändern
         this.regeneration += 0.1;
-        console.log(`Level Up! Neues Level: ${this.level}`);
-        alert("Level Up! Neues Level: " + this.level);
-        alert("xp bis zum nächsten Level: " + (this.level * 10 - this.xp));
     }
 
     die() {
         console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
         this.onDeath();
     }
-
 
     collectPickup(item) { //wird von game aufgerufen wenn collision mit item, übergibt logik an itemklasse
         if (!item) return;
@@ -62,10 +59,13 @@ export class Player extends MovingEntity {
 
     collectXp(xpAmount) {
         this.xp += xpAmount;
-        const xpForNextLevel = this.level * 10; // Beispiel: 10 XP pro Level
-        if (this.xp >= xpForNextLevel) {
-            this.xp -= xpForNextLevel; // Überschüssige XP behalten
+        this.xpForNextLevel = this.level * 10 - this.xp; // Beispiel: 10 XP pro Level
+        if (this.xp >= this.xpForNextLevel) {
+            this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
+
+            Game.hudXpProgress.max = this.level * 10;
         }
+        Game.hudXpProgress.value = this.xp;
     }
 }
