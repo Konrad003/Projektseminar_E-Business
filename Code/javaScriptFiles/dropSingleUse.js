@@ -27,12 +27,26 @@ export class SpeedBoostDrop extends DropSingleUse {
     }
 
     apply(player) {
-        player.speed *= this.speedMultiplier
 
-        setTimeout(() => {
-            player.speed /= this.speedMultiplier
-        }, this.duration)
+    // Basis-Speed merken (falls noch nicht gesetzt)
+    if (player.baseSpeed == null) {
+        player.baseSpeed = player.speed
     }
+
+    // Falls schon ein Speedboost aktiv → NUR Timer resetten
+    if (player.speedBoostTimeout) {
+        clearTimeout(player.speedBoostTimeout)
+    } else {
+        // nur erhöhen wenn neu aktiviert
+        player.speed = player.baseSpeed * this.speedMultiplier
+    }
+
+    // Effekt-Dauer resetten
+    player.speedBoostTimeout = setTimeout(() => {
+        player.speed = player.baseSpeed
+        player.speedBoostTimeout = null
+    }, this.duration)
+}
 }
 
     export class HealDrop extends DropSingleUse {
