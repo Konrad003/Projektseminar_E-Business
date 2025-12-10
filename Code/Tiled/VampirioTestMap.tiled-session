@@ -10,7 +10,8 @@
     "exportAsImage.useCurrentScale": true,
     "fileStates": {
         "": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "#Vulkan": {
             "dynamicWrapping": false
@@ -58,8 +59,8 @@
             "scale": 2,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 52,
-                "y": 168.75
+                "x": 1549,
+                "y": 12900.25
             }
         },
         "map2Jungle.json#tf_jungle_a1": {
@@ -69,10 +70,12 @@
             "scaleInDock": 1
         },
         "map2Jungle.json#tf_jungle_a5": {
-            "scaleInDock": 1.5
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
         },
         "map2Jungle.json#tf_jungle_b": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         }
     },
     "last.exportedFilePath": "C:/Users/49173/Documents/GitHub/Projektseminar_E-Business/Code/Tiled",
