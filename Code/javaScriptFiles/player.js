@@ -5,25 +5,25 @@ export class Player extends MovingEntity {
     xpForNextLevel;
 
     constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
-        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-        this.globalEntityX = globalEntityX
-        this.globalEntityY = globalEntityY
+            super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
+            this.globalEntityX = globalEntityX
+            this.globalEntityY = globalEntityY
 
-        this.xp = xp;
-        this.level = 1;
-        this.ausrüstung = ausrüstung;
-        this.weapons = weapons;
-        this.regeneration = regeneration;
-        this.ctx = ctx;
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.png = png;
-        this.hitbox = hitbox;
-        this.baseSpeed = speed;
-        this.onDeath = onDeath;
+            this.hp = hp;
+            this.maxHp = maxHp;
+            this.xp = xp;
+            this.level = 1;
+            this.png = png;
+            this.baseSpeed = speed;
+            this.hitbox = hitbox;
+            this.ausrüstung = ausrüstung;
+            this.weapons = weapons;
+            this.regeneration = regeneration;
+            this.ctx = ctx;
+            this.onDeath = onDeath;
 
-        this.xpForNextLevel = this.level * 10;
-    }
+            this.xpForNextLevel = this.level * 10;
+        }
 
     handleInput(map, inputState) {
         let speed = this.speed

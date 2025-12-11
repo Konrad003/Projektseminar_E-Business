@@ -3,19 +3,16 @@ import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
 
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false) {
-        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-        this.level = level
-        this.xpDrop = xpDrop
-        this.elite = elite
-        this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
-        this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
-        this.ranged = ranged
-        this.hp = hp
-        this.png = png
-        this.hitbox = hitbox
-        this.speed = speed
-    }
+   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false) {
+            super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
+            // Nur Enemy-spezifische Felder nach Aufruf von super() setzen
+            this.level = level
+            this.xpDrop = xpDrop
+            this.elite = elite
+            this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
+            this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
+            this.ranged = ranged
+        }
 
     // Gegner zufällig am Kartenrand spawnen
     static spawnEnemyAtEdge(enemiesArray, mapWidth, mapHeight) {
