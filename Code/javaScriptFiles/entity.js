@@ -6,10 +6,10 @@ export class Entity {
     png
 
     constructor(globalEntityX, globalEntityY, hitbox, png) {
-    this.globalEntityX = globalEntityX
-    this.globalEntityY = globalEntityY
-    this.hitbox = hitbox
-    this.png = png
+        this.globalEntityX = globalEntityX
+        this.globalEntityY = globalEntityY
+        this.hitbox = hitbox
+        this.png = png
     }
 
     draw(ctx, x, y, width, height, color) {
@@ -18,6 +18,6 @@ export class Entity {
         ctx.fillStyle = color;
         ctx.fill();
         ctx.strokeStyle = color;
-        ctx.stroke();    
+        ctx.stroke();
     }
 }

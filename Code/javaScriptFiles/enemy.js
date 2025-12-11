@@ -1,4 +1,4 @@
-import {DropSingleUse, SpeedBoostDrop, HealDrop} from "./dropSingleUse.js"
+import {DropSingleUse, HealDrop, SpeedBoostDrop} from "./dropSingleUse.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
@@ -80,13 +80,12 @@ export class Enemy extends MovingEntity {
         const moveStepY = distanceY * this.speed
         const visitedForX = new Set()
         const visitedForY = new Set()
-        const resultX=this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX)
-        const resultY=this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY)
+        const resultX = this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX)
+        const resultY = this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY)
     }
 
     die() {
         console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
-
 
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
@@ -101,8 +100,7 @@ export class Enemy extends MovingEntity {
                 enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
             }
         }
-    
-        
+
         enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
     }
 }

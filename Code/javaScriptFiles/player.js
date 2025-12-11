@@ -1,5 +1,4 @@
 import {MovingEntity} from "./movingEntity.js"
-import {game} from "./game.js"
 
 export class Player extends MovingEntity {
     ctx
@@ -29,16 +28,21 @@ export class Player extends MovingEntity {
     handleInput(map, inputState) {
         let speed = this.speed
         if ((inputState.rightPressed || inputState.leftPressed)         //Diagonalbewegung smoother
-            && (inputState.upPressed || inputState.downPressed))
+            && (inputState.upPressed || inputState.downPressed)) {
             speed /= 1.8
-        if (inputState.rightPressed)
+        }
+        if (inputState.rightPressed) {
             this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
-        if (inputState.upPressed)
+        }
+        if (inputState.upPressed) {
             this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
-        if (inputState.leftPressed)
+        }
+        if (inputState.leftPressed) {
             this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
-        if (inputState.downPressed)
+        }
+        if (inputState.downPressed) {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+        }
     }
 
     lvlUp() {

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Vampirio.io</title>
     <link href="./Code/cssFiles/style.css" rel="stylesheet">
 </head>
+
 <body>
 <section class="screen" id="gameScreen">
     <div class="hud-top-panel-flex">
@@ -17,7 +19,7 @@
         </div>
 
         <div class="hud-section section-left">
-            <progress id="hudHealthProgress" value="" max=""></progress>
+            <progress id="hudHealthProgress" max="" value=""></progress>
         </div>
 
         <div class="hud-section section-center">
@@ -27,7 +29,7 @@
         </div>
 
         <div class="hud-section section-right">
-            <progress id="hudXpProgress" value="" max=""></progress>
+            <progress id="hudXpProgress" max="" value=""></progress>
         </div>
 
         <div class="hud-section section-right">
@@ -35,11 +37,9 @@
                 XP: <span id="hudXP">2301</span>
             </div>
         </div>
-
     </div>
 
     <canvas height="1600" id="game" width="2400"></canvas>
-
 </section>
 
 <section class="screen" id="startScreen">
@@ -70,14 +70,15 @@
                 <input checked id="effects" type="checkbox">
                 <label for="effects">Sound effects</label>
             </div>
+
             <div class="settings" id="gameSettings">
                 <input id="speed" max="1" min="0" step="0.01" type="range" value="0.5">
                 <label for="speed">Game Speed</label>
 
                 <input id="mapChoice" max="1" min="0" step="1" type="number" value="0">
                 <label for="mapChoice">Map Choice (0-1)</label>
-
             </div>
+
             <div class="settings" id="keySettings">
                 <input id="keyUp" type="text" value="W">
                 <label for="keyUp">Move Up Key</label>
@@ -103,6 +104,7 @@
 
 <section class="screen overlay-dark" id="pauseScreen">
     <h1 class="screenTitle">PAUSED</h1>
+
     <div class="menu">
         <button class="btn" onclick="Game.resumeGame()">RESUME</button>
         <button class="btn" onclick="Game.settings()">SETTINGS</button>
@@ -117,6 +119,7 @@
     <h1 class="screenTitle">
         You have been defeated!
     </h1>
+
     <div class="statsPanel">
         <p>Time: <span class="stat-val" id="defeatTime">02:13</span></p>
         <p>XP: <span class="stat-val" id="defeatXP">2300</span></p>
@@ -133,6 +136,7 @@
     <h1 class="screenTitle">
         You survived!
     </h1>
+
     <div class="statsPanel">
         <p>Time: <span class="stat-val" id="winTime">10:00</span></p>
         <p>XP: <span class="stat-val" id="winXP">2300</span></p>
@@ -144,7 +148,6 @@
         <button class="btn" id="startMenuButtonWin" onclick="Game.home()">Start Menu</button>
     </div>
 </section>
-
 
 <script defer src="./Code/javaScriptFiles/game.js" type="module"></script>
 </body>

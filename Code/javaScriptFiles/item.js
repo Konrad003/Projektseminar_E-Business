@@ -1,4 +1,5 @@
-import { StaticEntity } from "./staticEntity.js"
+import {StaticEntity} from "./staticEntity.js"
+
 export class Item extends StaticEntity {
 
     constructor(globalEntityX, globalEntityY, hitbox, png, icon, description) {

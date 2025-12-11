@@ -1,6 +1,5 @@
 import {Projectile} from "./projectile.js";
 import {Item} from "./item.js";
-import {Enemy} from "./enemy.js";
 
 export class Weapon extends Item {
     constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount) {
@@ -15,6 +14,24 @@ export class Weapon extends Item {
         this.lastShotTime = 0; // Timestamp of the last shot
     }
 
+    static create(type) {
+        switch (type) {
+            case "basic":
+                return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1);
+
+
+            case "shotgun":
+                return new Weapon(null, "Shotgun", null, 6, 800, 0, 0, 500, 1, 6);
+
+
+            case "sniper":
+                return new Weapon(null, "Sniper", null, 30, 1200, 0, 0, 2000, 1, 1);
+
+
+            default:
+                return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 1);
+        }
+    }
 
     shoot(player, projectiles, currentTime, enemies) {
         // Check if the cooldown has passed
@@ -30,7 +47,7 @@ export class Weapon extends Item {
         for (let i = 0; i < this.amount; i++) {
             let dir
             if (this.focus === 1) {
-                let closestEnemy={enemy:null, distance:99999}
+                let closestEnemy = {enemy: null, distance: 99999}
                 for (let i = enemies.length - 1; i >= 0; i--) {
                     let enemy = enemies[i]
                     let distanceX = player.globalEntityX - enemy.globalEntityX
@@ -51,10 +68,8 @@ export class Weapon extends Item {
             }
 
 
-            const p = new Projectile(
-                player.globalEntityX, // Use the player's current position
-                player.globalEntityY,
-                1, // hp
+            const p = new Projectile(player.globalEntityX, // Use the player's current position
+                player.globalEntityY, 1, // hp
                 null, // png
                 5, // speed
                 {width: 8, height: 8}, // hitbox
@@ -66,25 +81,6 @@ export class Weapon extends Item {
 
 
             projectiles.push(p); // Add the projectile to the game's array
-        }
-    }
-
-    static create(type) {
-        switch (type) {
-            case "basic":
-                return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1);
-
-
-            case "shotgun":
-                return new Weapon(null, "Shotgun", null, 6, 800, 0, 0, 500, 1, 6);
-
-
-            case "sniper":
-                return new Weapon(null, "Sniper", null, 30, 1200, 0, 0, 2000, 1, 1);
-
-
-            default:
-                return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 1);
         }
     }
 }
