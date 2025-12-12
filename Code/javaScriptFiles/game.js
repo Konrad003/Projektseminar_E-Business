@@ -5,8 +5,7 @@
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {Enemy} from "./enemy.js"
-import {drawEnemyItem, drawEnemyXp, handleEnemyItemPickups, handleEnemyXpPickups} from "./enemy.js"
+import {drawEnemyItem, drawEnemyXp, Enemy, handleEnemyItemPickups, handleEnemyXpPickups} from "./enemy.js"
 import {Projectile} from "./projectile.js"
 import {Weapon} from "./weapon.js";
 
@@ -87,8 +86,6 @@ export class game {
             if (document.getElementById("gameScreen").style.display === "flex") {
                 this.pauseGame() // Spiel nur pausieren, wenn Game läuft
             }
-
-            return;
         }
     }
 
@@ -128,8 +125,7 @@ export class game {
         const minutes = Math.floor(this.gameTimer / 60)
         const seconds = this.gameTimer % 60
         // Format mm:ss
-        document.getElementById("hudTime").textContent =
-            `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+        document.getElementById("hudTime").textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
     }
 
     startGameTimer() { // Startet den Spieltimer
@@ -154,7 +150,7 @@ export class game {
     }
 
     start() {
-        const timestamp = Date.now();
+        this.timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
 
@@ -166,10 +162,8 @@ export class game {
             //this.mapDataTiles = this.mapData.layers[0].data
 
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 10.5, null, 5,{
-                width: 16,
-                height: 16
-            }, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 10.5, null, 5, {width: 16, height: 16}, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+
             //console.log(this.mapData.width * this.mapData.tilewidth / 2)
             this.renderInterval = setInterval(() => this.render(), 5);
 
@@ -281,7 +275,6 @@ export class game {
         this.resetTimer()
 
 
-
         // Intervalle für Rendern und Gegner-Spawns stoppen
         if (this.renderInterval) {
             clearInterval(this.renderInterval)
@@ -339,16 +332,9 @@ export class game {
         this.weapon.shoot(this.PlayerOne, this.projectiles, performance.now(), this.enemies);
 
         //PROJEKTILE BEWEGEN + ZEICHNEN
-        Projectile.handleProjectiles(
-            ctx,
-            this.projectiles,
-            this.enemies,
-            this.PlayerOne,
-            this.MapOne,
-            () => {
-                this.killCount++;
-            }
-        );
+        Projectile.handleProjectiles(ctx, this.projectiles, this.enemies, this.PlayerOne, this.MapOne, () => {
+            this.killCount++;
+        });
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]

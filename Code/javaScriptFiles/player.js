@@ -1,44 +1,48 @@
 import {MovingEntity} from "./movingEntity.js"
-import {game} from "./game.js"
 
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
     constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
-        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-        this.globalEntityX = globalEntityX
-        this.globalEntityY = globalEntityY
+            super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
+            this.globalEntityX = globalEntityX
+            this.globalEntityY = globalEntityY
 
-        this.xp = xp;
-        this.level = 1;
-        this.ausrüstung = ausrüstung;
-        this.weapons = weapons;
-        this.regeneration = regeneration;
-        this.ctx = ctx;
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.png = png;
-        this.hitbox = hitbox;
-        this.baseSpeed = speed;
-        this.onDeath = onDeath;
+            this.hp = hp;
+            this.maxHp = maxHp;
+            this.xp = xp;
+            this.level = 1;
+            this.png = png;
+            this.baseSpeed = speed;
+            this.hitbox = hitbox;
+            this.ausrüstung = ausrüstung;
+            this.weapons = weapons;
+            this.regeneration = regeneration;
+            this.ctx = ctx;
+            this.onDeath = onDeath;
 
-        this.xpForNextLevel = this.level * 10;
-    }
+            this.xpForNextLevel = this.level * 10;
+        }
 
     handleInput(map, inputState) {
         let speed = this.speed
         if ((inputState.rightPressed || inputState.leftPressed)         //Diagonalbewegung smoother
-            && (inputState.upPressed || inputState.downPressed))
+            && (inputState.upPressed || inputState.downPressed)) {
             speed /= 1.8
-        if (inputState.rightPressed)
+        }
+        if (inputState.rightPressed) {
             this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
-        if (inputState.upPressed)
+        }
+        if (inputState.upPressed) {
             this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
-        if (inputState.leftPressed)
+        }
+        if (inputState.leftPressed) {
             this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
-        if (inputState.downPressed)
+        }
+        if (inputState.downPressed) {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+        }
     }
 
     lvlUp() {

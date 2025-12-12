@@ -1,9 +1,10 @@
-class Equipment extends Item{
+class Equipment extends Item {
 
     attackBonus
     defenseBonus
     xpBonus
     projectileSize
+
     //usw.
 
     constructor(icon, description, picture, attackBonus, defenseBonus, xpBonus, projectileSize /*usw.*/) {
@@ -14,7 +15,7 @@ class Equipment extends Item{
         this.projectileSize = projectileSize
         //usw.
     }
-    
+
     apply() {
 
     }
