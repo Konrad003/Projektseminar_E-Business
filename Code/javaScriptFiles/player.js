@@ -4,11 +4,10 @@ export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle ) {
             super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
             this.globalEntityX = globalEntityX
             this.globalEntityY = globalEntityY
-
             this.hp = hp;
             this.maxHp = maxHp;
             this.xp = xp;
@@ -22,6 +21,8 @@ export class Player extends MovingEntity {
             this.ctx = ctx;
             this.onDeath = onDeath;
 
+            this.canvasWidthMiddle = canvasWidthMiddle
+            this.canvasWidthHeight = canvasHeightMiddle
             this.xpForNextLevel = this.level * 10;
         }
 
@@ -72,5 +73,11 @@ export class Player extends MovingEntity {
             Game.hudXpProgress.max = this.level * 10;
         }
         Game.hudXpProgress.value = this.xp;
+    }
+
+    render(map, inputState){
+        console.log(this.maxHp)
+        this.handleInput(map, inputState)
+        this.draw(this.ctx,this, 'blue')
     }
 }

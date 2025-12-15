@@ -9,8 +9,9 @@ export class Projectile extends MovingEntity {
         this.dmg = dmg;
     }
 
-    static handleProjectiles(ctx, projectiles, enemies, player, map, onEnemyKill) {
+    handleProjectiles(ctx, projectiles, enemies, player, map) {
         // Loop through projectiles for movement, drawing, and collision
+        let killCount=0
         for (let projectileIndex = projectiles.length - 1; projectileIndex >= 0; projectileIndex--) {
             let projectile = projectiles[projectileIndex];
 
@@ -21,7 +22,7 @@ export class Projectile extends MovingEntity {
             let leftBorder = player.globalEntityX - map.FOVwidth / 2;
             let topBorder = player.globalEntityY - map.FOVheight / 2;
 
-            projectile.draw(ctx, projectile.globalEntityX - leftBorder, projectile.globalEntityY - topBorder, projectile.hitbox.width, projectile.hitbox.height, "lightblue");
+            projectile.draw(ctx, player, "lightblue");
 
             // Projectile entfernen, wenn es außerhalb der Kartenbegrenzungen ist
             if (projectile.globalEntityX < 0 || projectile.globalEntityX > map.mapWidth || projectile.globalEntityY < 0 || projectile.globalEntityY > map.mapHeight) {
@@ -38,7 +39,7 @@ export class Projectile extends MovingEntity {
                     enemies.splice(enemyIndex, 1);
                     projectiles.splice(projectileIndex, 1);
 
-                    onEnemyKill(); // Notify game that an enemy was killed
+                    killCount++; // Notify game that an enemy was killed
 
                     enemy.die(); // Drop XP, etc.
 
@@ -47,6 +48,7 @@ export class Projectile extends MovingEntity {
                 }
             }
         }
+        return killCount
     }
 
     move(map, projectiles, projectileIndex) {
@@ -67,5 +69,9 @@ export class Projectile extends MovingEntity {
         if ((oldGlobalEntityX === this.globalEntityX && this.direction.x !== 0) || (oldGlobalEntityY === this.globalEntityY && this.direction.y !== 0)) { // Kollision mit Wand
             projectiles.splice(projectileIndex, 1);
         }
+    }
+
+    render(ctx, projectiles, enemies, PlayerOne, MapOne){
+        return this.handleProjectiles(ctx, projectiles, enemies, PlayerOne, MapOne)
     }
 }
