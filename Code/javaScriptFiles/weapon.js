@@ -86,7 +86,11 @@ export class Weapon extends Item {
         }
     }
 
-    render(PlayerOne, projectiles, performanceNow, enemies){
+    render(ctx, PlayerOne, projectiles, performanceNow, enemies, map){
         this.shoot(PlayerOne, projectiles, performanceNow, enemies)
+        for (let projectileIndex = projectiles.length - 1; projectileIndex >= 0; projectileIndex--) {
+            let projectile = projectiles[projectileIndex]
+            projectile.render(ctx, projectiles, projectileIndex, enemies, PlayerOne, map)
+        }
     }
 }

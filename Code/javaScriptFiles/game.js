@@ -317,8 +317,8 @@ export class game {
         this.MapOne.render(this.PlayerOne)
         this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
         
-        this.weapon.render(this.PlayerOne, this.projectiles, performance.now(), this.enemies)
-        this.ProjectileSystem.render(ctx, this.projectiles, this.enemies, this.PlayerOne, this.MapOne)
+        this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
+        
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         
