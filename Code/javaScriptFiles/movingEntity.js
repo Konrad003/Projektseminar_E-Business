@@ -63,6 +63,7 @@ export class MovingEntity extends Entity {
         const colliding = [] //Array mit Entitys die gepusht werden müssten damit true
         for (const other of enemyArray) {
             if (other === self) continue
+            if (Math.abs(other.gridMapTile.row - self.gridMapTile.row)>1 || Math.abs(other.gridMapTile.column - self.gridMapTile.column)>1) continue
             if (axis === 'x') {
                 if (self.checkCollisionHorizontal(other, move)) {    //Horizontale überlappung mit einem gegener--> somit einfügen in das Array colliding
                     colliding.push(other)

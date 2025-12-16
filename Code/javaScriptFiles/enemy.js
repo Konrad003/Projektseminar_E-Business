@@ -3,7 +3,7 @@ import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
 
-   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false) {
+   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false, gridMapTile) {
             super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
             // Nur Enemy-spezifische Felder nach Aufruf von super() setzen
             this.level = level
@@ -12,10 +12,11 @@ export class Enemy extends MovingEntity {
             this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
             this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
             this.ranged = ranged
+            this.gridMapTile = gridMapTile
         }
 
     // Gegner zufällig am Kartenrand spawnen
-    static spawnEnemyAtEdge(enemiesArray, mapWidth, mapHeight) {
+    static spawnEnemyAtEdge(enemiesArray, mapWidth, mapHeight, tilewidth) {
 
         const side = Math.floor(Math.random() * 4);
         let x, y;
@@ -41,7 +42,7 @@ export class Enemy extends MovingEntity {
                 y = Math.random() * mapHeight - 1;
                 break;
         }
-
+        let gridMapTile = {column : Math.floor(x / 16*tilewidth), row : Math.floor(y / 16*tilewidth)}
         // temporäre Werte, ohne lvl System bisher
         const hp = 10;
         const png = null;                 //KEIN enemyImg, damit kein Fehler
@@ -50,10 +51,9 @@ export class Enemy extends MovingEntity {
         const level = 1;
         const xpDrop = 2;
         const elite = false;
-
         const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
 
-        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged));
+        enemiesArray.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged, gridMapTile));
     }
 
     // Gegner bewegt sich in Richtung Player
