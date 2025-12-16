@@ -1,11 +1,11 @@
-//import { DropSingleUse } from "./dropSingleUse.js"
-//import { Entity } from "./entity.js"
+import {DropSingleUse} from "./dropSingleUse.js"
+import { Entity } from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {drawEnemyItem, drawEnemyXp, Enemy, handleEnemyItemPickups, handleEnemyXpPickups} from "./enemy.js"
+import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
 import {Weapon} from "./weapon.js";
 
@@ -153,31 +153,27 @@ export class game {
         this.timestamp = Date.now();
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
-
+        Entity.FOVwidthMiddle = canvas.width / 2
+        Entity.FOVheightMiddle = canvas.height / 2
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
-            //console.log(this.mapData.layers[0].data)
-            //this.mapDataTiles = this.mapData.layers[0].data
-
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, null, 10.5, null, 5, {width: 16, height: 16}, 0, 0, 1, ctx, this.end.bind(this)) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
-
-            //console.log(this.mapData.width * this.mapData.tilewidth / 2)
-            this.renderInterval = setInterval(() => this.render(), 5);
-
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 10.5, null, 5, {width: 16, height: 16}, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
+            this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
             this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
             this.hudXpProgress.value = this.PlayerOne.xp
+
+            this.renderInterval = setInterval(() => this.render(), 5);
+            this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+            this.resetTimer()
+            this.startGameTimer()
+            
         });
-
-        //setInterval(spawnEnemy, 100
-        this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 2000); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
-
-        this.resetTimer()
-        this.startGameTimer()
 
         // Screen-Wechsel zu Game-Screen
         document.getElementById("defeatScreen").style.display = "none";
@@ -185,7 +181,6 @@ export class game {
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("mapScreen").style.display = "none";
         document.getElementById("gameScreen").style.display = "flex";
-
 
     }
 
@@ -317,47 +312,22 @@ export class game {
         if (this.gameTimer === 600) { //Minuten überleben (in Sekunden)
             this.endWin()
         }
-
-        this.PlayerOne.handleInput(this.MapOne, {
-            upPressed: this.upPressed,
-            downPressed: this.downPressed,
-            leftPressed: this.leftPressed,
-            rightPressed: this.rightPressed
-        })
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.MapOne.draw(this.PlayerOne)
-        this.PlayerOne.draw(ctx, canvas.width / 2, canvas.height / 2, this.PlayerOne.hitbox.width, this.PlayerOne.hitbox.height, 'blue')
-        //WAFFE SCHIESSEN
-        this.weapon.shoot(this.PlayerOne, this.projectiles, performance.now(), this.enemies);
-
-        //PROJEKTILE BEWEGEN + ZEICHNEN
-        Projectile.handleProjectiles(ctx, this.projectiles, this.enemies, this.PlayerOne, this.MapOne, () => {
-            this.killCount++;
-        });
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        this.MapOne.render(this.PlayerOne)
+        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
+        
+        this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
+        
+        //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
+        
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]
-
-            enemy.chasePlayer(this.MapOne, this.PlayerOne, this.enemies)                   // Gegner läuft auf den Spieler zu
-            this.MapOne.drawMiniEnemy(enemy)
-            if (this.PlayerOne.checkCollision(enemy, 0, 0)) {        // Treffer?
-                this.PlayerOne.takeDmg(15)
-                enemy.die()
-                this.killCount++
-                this.enemies.splice(i, 1)                       // aus dem Array entfernen → "Monster verschwinden"
-            } else {
-                let leftBorder = this.PlayerOne.globalEntityX - this.MapOne.FOVwidth / 2
-                let topBorder = this.PlayerOne.globalEntityY - this.MapOne.FOVheight / 2
-                enemy.draw(ctx, enemy.globalEntityX - leftBorder, enemy.globalEntityY - topBorder, enemy.hitbox.width, enemy.hitbox.height, enemy.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
-            }
+            enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
         }
-
-        drawEnemyItem(ctx, this.PlayerOne, this.MapOne)
-        drawEnemyXp(ctx, this.PlayerOne, this.MapOne)
-
-        handleEnemyItemPickups(this.PlayerOne)
-        handleEnemyXpPickups(this.PlayerOne)
+         
+        this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp

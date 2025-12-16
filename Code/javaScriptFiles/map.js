@@ -271,4 +271,8 @@ export class Map {
         this.ctx.strokeStyle = color;
         this.ctx.stroke();
     }
+
+    render(player){
+        this.draw(player)
+    }
 }

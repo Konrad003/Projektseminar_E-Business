@@ -38,7 +38,9 @@ export class Weapon extends Item {
         if (currentTime - this.lastShotTime < this.cooldown) {
             return; // Still on cooldown
         }
-
+        if  (enemies.length===0){
+            return; //keine Gegner
+        }
 
         this.lastShotTime = currentTime;
 
@@ -81,6 +83,14 @@ export class Weapon extends Item {
 
 
             projectiles.push(p); // Add the projectile to the game's array
+        }
+    }
+
+    render(ctx, PlayerOne, projectiles, performanceNow, enemies, map){
+        this.shoot(PlayerOne, projectiles, performanceNow, enemies)
+        for (let projectileIndex = projectiles.length - 1; projectileIndex >= 0; projectileIndex--) {
+            let projectile = projectiles[projectileIndex]
+            projectile.render(ctx, projectiles, projectileIndex, enemies, PlayerOne, map)
         }
     }
 }

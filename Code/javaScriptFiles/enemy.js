@@ -90,70 +90,30 @@ export class Enemy extends MovingEntity {
             const roll = Math.random()
 
             if (roll < 0.33) {
-                enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY))
+                DropSingleUse.enemyItemDrop.push(
+                new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {width:16, height:16}, null)
+                )
             } else if (roll < 0.66) {
-                enemyItemDrop.push(new HealDrop(this.globalEntityX, this.globalEntityY))
+                DropSingleUse.enemyItemDrop.push(
+                new HealDrop(this.globalEntityX, this.globalEntityY, {width: 16, height: 16}, null)
+                )
             } else {
-                enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
+                DropSingleUse.enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {width: 16, height: 16}, null))
             }
         }
 
-        enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY))
+        DropSingleUse.enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {width: 8, height: 8}, null))
     }
-}
-
-export const enemyItemDrop = []
-export const enemyXpDrop = []
-
-export function drawEnemyItem(ctx, player, map) {
-    const leftBorder = player.globalEntityX - map.FOVwidth / 2
-    const topBorder = player.globalEntityY - map.FOVheight / 2
-
-    for (const drop of enemyItemDrop) {
-        const screenX = drop.globalEntityX - leftBorder;
-        const screenY = drop.globalEntityY - topBorder;
-
-        let color = "pink"
-
-        if (drop instanceof SpeedBoostDrop) {
-            color = "orange"
-        } else if (drop instanceof HealDrop) {
-            color = "green"
-        }
-
-        drop.draw(ctx, screenX, screenY, 13, 13, color)
-    }
-}
-
-export function drawEnemyXp(ctx, player, map) {
-    const leftBorder = player.globalEntityX - map.FOVwidth / 2
-    const topBorder = player.globalEntityY - map.FOVheight / 2
-
-    for (const drop of enemyXpDrop) {
-        const screenX = drop.globalEntityX - leftBorder;
-        const screenY = drop.globalEntityY - topBorder;
-        drop.draw(ctx, screenX, screenY, 8, 8, "brown")
-    }
-}
-
-export function handleEnemyItemPickups(player) {
-    for (let i = enemyItemDrop.length - 1; i >= 0; i--) {
-        const drop = enemyItemDrop[i]
-
-        if (player.checkCollision(drop, 0, 0)) {
-            player.collectPickup(drop)
-            enemyItemDrop.splice(i, 1)  //aufgesammelte Item wird gelöscht
-        }
-    }
-}
-
-export function handleEnemyXpPickups(player) {
-    for (let i = enemyXpDrop.length - 1; i >= 0; i--) {
-        const drop = enemyXpDrop[i]
-
-        if (player.checkCollision(drop, 0, 0)) {
-            player.collectXp(2) // Jeder XP-Drop gibt 2 XP
-            enemyXpDrop.splice(i, 1)  //aufgesammelte XP wird gelöscht
-        }
+    render(ctx, MapOne, PlayerOne, enemies, position){
+        this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
+        MapOne.drawMiniEnemy(this)
+        if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
+            PlayerOne.takeDmg(15)
+            this.die()
+            this.killCount++
+            enemies.splice(position, 1)                       // aus dem Array entfernen → "Monster verschwinden"
+        } else {
+            this.draw(ctx,PlayerOne, this.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
+                    }
     }
 }

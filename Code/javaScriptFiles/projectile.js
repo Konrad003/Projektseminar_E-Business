@@ -9,36 +9,23 @@ export class Projectile extends MovingEntity {
         this.dmg = dmg;
     }
 
-    static handleProjectiles(ctx, projectiles, enemies, player, map, onEnemyKill) {
+    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map) {
         // Loop through projectiles for movement, drawing, and collision
-        for (let projectileIndex = projectiles.length - 1; projectileIndex >= 0; projectileIndex--) {
-            let projectile = projectiles[projectileIndex];
-
+        let killCount=0
             // 1. Move projectile
-            projectile.move(map, projectiles, projectileIndex);
-
+            this.move(map, projectiles, projectileIndex);
             // 2. Draw projectile relative to the camera/player
-            let leftBorder = player.globalEntityX - map.FOVwidth / 2;
-            let topBorder = player.globalEntityY - map.FOVheight / 2;
-
-            projectile.draw(ctx, projectile.globalEntityX - leftBorder, projectile.globalEntityY - topBorder, projectile.hitbox.width, projectile.hitbox.height, "lightblue");
-
-            // Projectile entfernen, wenn es außerhalb der Kartenbegrenzungen ist
-            if (projectile.globalEntityX < 0 || projectile.globalEntityX > map.mapWidth || projectile.globalEntityY < 0 || projectile.globalEntityY > map.mapHeight) {
-                projectiles.splice(projectileIndex, 1);
-                continue; // Continue to the next projectile
-            }
-
+            this.draw(ctx, player, "lightblue");
             // 3. Check collision with enemies
             for (let enemyIndex = enemies.length - 1; enemyIndex >= 0; enemyIndex--) {
                 let enemy = enemies[enemyIndex];
 
-                if (projectile.checkCollision(enemy, 0, 0)) {
+                if (this.checkCollision(enemy, 0, 0)) {
                     // On hit, remove both
                     enemies.splice(enemyIndex, 1);
                     projectiles.splice(projectileIndex, 1);
 
-                    onEnemyKill(); // Notify game that an enemy was killed
+                    killCount++; // Notify game that an enemy was killed
 
                     enemy.die(); // Drop XP, etc.
 
@@ -46,7 +33,6 @@ export class Projectile extends MovingEntity {
                     break;
                 }
             }
-        }
     }
 
     move(map, projectiles, projectileIndex) {
@@ -67,5 +53,9 @@ export class Projectile extends MovingEntity {
         if ((oldGlobalEntityX === this.globalEntityX && this.direction.x !== 0) || (oldGlobalEntityY === this.globalEntityY && this.direction.y !== 0)) { // Kollision mit Wand
             projectiles.splice(projectileIndex, 1);
         }
+    }
+
+    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne){
+        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne)
     }
 }
