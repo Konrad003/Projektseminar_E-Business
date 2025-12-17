@@ -14,7 +14,7 @@ export class Enemy extends MovingEntity {
             this.ranged = ranged
         }
 
-    // Gegner zufällig am Kartenrand spawnen
+    
     static spawnEnemyOutsideView(enemiesArray, player, canvas) {
 
     const offset = 80
