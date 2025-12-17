@@ -114,6 +114,7 @@ export class Enemy extends MovingEntity {
             }
         }
 
+        Game.killCount++
         DropSingleUse.enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
@@ -126,7 +127,6 @@ export class Enemy extends MovingEntity {
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
             PlayerOne.takeDmg(15)
             this.die()
-            this.killCount++
             enemies.splice(position, 1)                       // aus dem Array entfernen → "Monster verschwinden"
         } else {
             this.draw(ctx, PlayerOne, this.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
