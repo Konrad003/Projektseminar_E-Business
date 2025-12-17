@@ -1,5 +1,5 @@
 import {DropSingleUse} from "./dropSingleUse.js"
-import { Entity } from "./entity.js"
+import {Entity} from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
@@ -35,6 +35,10 @@ export class game {
 
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
+
+    //Tests
+    testShoot = true
+    testDie = true
 
     constructor() {
         this.MapOne = null
@@ -105,20 +109,16 @@ export class game {
     }
 
     settingsListener() {
-        const form = document.getElementById("settingsForm");
-
-        //check if form exists
-        if (!form) return;
-
-        //submit listener
-        form.addEventListener("submit", (e) => {
+        document.getElementById("settingsForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            //logic
-            this.mapChoice = parseInt(document.getElementById("mapChoice").value);
+            // Save logic here
 
-            //go to Home Screen
-            this.home();
-        })
+            this.testShoot = document.getElementById("testShoot").checked;
+            this.testDie = document.getElementById("testDie").checked;
+
+
+            this.home()
+        });
     }
 
     updateTimerDisplay() { // Aktualisiert die Anzeige des Timers im Format mm:ss
@@ -316,7 +316,7 @@ export class game {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
         this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
-        
+
         this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
         
         //this.killCount += kills
