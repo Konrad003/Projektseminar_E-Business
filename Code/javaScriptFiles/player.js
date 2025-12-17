@@ -63,14 +63,22 @@ export class Player extends MovingEntity {
 
     collectXp(xpAmount) {
         this.xp += xpAmount;
-        this.xpForNextLevel = this.level * 10 - this.xp; // Beispiel: 10 XP pro Level
+
         if (this.xp >= this.xpForNextLevel) {
             this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
-
-            Game.hudXpProgress.max = this.level * 10;
         }
         Game.hudXpProgress.value = this.xp;
+    }
+
+    lvlUp() {
+        this.level++;
+        this.hp = this.maxHp; // volle Heilung bei Level-Up
+        this.speed += 0.2; // das sind nur beispiele, können wir dann ändern
+        this.regeneration += 0.1;
+        this.xpForNextLevel = this.level * 10; // Nächste Level-Up-Schwelle
+        Game.hudXpProgress.max = this.xpForNextLevel;
+        console.log(`Level Up! Du bist jetzt Level ${this.level}.`);
     }
 
     render(map, inputState) {
