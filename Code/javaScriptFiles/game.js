@@ -322,17 +322,30 @@ export class game {
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         
+        
+        // Gegner bewegen/zeichnen; Ranged-Gegner schießen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]
             enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
-        }
-         
-        this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
 
-        this.hudHealthProgress.max = this.PlayerOne.maxHp
-        this.hudHealthProgress.value = this.PlayerOne.hp
+            // NEU: Ranged-Enemy schießt gezielt auf den Spieler
+            if (enemy.ranged && enemy.weapon) {
+                enemy.weapon.shoot(
+                enemy,                 // shooter = der Gegner
+                this.projectiles,      // gemeinsames Projektil-Array
+                performance.now(),     // für cooldown
+                this.enemies,          // enemies-Liste (wird hier nicht genutzt, da targetEntity gesetzt)
+                this.PlayerOne,        // targetEntity = Spieler
+                true                   // isEnemyShooter = feindliches Projektil (trifft Player)
+                )
+            }
+            
+            this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
+
+            this.hudHealthProgress.max = this.PlayerOne.maxHp
+            this.hudHealthProgress.value = this.PlayerOne.hp
+        }
     }
 }
-
-document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
-window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
+    document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
+    window.Game = new game() // Ein globales Spielobjekt erstellen (für html)

@@ -1,4 +1,5 @@
 import {DropSingleUse, HealDrop, SpeedBoostDrop} from "./dropSingleUse.js"
+import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
@@ -12,6 +13,13 @@ export class Enemy extends MovingEntity {
             this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
             this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
             this.ranged = ranged
+            // Ranged-Enemy bekommt eine eigene Waffe
+            this.weapon = this.ranged ? Weapon.create("basic") : null;
+
+            if (this.weapon) {
+            this.weapon.cooldown = 2000; // Gegner schießen langsamer als der Spieler (z.B. 800 ms)
+            }
+
         }
 
     // Gegner zufällig am Kartenrand spawnen
@@ -43,7 +51,7 @@ export class Enemy extends MovingEntity {
         }
 
         // temporäre Werte, ohne lvl System bisher
-        const hp = 10;
+        const hp = 20;
         const png = null;                 //KEIN enemyImg, damit kein Fehler
         const speed = 1.0;
         const hitbox = {width: 16, height: 16};

@@ -33,13 +33,16 @@ export class Weapon extends Item {
         }
     }
 
-    shoot(player, projectiles, currentTime, enemies) {
+    shoot(shooter, projectiles, currentTime, enemies, targetEntity = null, isEnemyShooter = false) {
         // Check if the cooldown has passed
         if (currentTime - this.lastShotTime < this.cooldown) {
             return; // Still on cooldown
         }
-        if  (enemies.length===0){
-            return; //keine Gegner
+        
+        // Nur für den Spieler relevant: Wenn kein Ziel direkt vorgegeben ist,
+        // dann abbrechen, falls es keine Gegner gibt.
+        if (!targetEntity && enemies.length === 0) {
+            return; // keine Gegner für Auto-Fokus
         }
 
         this.lastShotTime = currentTime;
@@ -48,40 +51,52 @@ export class Weapon extends Item {
         // Create a projectile
         for (let i = 0; i < this.amount; i++) {
             let dir
-            if (this.focus === 1) {
+            if (targetEntity) {
+                // Gegner schießt gezielt auf targetEntity (z. B. den Player)
+                const dx = targetEntity.globalEntityX - shooter.globalEntityX;
+                const dy = targetEntity.globalEntityY - shooter.globalEntityY;
+                const angle = Math.atan2(dy, dx);
+                dir = { x: Math.cos(angle), y: Math.sin(angle) };
+            } else if (this.focus === 1) {
+                // Spieler zielt wie bisher auf den nächsten Gegner
                 let closestEnemy = {enemy: null, distance: 99999}
                 for (let i = enemies.length - 1; i >= 0; i--) {
                     let enemy = enemies[i]
-                    let distanceX = player.globalEntityX - enemy.globalEntityX
-                    let distanceY = player.globalEntityY - enemy.globalEntityY
+                    let distanceX = shooter.globalEntityX - enemy.globalEntityX
+                    let distanceY = shooter.globalEntityY - enemy.globalEntityY
 
                     let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
                     if (distance < closestEnemy.distance) {
                         closestEnemy = {enemy: enemy, distance: distance}
                     }
                 }
-                let distanceX = (closestEnemy.enemy.globalEntityX - player.globalEntityX)
-                let distanceY = (closestEnemy.enemy.globalEntityY - player.globalEntityY)
-                let angle = Math.atan2(distanceY, distanceX);
-                dir = {x: Math.cos(angle), y: Math.sin(angle)};
-            } else if (this.focus === 0) {
-                let angle = Math.random() * Math.PI * 2; // Fires in a random direction
-                dir = {x: Math.cos(angle), y: Math.sin(angle)};
+                if (closestEnemy.enemy) {
+                    let distanceX = (closestEnemy.enemy.globalEntityX - shooter.globalEntityX)
+                    let distanceY = (closestEnemy.enemy.globalEntityY - shooter.globalEntityY)
+                    let angle = Math.atan2(distanceY, distanceX);
+                    dir = {x: Math.cos(angle), y: Math.sin(angle)};
+                }
+                else {
+                    let angle = Math.random() * Math.PI * 2; // Fires in a random direction
+                    dir = {x: Math.cos(angle), y: Math.sin(angle)};
+                }
+            } else {
+                // Zufällige Richtung
+                const angle = Math.random() * Math.PI * 2;
+                dir = { x: Math.cos(angle), y: Math.sin(angle) }
             }
-
-
-            const p = new Projectile(player.globalEntityX, // Use the player's current position
-                player.globalEntityY, 1, // hp
+            
+            const p = new Projectile(shooter.globalEntityX, // Use the player's current position
+                shooter.globalEntityY, 1, // hp
                 null, // png
-                5, // speed
+                (isEnemyShooter ? 3 : 5), // langsamer für Gegner-Projektile (z. B. 3 statt 5)
                 {width: 8, height: 8}, // hitbox
                 false, // piercing
                 8, // size
                 dir, // direction
-                this.dmg // damage
+                this.dmg, // damage
+                isEnemyShooter            // NEU: markiert feindliche Projektile
             );
-
-
             projectiles.push(p); // Add the projectile to the game's array
         }
     }

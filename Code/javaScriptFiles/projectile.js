@@ -1,38 +1,59 @@
 import {MovingEntity} from "./movingEntity.js";
 
 export class Projectile extends MovingEntity {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg, isEnemy = false) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox);
         this.piercing = piercing;
         this.size = size;
         this.direction = direction;
         this.dmg = dmg;
+        this.isEnemy = isEnemy;
     }
 
     handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map) {
         // Loop through projectiles for movement, drawing, and collision
         let killCount=0
-            // 1. Move projectile
-            this.move(map, projectiles, projectileIndex);
-            // 2. Draw projectile relative to the camera/player
-            this.draw(ctx, player, "lightblue");
-            // 3. Check collision with enemies
+        // 1. Move projectile
+        this.move(map, projectiles, projectileIndex);
+        // 2. Draw projectile relative to the camera/player
+        const color = this.isEnemy ? "purple" : "lightblue"; //damit gegnerische Projektile rot sind
+        this.draw(ctx, player, color);
+        // 3. Check collision with enemies
+
+        if (this.isEnemy) {
+        // Feindliches Projektil trifft den Spieler
+        if (this.checkCollision(player, 0, 0)) {
+            player.takeDmg(this.dmg);
+            // Feindliche Projektile sind i. d. R. nicht piercing:
+            projectiles.splice(projectileIndex, 1);
+            // kein break nötig – wir sind aus der Funktion für dieses Projektil sowieso raus
+        }
+        } else {
+        // Spieler-Projektil trifft Gegner
             for (let enemyIndex = enemies.length - 1; enemyIndex >= 0; enemyIndex--) {
                 let enemy = enemies[enemyIndex];
 
                 if (this.checkCollision(enemy, 0, 0)) {
-                    // On hit, remove both
-                    enemies.splice(enemyIndex, 1);
-                    projectiles.splice(projectileIndex, 1);
+                    // statt instant kill, schaden zufügen
+                    enemy.takeDmg(this.dmg);
 
-                    killCount++; // Notify game that an enemy was killed
-
-                    enemy.die(); // Drop XP, etc.
+                    //projektil entfernen
+                    if (!this.piercing) {
+                        projectiles.splice(projectileIndex, 1);
+                    }
+                    
+                    // Gegner nur entfernen, wenn er durch den Schaden gestorben ist
+                    if (enemy.hp <= 0) {
+                        enemies.splice(enemyIndex, 1);
+                        enemy.die(); // Drops etc.
+                        killCount++; // Notify game that an enemy was killed
+                    }
 
                     // Since the projectile is gone, break the inner loop and continue to the next projectile
                     break;
                 }
             }
+        }
     }
 
     move(map, projectiles, projectileIndex) {
