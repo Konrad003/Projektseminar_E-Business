@@ -1,5 +1,5 @@
 import {DropSingleUse} from "./dropSingleUse.js"
-import { Entity } from "./entity.js"
+import {Entity} from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
@@ -151,8 +151,12 @@ export class game {
 
     start() {
         this.timestamp = Date.now();
-        document.addEventListener("keydown", this.keyDownHandler.bind(this));
-        document.addEventListener("keyup", this.keyUpHandler.bind(this));
+
+        this.keyDownBound = this.keyDownHandler.bind(this);
+        this.keyUpBound = this.keyUpHandler.bind(this);
+        document.addEventListener("keydown", this.keyDownBound);
+        document.addEventListener("keyup", this.keyUpBound);
+
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
         //Map Switch
@@ -160,7 +164,10 @@ export class game {
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 10.5, null, 5, {width: 16, height: 16}, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 10.5, null, 5, {
+                width: 16,
+                height: 16
+            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
@@ -172,7 +179,7 @@ export class game {
             this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
             this.resetTimer()
             this.startGameTimer()
-            
+
         });
 
         // Screen-Wechsel zu Game-Screen
@@ -263,7 +270,6 @@ export class game {
         this.start()
     }
 
-
     resetGame() {
         // Timer stoppen und zurücksetzen
         this.stopGameTimer()
@@ -280,14 +286,28 @@ export class game {
             this.enemySpawnInterval = null
         }
 
+        if (this.keyDownBound) {
+            document.removeEventListener("keydown", this.keyDownBound);
+            this.keyDownBound = null;
+        }
+        if (this.keyUpBound) {
+            document.removeEventListener("keyup", this.keyUpBound);
+            this.keyUpBound = null;
+        }
+
         // Gegner-Array leeren
-        this.enemies = []
+
+        this.enemies.length = 0
+        this.projectiles.length = 0
         this.MapOne = null
         this.PlayerOne = null
         this.mapData = null
 
-        // Projektile-Array leeren
-        this.projectiles = []
+        this.DropSystem = null
+        this.ProjectileSystem = null
+        this.weapon = null
+        this.Game = null
+
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
@@ -312,21 +332,26 @@ export class game {
         if (this.gameTimer === 600) { //Minuten überleben (in Sekunden)
             this.endWin()
         }
-        
+
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
-        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
-        
+        this.PlayerOne.render(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed
+        })
+
         this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
-        
+
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
-        
+
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]
             enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
         }
-         
+
         this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
