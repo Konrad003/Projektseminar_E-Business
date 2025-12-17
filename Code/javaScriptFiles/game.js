@@ -312,21 +312,26 @@ export class game {
         if (this.gameTimer === 600) { //Minuten überleben (in Sekunden)
             this.endWin()
         }
-        
+
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
-        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
+        this.PlayerOne.render(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed
+        })
 
         this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
-        
+
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
-        
+
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i]
             enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
         }
-         
+
         this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
