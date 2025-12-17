@@ -3,30 +3,32 @@ import {StaticEntity} from "./staticEntity.js"
 export class DropSingleUse extends StaticEntity {
     static enemyXpDrop = []
     static enemyItemDrop = []
+
     constructor(globalEntityX, globalEntityY, hitbox, png) {
         super(globalEntityX, globalEntityY, hitbox, png)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
         this.hitbox = hitbox
         this.png = png
-        
+
     }
 
     apply(player) {
         console.log("DropSingleUse picked up – noch kein Effekt definiert.")
     }
+
     drawEnemyItem(ctx, player, map) {
-    for (const drop of DropSingleUse.enemyItemDrop) {
-        let color = "pink"
-        if (drop instanceof SpeedBoostDrop) {
-            color = "orange"
-        } else if (drop instanceof HealDrop) {
-            color = "green"
-        }
-        drop.draw(ctx, player, color)
+        for (const drop of DropSingleUse.enemyItemDrop) {
+            let color = "pink"
+            if (drop instanceof SpeedBoostDrop) {
+                color = "orange"
+            } else if (drop instanceof HealDrop) {
+                color = "green"
+            }
+            drop.draw(ctx, player, color)
         }
     }
-    
+
     drawEnemyXp(ctx, player, map) {
         for (const drop of DropSingleUse.enemyXpDrop) {
             drop.draw(ctx, player, "brown")
@@ -49,13 +51,13 @@ export class DropSingleUse extends StaticEntity {
             const drop = DropSingleUse.enemyXpDrop[i]
 
             if (player.checkCollision(drop, 0, 0)) {
-               player.collectXp(2) // Jeder XP-Drop gibt 2 XP
-               DropSingleUse.enemyXpDrop.splice(i, 1)  //aufgesammelte XP wird gelöscht
+                player.collectXp(2) // Jeder XP-Drop gibt 2 XP
+                DropSingleUse.enemyXpDrop.splice(i, 1)  //aufgesammelte XP wird gelöscht
             }
         }
     }
 
-    render(ctx, player, map){
+    render(ctx, player, map) {
         this.drawEnemyItem(ctx, player, map)
         this.drawEnemyXp(ctx, player, map)
         this.handleEnemyItemPickups(player)
