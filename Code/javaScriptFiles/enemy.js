@@ -3,51 +3,51 @@ import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
 
-   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false) {
-            super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-            // Nur Enemy-spezifische Felder nach Aufruf von super() setzen
-            this.level = level
-            this.xpDrop = xpDrop
-            this.elite = elite
-            this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
-            this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
-            this.ranged = ranged
-        }
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false) {
+        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
+        // Nur Enemy-spezifische Felder nach Aufruf von super() setzen
+        this.level = level
+        this.xpDrop = xpDrop
+        this.elite = elite
+        this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
+        this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
+        this.ranged = ranged
+    }
 
-    
+
     static spawnEnemyOutsideView(enemiesArray, player, canvas) {
 
-    const offset = 80
-    const side = Math.floor(Math.random() * 4)
+        const offset = 80
+        const side = Math.floor(Math.random() * 4)
 
-    const left   = player.globalEntityX - canvas.width / 2
-    const right  = player.globalEntityX + canvas.width / 2
-    const top    = player.globalEntityY - canvas.height / 2
-    const bottom = player.globalEntityY + canvas.height / 2
+        const left = player.globalEntityX - canvas.width / 2
+        const right = player.globalEntityX + canvas.width / 2
+        const top = player.globalEntityY - canvas.height / 2
+        const bottom = player.globalEntityY + canvas.height / 2
 
-    let x, y
+        let x, y
 
-    switch (side) {
-        case 0: // oben
-            x = left + Math.random() * (right - left)
-            y = top - offset
-            break
+        switch (side) {
+            case 0: // oben
+                x = left + Math.random() * (right - left)
+                y = top - offset
+                break
 
-        case 1: // rechts
-            x = right + offset
-            y = top + Math.random() * (bottom - top)
-            break
+            case 1: // rechts
+                x = right + offset
+                y = top + Math.random() * (bottom - top)
+                break
 
-        case 2: // unten
-            x = left + Math.random() * (right - left)
-            y = bottom + offset
-            break
+            case 2: // unten
+                x = left + Math.random() * (right - left)
+                y = bottom + offset
+                break
 
-        case 3: // links
-            x = left - offset
-            y = top + Math.random() * (bottom - top)
-            break
-    }
+            case 3: // links
+                x = left - offset
+                y = top + Math.random() * (bottom - top)
+                break
+        }
 
         // temporäre Werte, ohne lvl System bisher
         const hp = 10;
@@ -97,21 +97,30 @@ export class Enemy extends MovingEntity {
             const roll = Math.random()
 
             if (roll < 0.33) {
-                DropSingleUse.enemyItemDrop.push(
-                new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {width:16, height:16}, null)
-                )
+                DropSingleUse.enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, null))
             } else if (roll < 0.66) {
-                DropSingleUse.enemyItemDrop.push(
-                new HealDrop(this.globalEntityX, this.globalEntityY, {width: 16, height: 16}, null)
-                )
+                DropSingleUse.enemyItemDrop.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, null))
             } else {
-                DropSingleUse.enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {width: 16, height: 16}, null))
+                DropSingleUse.enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, null))
             }
         }
 
-        DropSingleUse.enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {width: 8, height: 8}, null))
+        DropSingleUse.enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
+            width: 8,
+            height: 8
+        }, null))
     }
-    render(ctx, MapOne, PlayerOne, enemies, position){
+
+    render(ctx, MapOne, PlayerOne, enemies, position) {
         this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
         MapOne.drawMiniEnemy(this)
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
@@ -120,7 +129,7 @@ export class Enemy extends MovingEntity {
             this.killCount++
             enemies.splice(position, 1)                       // aus dem Array entfernen → "Monster verschwinden"
         } else {
-            this.draw(ctx,PlayerOne, this.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
-                    }
+            this.draw(ctx, PlayerOne, this.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
+        }
     }
 }
