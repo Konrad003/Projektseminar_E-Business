@@ -160,7 +160,10 @@ export class game {
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 10.5, null, 5, {width: 16, height: 16}, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 0, null, 5, {
+                width: 16,
+                height: 16
+            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
@@ -172,7 +175,7 @@ export class game {
             this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
             this.resetTimer()
             this.startGameTimer()
-            
+
         });
 
         // Screen-Wechsel zu Game-Screen
