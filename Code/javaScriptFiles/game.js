@@ -208,6 +208,20 @@ export class game {
         document.getElementById("pauseScreen").style.display = "none";
     }
 
+    lvlUPshow() {
+        this.gamePaused = true;
+        this.stopGameTimer()
+
+        document.getElementById("lvlScreen").style.display = "flex";
+    }
+
+    lvlUPhide() {
+        this.gamePaused = false;
+        this.startGameTimer()
+
+        document.getElementById("lvlScreen").style.display = "none";
+    }
+
     chooseMap() {
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
