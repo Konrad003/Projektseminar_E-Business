@@ -350,7 +350,7 @@ export class game {
             enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
 
             // NEU: Ranged-Enemy schießt gezielt auf den Spieler
-            if (enemy.ranged && enemy.weapon) {
+            if (enemy.shouldShoot(this.PlayerOne)) { //prüft ob gegner nah genug ist zum schießen
                 enemy.weapon.shoot(
                 enemy,                 // shooter = der Gegner
                 this.projectiles,      // gemeinsames Projektil-Array
@@ -360,7 +360,7 @@ export class game {
                 true                   // isEnemyShooter = feindliches Projektil (trifft Player)
                 )
             }
-            
+
             this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
 
             this.hudHealthProgress.max = this.PlayerOne.maxHp

@@ -122,6 +122,21 @@ export class Enemy extends MovingEntity {
         }, null))
     }
 
+    shouldShoot(player) {
+        // Nur Ranged-Gegner mit Waffe können schießen
+        if (!this.ranged || !this.weapon) return false;
+
+        // Distanzberechnung mit deinen Bezeichnern
+        let distanceX = player.globalEntityX - this.globalEntityX;
+        let distanceY = player.globalEntityY - this.globalEntityY;
+        let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+        // Nutze die Eigenschaft oder fallback auf den bisherigen Wert
+        let stopDistance = 200;
+
+        return distance <= stopDistance;
+    }
+
     render(ctx, MapOne, PlayerOne, enemies, position) {
         this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
         MapOne.drawMiniEnemy(this)
