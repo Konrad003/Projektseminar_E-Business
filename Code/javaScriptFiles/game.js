@@ -1,5 +1,5 @@
 import {DropSingleUse} from "./dropSingleUse.js"
-import { Entity } from "./entity.js"
+import {Entity} from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
@@ -160,7 +160,10 @@ export class game {
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 10.5, null, 5, {width: 16, height: 16}, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 0, null, 5, {
+                width: 16,
+                height: 16
+            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
@@ -172,7 +175,7 @@ export class game {
             this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
             this.resetTimer()
             this.startGameTimer()
-            
+
         });
 
         // Screen-Wechsel zu Game-Screen
@@ -199,6 +202,20 @@ export class game {
         this.startGameTimer()
 
         document.getElementById("pauseScreen").style.display = "none";
+    }
+
+    lvlUPshow() {
+        this.gamePaused = true;
+        this.stopGameTimer()
+
+        document.getElementById("lvlScreen").style.display = "flex";
+    }
+
+    lvlUPhide() {
+        this.gamePaused = false;
+        this.startGameTimer()
+
+        document.getElementById("lvlScreen").style.display = "none";
     }
 
     chooseMap() {
@@ -312,16 +329,20 @@ export class game {
         if (this.gameTimer === 600) { //Minuten überleben (in Sekunden)
             this.endWin()
         }
-        
+
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
-        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
-        
+        this.PlayerOne.render(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed
+        })
+
         this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
-        
+
         //this.killCount += kills
-        // Gegner bewegen, zeichnen und bei Collision entfernen
-        
+        // Gegner bewegen, zeichnen und bei Collision entfernen        
         
         // Gegner bewegen/zeichnen; Ranged-Gegner schießen
         for (let i = this.enemies.length - 1; i >= 0; i--) {
