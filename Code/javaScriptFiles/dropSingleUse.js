@@ -13,7 +13,7 @@ export class DropSingleUse extends StaticEntity {
     }
 
     apply(player) {
-        console.log("DropSingleUse picked up – noch kein Effekt definiert.")
+    //console.log("DropSingleUse picked up – noch kein Effekt definiert.")
     }
     drawEnemyItem(ctx, player, map) {
     for (const drop of DropSingleUse.enemyItemDrop) {
