@@ -133,14 +133,15 @@ export class Weapon extends Item {
     }
 
     render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth){
-                this.shoot(
-                PlayerOne,         // immer der Player 
-                performanceNow,     // für cooldown
-                enemies,          // enemies-Liste (wird hier nicht genutzt, da targetEntity gesetzt)
-                map.tilelength,
-                gridWidth
-                )
- 
+                if (Game.testShoot === true) {
+                  this.shoot(
+                  PlayerOne,         // immer der Player 
+                  performanceNow,     // für cooldown
+                  enemies,          // enemies-Liste (wird hier nicht genutzt, da targetEntity gesetzt)
+                  map.tilelength,
+                  gridWidth
+                  )
+                }
         if (this.shooter instanceof Enemy){
             for (let j = this.projectiles.length-1; j>= 0; j--){
                 let projectile = this.projectiles[j]

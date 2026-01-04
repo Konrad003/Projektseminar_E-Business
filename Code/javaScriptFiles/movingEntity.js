@@ -116,7 +116,7 @@ export class MovingEntity extends Entity {
         this.hp -= amount;
         document.getElementById("hudHealthProgress").style.value = this.hp
 
-        if (this.hp <= 0) {
+        if (this.hp <= 0 && Game.testDie) {
             this.hp = 0;
             this.die(enemies, positionWithin);
         }
