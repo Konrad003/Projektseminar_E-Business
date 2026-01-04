@@ -52,7 +52,7 @@ export class Player extends MovingEntity {
     }
 
     die() {
-        console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
+        //console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
         this.onDeath();
     }
 
@@ -71,8 +71,7 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
-    render(map, inputState) {
-        console.log(this.maxHp)
+    render(map, inputState){
         this.handleInput(map, inputState)
         this.draw(this.ctx, this, 'blue')
     }
