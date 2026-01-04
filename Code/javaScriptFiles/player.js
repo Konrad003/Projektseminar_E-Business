@@ -4,27 +4,27 @@ export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle ) {
-            super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-            this.globalEntityX = globalEntityX
-            this.globalEntityY = globalEntityY
-            this.hp = hp;
-            this.maxHp = maxHp;
-            this.xp = xp;
-            this.level = 1;
-            this.png = png;
-            this.baseSpeed = speed;
-            this.hitbox = hitbox;
-            this.ausrüstung = ausrüstung;
-            this.weapons = weapons;
-            this.regeneration = regeneration;
-            this.ctx = ctx;
-            this.onDeath = onDeath;
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle) {
+        super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
+        this.globalEntityX = globalEntityX
+        this.globalEntityY = globalEntityY
+        this.hp = hp;
+        this.maxHp = maxHp;
+        this.xp = xp;
+        this.level = 1;
+        this.png = png;
+        this.baseSpeed = speed;
+        this.hitbox = hitbox;
+        this.ausrüstung = ausrüstung;
+        this.weapons = weapons;
+        this.regeneration = regeneration;
+        this.ctx = ctx;
+        this.onDeath = onDeath;
 
-            this.canvasWidthMiddle = canvasWidthMiddle
-            this.canvasWidthHeight = canvasHeightMiddle
-            this.xpForNextLevel = this.level * 10;
-        }
+        this.canvasWidthMiddle = canvasWidthMiddle
+        this.canvasWidthHeight = canvasHeightMiddle
+        this.xpForNextLevel = this.level * 10;
+    }
 
     handleInput(map, inputState) {
         let speed = this.speed
@@ -47,10 +47,8 @@ export class Player extends MovingEntity {
     }
 
     lvlUp() {
+        Game.lvlUPshow()
         this.level++;
-        this.hp = this.maxHp; // volle Heilung bei Level-Up
-        this.speed += 0.2; // das sind nur beispiele, können wir dann ändern
-        this.regeneration += 0.1;
     }
 
     die() {
@@ -65,18 +63,16 @@ export class Player extends MovingEntity {
 
     collectXp(xpAmount) {
         this.xp += xpAmount;
-        this.xpForNextLevel = this.level * 10 - this.xp; // Beispiel: 10 XP pro Level
+
         if (this.xp >= this.xpForNextLevel) {
             this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
-
-            Game.hudXpProgress.max = this.level * 10;
         }
         Game.hudXpProgress.value = this.xp;
     }
 
     render(map, inputState){
         this.handleInput(map, inputState)
-        this.draw(this.ctx,this, 'blue')
+        this.draw(this.ctx, this, 'blue')
     }
 }
