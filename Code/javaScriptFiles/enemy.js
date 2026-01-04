@@ -16,31 +16,38 @@ export class Enemy extends MovingEntity {
         }
 
     // Gegner zufällig am Kartenrand spawnen
-    static spawnEnemyAtEdge(enemiesArray, mapWidth, mapHeight, tilewidth, gridWidth) {
+    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth) {
 
-        const side = Math.floor(Math.random() * 4);
-        let x, y;
+        const offset = 80
+        const side = Math.floor(Math.random() * 4)
+
+        const left = player.globalEntityX - canvas.width / 2
+        const right = player.globalEntityX + canvas.width / 2
+        const top = player.globalEntityY - canvas.height / 2
+        const bottom = player.globalEntityY + canvas.height / 2
+
+        let x, y
 
         switch (side) {
             case 0: // oben
-                x = Math.random() * mapWidth - 1;   // spawnt Enemy an random Stelle am oberen Rand
-                y = 1;
-                break;
+                x = left + Math.random() * (right - left)
+                y = top - offset
+                break
 
             case 1: // rechts
-                x = mapWidth - 1;
-                y = Math.random() * mapHeight - 1;
-                break;
+                x = right + offset
+                y = top + Math.random() * (bottom - top)
+                break
 
             case 2: // unten
-                x = Math.random() * mapWidth - 1;
-                y = mapHeight - 1;
-                break;
+                x = left + Math.random() * (right - left)
+                y = bottom + offset
+                break
 
             case 3: // links
-                x = 1;
-                y = Math.random() * mapHeight - 1;
-                break;
+                x = left - offset
+                y = top + Math.random() * (bottom - top)
+                break
         }
         let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
         // temporäre Werte, ohne lvl System bisher
