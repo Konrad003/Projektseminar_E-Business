@@ -1,5 +1,6 @@
 import {MovingEntity} from "./movingEntity.js"
 import {Weapon} from "./weapon.js";
+
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
@@ -23,6 +24,7 @@ export class Player extends MovingEntity {
 
         this.canvasWidthMiddle = canvasWidthMiddle
         this.canvasWidthHeight = canvasHeightMiddle
+
         this.xpForNextLevel = this.level * 10;
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
     }
@@ -50,6 +52,8 @@ export class Player extends MovingEntity {
     lvlUp() {
         Game.lvlUPshow()
         this.level++;
+        this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
+        document.getElementById("hudXpProgress").style.max = this.xpForNextLevel;
     }
 
     die() {
@@ -72,9 +76,9 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
-    render(map, inputState, performanceNow, enemies, gridWidth){
+    render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
-        this.weapon.render(this.ctx, this, performanceNow, enemies, map , gridWidth)
+        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth)
         this.draw(this.ctx, this, 'blue')
     }
 }
