@@ -1,4 +1,5 @@
 import {DropSingleUse, HealDrop, SpeedBoostDrop} from "./dropSingleUse.js"
+import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
@@ -13,11 +14,18 @@ export class Enemy extends MovingEntity {
             this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
             this.ranged = ranged
             this.gridMapTile = gridMapTile
+            // Ranged-Enemy bekommt eine eigene Waffe
+            this.weapon = this.ranged ? Weapon.create("basicEnemy", this,0,0,0) : null;
+
+            if (this.weapon) {
+            this.weapon.cooldown = 2000; // Gegner schießen langsamer als der Spieler (z.B. 800 ms)
+            }
+
+            
         }
 
     // Gegner zufällig am Kartenrand spawnen
     static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth) {
-
         const offset = 80
         const side = Math.floor(Math.random() * 4)
 
@@ -49,17 +57,20 @@ export class Enemy extends MovingEntity {
                 y = top + Math.random() * (bottom - top)
                 break
         }
+        if (x<0)x=0
+        if (y<0)y=0 // Können außerhalb der Map spawnen, FIXEN
+        // falls x / y > Map spawnen sie da trotzdem
+
         let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
         // temporäre Werte, ohne lvl System bisher
-        const hp = 10;
+        const hp = 20;
         const png = null;                 //KEIN enemyImg, damit kein Fehler
         const speed = 1.0;
         const hitbox = {width: 16, height: 16};
         const level = 1;
-        const xpDrop = 2;
+        const xpDrop = 2;   
         const elite = false;
         const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
-
         enemiesArray[gridMapTile.row][gridMapTile.column].within.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged, gridMapTile));
     }
 
@@ -88,9 +99,9 @@ export class Enemy extends MovingEntity {
         const resultY = this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY)
     }
 
-    die() {
+    die(enemies, positionWithin) {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
-
+        enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
 
@@ -120,16 +131,30 @@ export class Enemy extends MovingEntity {
             height: 8
         }, null))
     }
-    
-    render(ctx, MapOne, PlayerOne, enemies, positionWithin, gridWidth){  
+
+    shouldShoot(player) {
+        // Nur Ranged-Gegner mit Waffe können schießen
+        if (!this.ranged || !this.weapon) return false;
+
+        // Distanzberechnung mit deinen Bezeichnern
+        let distanceX = player.globalEntityX - this.globalEntityX;
+        let distanceY = player.globalEntityY - this.globalEntityY;
+        let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+        // Nutze die Eigenschaft oder fallback auf den bisherigen Wert
+        let stopDistance = 200;
+
+        return distance <= stopDistance;
+    }
+     
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
         MapOne.drawMiniEnemy(this)
+        if (this.ranged)  this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
-            PlayerOne.takeDmg(15)
-            this.die()
+            PlayerOne.takeDmg(15, enemies, positionWithin)
             this.killCount++
-            enemies[position.gridMapTile.row][position.gridMapTile.column].within.splice(position.positionWithin, 1)                       // aus dem Array entfernen → "Monster verschwinden"
         } else {
             this.draw(ctx, PlayerOne, this.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
         }
