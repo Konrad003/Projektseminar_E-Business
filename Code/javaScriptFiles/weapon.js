@@ -33,7 +33,7 @@ export class Weapon extends Item {
         }
     }
 
-    shoot(shooter, projectiles, currentTime, enemies, targetEntity = null, isEnemyShooter = false) {
+    shoot(player, projectiles, currentTime, enemies, targetEntity = null, isEnemyShooter = false, tilelength, gridWidth) {
         // Check if the cooldown has passed
         if (currentTime - this.lastShotTime < this.cooldown) {
             return; // Still on cooldown
@@ -49,7 +49,7 @@ export class Weapon extends Item {
 
 
         // Create a projectile
-        for (let i = 0; i < this.amount; i++) {
+        for (let j = 0; j < this.amount; j++) {
             let dir
             if (targetEntity) {
                 // Gegner schießt gezielt auf targetEntity (z. B. den Player)
@@ -61,13 +61,15 @@ export class Weapon extends Item {
                 // Spieler zielt wie bisher auf den nächsten Gegner
                 let closestEnemy = {enemy: null, distance: 99999}
                 for (let i = enemies.length - 1; i >= 0; i--) {
-                    let enemy = enemies[i]
-                    let distanceX = shooter.globalEntityX - enemy.globalEntityX
-                    let distanceY = shooter.globalEntityY - enemy.globalEntityY
-
-                    let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
-                    if (distance < closestEnemy.distance) {
-                        closestEnemy = {enemy: enemy, distance: distance}
+                    for (let n = enemies[i].length -1 ; n>= 0; n--){
+                        for (let enemy of enemies[i][n].within){
+                            let distanceX = shooter.globalEntityX - enemy.globalEntityX
+                            let distanceY = shooter.globalEntityY - enemy.globalEntityY
+                            let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
+                            if (distance < closestEnemy.distance) {
+                                closestEnemy = {enemy: enemy, distance: distance}
+                            }
+                        }
                     }
                 }
                 if (closestEnemy.enemy) {
@@ -96,16 +98,21 @@ export class Weapon extends Item {
                 dir, // direction
                 this.dmg, // damage
                 isEnemyShooter            // NEU: markiert feindliche Projektile
+                {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))}  
             );
-            projectiles.push(p); // Add the projectile to the game's array
+            projectiles[p.gridMapTile.row][p.gridMapTile.column].within.push(p); // Add the projectile to the game's array
         }
     }
 
-    render(ctx, PlayerOne, projectiles, performanceNow, enemies, map){
-        this.shoot(PlayerOne, projectiles, performanceNow, enemies)
-        for (let projectileIndex = projectiles.length - 1; projectileIndex >= 0; projectileIndex--) {
-            let projectile = projectiles[projectileIndex]
-            projectile.render(ctx, projectiles, projectileIndex, enemies, PlayerOne, map)
+    render(ctx, PlayerOne, projectiles, performanceNow, enemies, map, gridWidth){
+        this.shoot(PlayerOne, projectiles, performanceNow, enemies, map.tilelength, gridWidth)
+        for (let i = projectiles.length - 1; i >= 0; i--) {
+            for (let n = projectiles[i].length - 1; n >= 0; n--){
+                for (let j = projectiles[i][n].within.length - 1; j >= 0 ;j--){
+                    let projectile = projectiles[i][n].within[j]
+                    projectile.render(ctx, projectiles, j, enemies, PlayerOne, map, gridWidth)
+                }
+            }
         }
     }
 }

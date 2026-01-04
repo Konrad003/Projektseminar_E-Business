@@ -21,7 +21,7 @@ export class game {
     leftPressed = false
     rightPressed = false
     mapData
-
+    gridWidth = 8
     killCount = 0
     mapChoice = 0 // 0 = Map1, 1 = Map2 Jungle
 
@@ -172,10 +172,21 @@ export class game {
             this.hudXpProgress.value = this.PlayerOne.xp
 
             this.renderInterval = setInterval(() => this.render(), 5);
-            this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+            this.enemySpawnInterval = setInterval(() => {
+                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+            }, 200)
             this.resetTimer()
             this.startGameTimer()
 
+            // Erstellen des GridArrays für Enemie und Projectile
+            for (let row = 0; row<=Math.floor(this.mapData.height / (this.gridWidth)) ;row++){
+                this.enemies[row] = []
+                this.projectiles[row] = []
+                for (let column = 0; column<=Math.floor(this.mapData.width / (this.gridWidth));column++){
+                    this.enemies[row][column] =  {within: []}
+                    this.projectiles[row][column] ={within: []}
+                }
+            }
         });
 
         // Screen-Wechsel zu Game-Screen
@@ -332,34 +343,21 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
-        this.PlayerOne.render(this.MapOne, {
-            upPressed: this.upPressed,
-            downPressed: this.downPressed,
-            leftPressed: this.leftPressed,
-            rightPressed: this.rightPressed
-        })
-
-        this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
-
-        //this.killCount += kills
-        // Gegner bewegen, zeichnen und bei Collision entfernen        
+        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
+        this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne, this.gridWidth)
         
-        // Gegner bewegen/zeichnen; Ranged-Gegner schießen
-        for (let i = this.enemies.length - 1; i >= 0; i--) {
-            const enemy = this.enemies[i]
-            enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
-
-            // NEU: Ranged-Enemy schießt gezielt auf den Spieler
-            if (enemy.shouldShoot(this.PlayerOne)) { //prüft ob gegner nah genug ist zum schießen
-                enemy.weapon.shoot(
-                enemy,                 // shooter = der Gegner
-                this.projectiles,      // gemeinsames Projektil-Array
-                performance.now(),     // für cooldown
-                this.enemies,          // enemies-Liste (wird hier nicht genutzt, da targetEntity gesetzt)
-                this.PlayerOne,        // targetEntity = Spieler
-                true                   // isEnemyShooter = feindliches Projektil (trifft Player)
-                )
+        //this.killCount += kills
+        // Gegner bewegen, zeichnen und bei Collision entfernen
+        for (let row = 0; row<=Math.floor(this.mapData.height / (this.gridWidth)) ;row++){
+            for (let column = 0; column<=Math.floor(this.mapData.width / (this.gridWidth));column++){
+                for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
+                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles i, this.gridWidth)
+                }
             }
+        }
+
+            
+            
 
             this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
 
