@@ -46,8 +46,13 @@ export class Player extends MovingEntity {
         }
     }
 
+    lvlUp() {
+        Game.lvlUPshow()
+        this.level++;
+    }
+
     die() {
-        console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
+        //console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
         this.onDeath();
     }
 
@@ -66,18 +71,7 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
-    lvlUp() {
-        this.level++;
-        this.hp = this.maxHp; // volle Heilung bei Level-Up
-        this.speed += 0.2; // das sind nur beispiele, können wir dann ändern
-        this.regeneration += 0.1;
-        this.xpForNextLevel = this.level * 10; // Nächste Level-Up-Schwelle
-        Game.hudXpProgress.max = this.xpForNextLevel;
-        console.log(`Level Up! Du bist jetzt Level ${this.level}.`);
-    }
-
-    render(map, inputState) {
-        console.log(this.maxHp)
+    render(map, inputState){
         this.handleInput(map, inputState)
         this.draw(this.ctx, this, 'blue')
     }

@@ -1,41 +1,48 @@
 import {MovingEntity} from "./movingEntity.js";
 
 export class Projectile extends MovingEntity {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg, gridMapTile) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox);
         this.piercing = piercing;
         this.size = size;
         this.direction = direction;
         this.dmg = dmg;
+        this.gridMapTile = gridMapTile
     }
 
-    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map) {
+    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth) {
         // Loop through projectiles for movement, drawing, and collision
         let killCount=0
-            // 1. Move projectile
-            this.move(map, projectiles, projectileIndex);
-            // 2. Draw projectile relative to the camera/player
-            this.draw(ctx, player, "lightblue");
-            // 3. Check collision with enemies
-            for (let enemyIndex = enemies.length - 1; enemyIndex >= 0; enemyIndex--) {
-                let enemy = enemies[enemyIndex];
+        // 1. Move projectile
+        this.move(map, projectiles, projectileIndex, gridWidth);
+        // 2. Draw projectile relative to the camera/player
+        this.draw(ctx, player, "lightblue");
+        // 3. Check collision with enemies
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            for (let n = enemies[i].length - 1; n >= 0; n--){
+                for (let j = enemies[i][n].within.length - 1; j >= 0 ;j--){
+                    let enemy = enemies[i][n].within[j]
+                    if (this.checkCollision(enemy, 0, 0)) {
+                        console.log("2")
+                        // On hit, remove both
+                        enemies[i][n].within.splice(j, 1)
+                        projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1) 
 
-                if (this.checkCollision(enemy, 0, 0)) {
-                    // On hit, remove both
-                    enemies.splice(enemyIndex, 1);
-                    projectiles.splice(projectileIndex, 1);
+                        killCount++; // Notify game that an enemy was killed
 
-                    killCount++; // Notify game that an enemy was killed
+                        enemy.die(); // Drop XP, etc.
 
-                    enemy.die(); // Drop XP, etc.
-
-                    // Since the projectile is gone, break the inner loop and continue to the next projectile
-                    break;
+                        // Since the projectile is gone, break the inner loop and continue to the next projectile
+                        break;
+                    }
                 }
             }
+        }
     }
+       
 
-    move(map, projectiles, projectileIndex) {
+    move(map, projectiles, projectileIndex, gridWidth) {
+        let position=this.updateGridPlace(map.tilelength, projectiles, projectileIndex, gridWidth)
         // direction is a vector like {x: 0.5, y: -0.2}
         let oldGlobalEntityX = this.globalEntityX
         let oldGlobalEntityY = this.globalEntityY
@@ -51,11 +58,11 @@ export class Projectile extends MovingEntity {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, (this.direction.y * this.speed), this.hitbox)
         }
         if ((oldGlobalEntityX === this.globalEntityX && this.direction.x !== 0) || (oldGlobalEntityY === this.globalEntityY && this.direction.y !== 0)) { // Kollision mit Wand
-            projectiles.splice(projectileIndex, 1);
+            projectiles[position.gridMapTile.row][position.gridMapTile.column].within.splice(position.positionWithin, 1);
         }
     }
 
-    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne){
-        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne)
+    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth){
+        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth)
     }
 }
