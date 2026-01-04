@@ -155,10 +155,17 @@ export class game {
 
     start() {
         this.timestamp = Date.now();
-        document.addEventListener("keydown", this.keyDownHandler.bind(this));
-        document.addEventListener("keyup", this.keyUpHandler.bind(this));
+
+        this.keyDownBound = this.keyDownHandler.bind(this);
+        this.keyUpBound = this.keyUpHandler.bind(this);
+        document.addEventListener("keydown", this.keyDownBound);
+        document.addEventListener("keyup", this.keyUpBound);
+
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
+
+        this.weapon = Weapon.create("basic")
+        
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
@@ -294,7 +301,6 @@ export class game {
         this.start()
     }
 
-
     resetGame() {
         // Timer stoppen und zurücksetzen
         this.stopGameTimer()
@@ -311,14 +317,28 @@ export class game {
             this.enemySpawnInterval = null
         }
 
+        if (this.keyDownBound) {
+            document.removeEventListener("keydown", this.keyDownBound);
+            this.keyDownBound = null;
+        }
+        if (this.keyUpBound) {
+            document.removeEventListener("keyup", this.keyUpBound);
+            this.keyUpBound = null;
+        }
+
         // Gegner-Array leeren
-        this.enemies = []
+
+        this.enemies.length = 0
+        this.projectiles.length = 0
         this.MapOne = null
         this.PlayerOne = null
         this.mapData = null
 
-        // Projektile-Array leeren
-        this.projectiles = []
+        this.DropSystem = null
+        this.ProjectileSystem = null
+        this.weapon = null
+        this.Game = null
+
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
