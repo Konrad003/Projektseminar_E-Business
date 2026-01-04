@@ -61,17 +61,23 @@ export class MovingEntity extends Entity {
 
         if (move === 0) return {success: true}
         const colliding = [] //Array mit Entitys die gepusht werden müssten damit true
-        for (const other of enemyArray) {
-            if (other === self) continue
-            if (axis === 'x') {
-                if (self.checkCollisionHorizontal(other, move)) {    //Horizontale überlappung mit einem gegener--> somit einfügen in das Array colliding
-                    colliding.push(other)
+        for (let row = self.gridMapTile.row - 1; row<= self.gridMapTile.row + 1; row++){
+            if (!enemyArray[row]) continue // abfangen von out of Border
+            for (let column = self.gridMapTile.column - 1; column<= self.gridMapTile.column + 1; column++){
+                if (!enemyArray[row][column]) continue // abfangen von out of Border
+                for (const other of enemyArray[row][column].within) {
+                    if (other === self) continue
+                    if (axis === 'x') {
+                        if (self.checkCollisionHorizontal(other, move)) {    //Horizontale überlappung mit einem gegener--> somit einfügen in das Array colliding
+                            colliding.push(other)
+                        }
+                    } else { // Y-Achse
+                        if (self.checkCollisionVertical(other, move)) {    //Vertikale überlappung mit einem gegener--> somit einfügen in das Array colliding
+                            colliding.push(other)
+                        }
+                    }
                 }
-            } else { // Y-Achse
-                if (self.checkCollisionVertical(other, move)) {    //Vertikale überlappung mit einem gegener--> somit einfügen in das Array colliding
-                    colliding.push(other)
-                }
-            }
+            }    
         }// alle Enemys die Kollidieren mit diesen einem Enemy eingetragen
 
         for (const other of colliding) { // jedes Objekt welches bisher kollidierte
@@ -119,4 +125,25 @@ export class MovingEntity extends Entity {
 
     die() {
     }
+
+    updateGridPlace(tilelength, objectArray, positionWithin, gridWidth){
+        let newGridMapTile = {column : Math.floor(this.globalEntityX / (gridWidth*tilelength)),
+                              row : Math.floor(this.globalEntityY / (gridWidth*tilelength))}   //8 kann später noch maybe noch variabel gemacht werden
+        if (this.gridMapTile== null || 
+            this.gridMapTile.row !== newGridMapTile.row ||
+            this.gridMapTile.column !== newGridMapTile.column){
+
+            
+            if (this.gridMapTile!=null){
+                objectArray[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
+            }
+            objectArray[newGridMapTile.row][newGridMapTile.column].within.push(this)
+            this.gridMapTile=newGridMapTile
+            
+            
+            positionWithin=objectArray[this.gridMapTile.row][this.gridMapTile.column].within.length-1
+        }
+        return {gridMapTile: this.gridMapTile, positionWithin: positionWithin}
+    }
+
 }
