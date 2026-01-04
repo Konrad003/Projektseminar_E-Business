@@ -112,14 +112,13 @@ export class MovingEntity extends Entity {
     }
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
-    takeDmg(amount) {
+    takeDmg(amount, enemies, positionWithin) {
         this.hp -= amount;
-        
         document.getElementById("hudHealthProgress").style.value = this.hp
 
         if (this.hp <= 0 && Game.testDie) {
             this.hp = 0;
-            this.die();
+            this.die(enemies, positionWithin);
         }
     }
 

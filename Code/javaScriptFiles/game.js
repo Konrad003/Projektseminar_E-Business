@@ -48,7 +48,7 @@ export class game {
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
-        this.weapon = Weapon.create("basic")
+        
     }
 
     loadMap(file) {
@@ -168,28 +168,27 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16,
                 height: 16
-            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
             this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
             this.hudXpProgress.value = this.PlayerOne.xp
-
-            this.renderInterval = setInterval(() => this.render(), 5);
-            this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth, this.mapData.tilewidth, this.gridWidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
-            this.resetTimer()
-            this.startGameTimer()
-
             // Erstellen des GridArrays für Enemie und Projectile
             for (let row = 0; row<=Math.floor(this.mapData.height / (this.gridWidth)) ;row++){
                 this.enemies[row] = []
-                this.projectiles[row] = []
                 for (let column = 0; column<=Math.floor(this.mapData.width / (this.gridWidth));column++){
                     this.enemies[row][column] =  {within: []}
-                    this.projectiles[row][column] ={within: []}
                 }
             }
+            this.renderInterval = setInterval(() => this.render(), 5);
+            this.enemySpawnInterval = setInterval(() => {
+                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+            }, 200)
+            this.resetTimer()
+            this.startGameTimer()
+
         });
 
         // Screen-Wechsel zu Game-Screen
@@ -346,25 +345,22 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
-        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed})
-        this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne, this.gridWidth)
+        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed}, performance.now(), this.enemies, this.gridWidth)
+        
         
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row<=Math.floor(this.mapData.height / (this.gridWidth)) ;row++){
             for (let column = 0; column<=Math.floor(this.mapData.width / (this.gridWidth));column++){
                 for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
-                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, i, this.gridWidth)
+                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles,performance.now(), i, this.gridWidth)
                 }
             }
         }
-
         this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
-
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
     }
 }
-
-document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
-window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
+    document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
+    window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
