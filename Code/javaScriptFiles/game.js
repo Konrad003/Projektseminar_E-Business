@@ -172,7 +172,9 @@ export class game {
             this.hudXpProgress.value = this.PlayerOne.xp
 
             this.renderInterval = setInterval(() => this.render(), 5);
-            this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth, this.mapData.tilewidth, this.gridWidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+            this.enemySpawnInterval = setInterval(() => {
+                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+            }, 200)
             this.resetTimer()
             this.startGameTimer()
 
