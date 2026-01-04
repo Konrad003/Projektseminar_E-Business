@@ -64,33 +64,27 @@
     <form id="settingsForm">
         <div class="panel">
             <div class="settings" id="soundSettings">
-                <input id="volume" max="1" min="0" step="0.01" type="range" value="0.5">
-                <label for="volume">Volume</label>
 
-                <input checked id="effects" type="checkbox">
-                <label for="effects">Sound effects</label>
             </div>
 
             <div class="settings" id="gameSettings">
-                <input id="speed" max="1" min="0" step="0.01" type="range" value="0.5">
-                <label for="speed">Game Speed</label>
+                <input id="testHealth" max="9999" min="1" name="testHealth" type="number" value="100">
+                <label for="testHealth">Set your Health</label>
 
-                <input id="mapChoice" max="1" min="0" step="1" type="number" value="0">
-                <label for="mapChoice">Map Choice (0-1)</label>
+                <input id="testMaxHealth" max="9999" min="1" name="testMaxHealth" type="number" value="100">
+                <label for="testMaxHealth">Set your max. Health</label>
+
+                <input id="testXP" max="9999" min="0" name="testXP" type="number" value="0">
+                <label for="testXP">Set your XP</label>
             </div>
 
-            <div class="settings" id="keySettings">
-                <input id="keyUp" type="text" value="W">
-                <label for="keyUp">Move Up Key</label>
+            <div class="settings">
+                <input checked id="testShoot" name="testShoot" type="checkbox" value="true">
+                <label for="testShoot">Enable Shooting</label>
 
-                <input id="keyLeft" type="text" value="A">
-                <label for="keyLeft">Move Left Key</label>
+                <input checked id="testDie" name="testDie" type="checkbox" value="true">
+                <label for="testDie">Player can die?</label>
 
-                <input id="keyDown" type="text" value="S">
-                <label for="keyDown">Move Down Key</label>
-
-                <input id="keyRight" type="text" value="D">
-                <label for="keyRight">Move Right Key</label>
             </div>
 
             <div class="menu">
