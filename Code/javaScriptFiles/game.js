@@ -7,7 +7,6 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
-import {Weapon} from "./weapon.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -41,7 +40,7 @@ export class game {
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
-        
+
     }
 
     loadMap(file) {
@@ -161,8 +160,7 @@ export class game {
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 0, null, 5, {
-                width: 16,
-                height: 16
+                width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -171,10 +169,10 @@ export class game {
             this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
             this.hudXpProgress.value = this.PlayerOne.xp
             // Erstellen des GridArrays für Enemie und Projectile
-            for (let row = 0; row<=Math.floor(this.mapData.height / (this.gridWidth)) ;row++){
+            for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
                 this.enemies[row] = []
-                for (let column = 0; column<=Math.floor(this.mapData.width / (this.gridWidth));column++){
-                    this.enemies[row][column] =  {within: []}
+                for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
+                    this.enemies[row][column] = {within: []}
                 }
             }
             this.renderInterval = setInterval(() => this.render(), 5);
@@ -253,33 +251,35 @@ export class game {
     }
 
     end() {
-        this.stopGameTimer()
-        this.resetTimer()
-
-        document.getElementById("defeatKills").innerHTML = this.killCount
-
-        this.resetGame()
-
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
+        document.getElementById("defeatTime").innerHTML = document.getElementById("hudTime").innerHTML
+        document.getElementById("defeatXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("defeatKills").innerHTML = this.killCount
         document.getElementById("defeatScreen").style.display = "flex";
+
+        this.stopGameTimer()
+        this.resetTimer()
+
+        this.resetGame()
     }
 
     endWin() {
-        this.stopGameTimer()
-        this.resetTimer()
-
-        document.getElementById("winKills").innerHTML = this.killCount
-
-        this.resetGame()
-
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
+        document.getElementById("winTime").innerHTML = document.getElementById("hudTime").innerHTML
+        document.getElementById("winXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("winKills").innerHTML = this.killCount
         document.getElementById("winScreen").style.display = "flex";
+
+        this.stopGameTimer()
+        this.resetTimer()
+
+        this.resetGame()
     }
 
     // Ende der Screen-Wechsel-Funktionen
@@ -340,22 +340,29 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
-        this.PlayerOne.render(this.MapOne, {upPressed: this.upPressed, downPressed: this.downPressed, leftPressed: this.leftPressed, rightPressed: this.rightPressed}, performance.now(), this.enemies, this.gridWidth)
-        
-        
+        this.PlayerOne.render(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed
+        }, performance.now(), this.enemies, this.gridWidth)
+
+
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
-        for (let row = 0; row<=Math.floor(this.mapData.height / (this.gridWidth)) ;row++){
-            for (let column = 0; column<=Math.floor(this.mapData.width / (this.gridWidth));column++){
+        for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
+            for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
                 for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
-                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles,performance.now(), i, this.gridWidth)
+                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth)
                 }
             }
         }
         this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
+        document.getElementById("hudXP").innerHTML = this.PlayerOne.xp
     }
 }
-    document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
-    window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
+
+document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
+window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
