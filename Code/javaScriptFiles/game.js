@@ -163,8 +163,6 @@ export class game {
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
-
-        this.weapon = Weapon.create("basic")
         
         //Map Switch
         this.mapData = []
