@@ -275,6 +275,7 @@ export class game {
         this.resetTimer()
 
         this.resetGame()
+        Sounds.loseSound.play()
     }
 
     endWin() {
@@ -291,6 +292,7 @@ export class game {
         this.resetTimer()
 
         this.resetGame()
+        Sounds.WinSound.play()
     }
 
     Sounds() {
@@ -298,6 +300,7 @@ export class game {
             buttonSound: new Audio('./Sound/click.mp3'),
             //backgroundMusic: new Audio('./Sound/backgroundMusic.mp3'),
             WinSound: new Audio('./Sound/Win.mp3'),
+            loseSound: new Audio('./Sound/lose.mp3'),
         };
     }
 
