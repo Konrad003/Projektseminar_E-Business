@@ -115,7 +115,6 @@ export class MovingEntity extends Entity {
     takeDmg(amount, enemies, positionWithin) {
         this.hp -= amount;
         document.getElementById("hudHealthProgress").style.value = this.hp
-
         if (this.hp <= 0 && Game.testDie) {
             this.hp = 0;
             this.die(enemies, positionWithin);

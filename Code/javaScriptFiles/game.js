@@ -192,7 +192,6 @@ export class game {
             }, 200)
             this.resetTimer()
             this.startGameTimer()
-
         });
 
         // Screen-Wechsel zu Game-Screen
