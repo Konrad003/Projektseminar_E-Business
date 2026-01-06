@@ -35,6 +35,9 @@ export class game {
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
 
+    soundEffects = true
+    music = true
+
     //Tests
     testShoot = true
     testDie = true
@@ -115,6 +118,9 @@ export class game {
             e.preventDefault();
             // Save logic here
 
+            this.soundEffects = document.getElementById("effectsOn").checked
+            this.music = document.getElementById("musicOn").checked
+
             this.testShoot = document.getElementById("testShoot").checked
             this.testDie = document.getElementById("testDie").checked
             this.Health = parseInt(document.getElementById("testHealth").value)
@@ -163,15 +169,14 @@ export class game {
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
-        
+
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
-                width: 16,
-                height: 16
+                width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -275,7 +280,9 @@ export class game {
         this.resetTimer()
 
         this.resetGame()
-        Sounds.loseSound.play()
+        if (this.soundEffects) {
+            Sounds.loseSound.play()
+        }
     }
 
     endWin() {
@@ -292,18 +299,30 @@ export class game {
         this.resetTimer()
 
         this.resetGame()
-        Sounds.WinSound.play()
+
+        if (this.soundEffects) {
+            Sounds.WinSound.play()
+        }
+
     }
 
     Sounds() {
+        this.buttonSound = new Audio('./Sound/click.mp3');
+        this.winSound = new Audio('./Sound/Win.mp3');
+        this.loseSound = new Audio('./Sound/lose.mp3');
+
         window.Sounds = {
-            buttonSound: new Audio('./Sound/click.mp3'),
-            //backgroundMusic: new Audio('./Sound/backgroundMusic.mp3'),
-            WinSound: new Audio('./Sound/Win.mp3'),
-            loseSound: new Audio('./Sound/lose.mp3'),
+            buttonSound: this.buttonSound, //backgroundMusic: backgroundMusic,
+            WinSound: this.winSound, loseSound: this.loseSound,
         };
     }
 
+    playButtonSound() {
+        if (!this.soundEffects) return;
+        if (!window.Sounds || !window.Sounds.buttonSound) return;
+
+        Sounds.buttonSound.play();
+    }
 
     // Ende der Screen-Wechsel-Funktionen
     restart() {
