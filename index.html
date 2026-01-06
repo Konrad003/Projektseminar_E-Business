@@ -46,15 +46,15 @@
     <h1 class="gameTitle">Vampirio.io</h1>
 
     <div class="menu">
-        <button class="btn" id="startButton" onclick="Game.chooseMap()">Start Game</button>
-        <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
+        <button class="btn" id="startButton" onclick="Game.chooseMap()" onmousedown="Sounds.buttonSound.play()">Start Game</button>
+        <button class="btn" id="settingsButton" onclick="Game.settings()" onmousedown="Sounds.buttonSound.play()">Settings</button>
     </div>
 </section>
 
 <section class="screen" id="mapScreen">
     <div class="menu">
-        <button class="btn" onclick="Game.mapSelect(0)">Jungle</button>
-        <button class="btn" onclick="Game.mapSelect(1)">Vanilla</button>
+        <button class="btn" onclick="Game.mapSelect(0)" onmousedown="Sounds.buttonSound.play()">Jungle</button>
+        <button class="btn" onclick="Game.mapSelect(1)" onmousedown="Sounds.buttonSound.play()">Vanilla</button>
     </div>
 </section>
 
@@ -88,10 +88,10 @@
             </div>
 
             <div class="menu">
-                <button class="btn" id="startMenuButton" onclick="Game.home()">Back</button>
+                <button class="btn" id="startMenuButton" onclick="Game.home()" onmousedown="Sounds.buttonSound.play()">Back</button>
             </div>
 
-            <input class="btn" type="submit" value="Save"/>
+            <input class="btn" type="submit" value="Save" onmousedown="Sounds.buttonSound.play()"/>
         </div>
     </form>
 </section>
@@ -100,12 +100,12 @@
     <h1 class="screenTitle">PAUSED</h1>
 
     <div class="menu">
-        <button class="btn" onclick="Game.resumeGame()">RESUME</button>
-        <button class="btn" onclick="Game.settings()">SETTINGS</button>
-        <button class="btn" onclick="Game.home()">MAIN MENU</button>
+        <button class="btn" onclick="Game.resumeGame()" onmousedown="Sounds.buttonSound.play()">RESUME</button>
+        <button class="btn" onclick="Game.settings()" onmousedown="Sounds.buttonSound.play()">SETTINGS</button>
+        <button class="btn" onclick="Game.home()" onmousedown="Sounds.buttonSound.play()">MAIN MENU</button>
 
-        <button class="btn" onclick="Game.end()">DEFEAT</button>
-        <button class="btn" onclick="Game.endWin()">WIN</button>
+        <button class="btn" onclick="Game.end()" onmousedown="Sounds.buttonSound.play()">DEFEAT</button>
+        <button class="btn" onclick="Game.endWin()" onmousedown="Sounds.buttonSound.play()">WIN</button>
     </div>
 </section>
 
@@ -152,8 +152,8 @@
     </div>
 
     <div class="flex-row-gap" style="margin-top: 20px;">
-        <button class="btn" id="retryButtonDefeat" onclick="Game.restart()">Retry</button>
-        <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()">Start Menu</button>
+        <button class="btn" id="retryButtonDefeat" onclick="Game.restart()" onmousedown="Sounds.buttonSound.play()">Retry</button>
+        <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()" onmousedown="Sounds.buttonSound.play()">Start Menu</button>
     </div>
 </section>
 
@@ -169,8 +169,8 @@
     </div>
 
     <div class="flex-row-gap" style="margin-top: 20px;">
-        <button class="btn" id="retryButtonWin" onclick="Game.restart()">Retry</button>
-        <button class="btn" id="startMenuButtonWin" onclick="Game.home()">Start Menu</button>
+        <button class="btn" id="retryButtonWin" onclick="Game.restart()" onmousedown="Sounds.buttonSound.play()">Retry</button>
+        <button class="btn" id="startMenuButtonWin" onclick="Game.home()" onmousedown="Sounds.buttonSound.play()">Start Menu</button>
     </div>
 </section>
 

@@ -47,7 +47,7 @@ export class game {
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
-
+        this.Sounds();
     }
 
     loadMap(file) {
@@ -292,6 +292,15 @@ export class game {
 
         this.resetGame()
     }
+
+    Sounds() {
+        window.Sounds = {
+            buttonSound: new Audio('./Sound/click.mp3'),
+            //backgroundMusic: new Audio('./Sound/backgroundMusic.mp3'),
+            WinSound: new Audio('./Sound/Win.mp3'),
+        };
+    }
+
 
     // Ende der Screen-Wechsel-Funktionen
     restart() {
