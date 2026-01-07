@@ -1,8 +1,8 @@
 import {Item} from "./item.js"
 
-export class Equipment extends Item {
+class Equipment extends Item {
 
-    static dashActive = true //Gibt an ob der Spieler Dash freigeschaltet hat
+    dashActive = false //Gibt an ob der Spieler Dash freigeschaltet hat
     attackBonus
     defenseBonus
     xpBonus
@@ -19,12 +19,11 @@ export class Equipment extends Item {
         //usw.
     }
 
-    //static um zu testen. Ansonsten funktional, aber noch nicht komplett wie gewünscht!!
-    static dashAction(player, map, inputState) {
+    //Funktional, aber noch nicht komplett wie gewünscht!!
+    dashAction(player, map, inputState) {
         if (this.dashActive) {
             for (let d = 0; d <= 10; d++) {
                 let dashDistance = 10
-                console.log(dashDistance)
                 if (inputState.rightPressed) {
                     player.globalEntityX = map.rightFree(player.globalEntityX, player.globalEntityY, dashDistance, player.hitbox);
                 }
@@ -39,7 +38,6 @@ export class Equipment extends Item {
                 }
             }
         }
-
     }
 
     dashLevelUp() {
@@ -47,3 +45,5 @@ export class Equipment extends Item {
     }
 
 }
+
+export default Equipment

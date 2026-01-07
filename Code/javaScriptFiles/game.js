@@ -1,6 +1,6 @@
 import {DropSingleUse} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
-import {Equipment} from "./equipment.js"
+import Equipment from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
@@ -38,6 +38,7 @@ export class game {
     //Tests
     testShoot = true
     testDie = true
+    dashActiveSetting = false
     Health = 100
     maxHealth = 100
     XP = 0
@@ -48,6 +49,7 @@ export class game {
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
 
+        this.dashTrails = [] // Array für Dash-Effekte
     }
 
     loadMap(file) {
@@ -94,13 +96,24 @@ export class game {
             }
         }
         if (e.key === " ") {
-            console.log("Space")
-            Equipment.dashAction(this.PlayerOne, this.MapOne, {
+            const startX = this.PlayerOne.globalEntityX
+            const startY = this.PlayerOne.globalEntityY
+
+            this.dashEquipment.dashAction(this.PlayerOne, this.MapOne, {
                 upPressed: this.upPressed,
                 downPressed: this.downPressed,
                 leftPressed: this.leftPressed,
                 rightPressed: this.rightPressed
             })
+
+            const endX = this.PlayerOne.globalEntityX
+            const endY = this.PlayerOne.globalEntityY
+
+            if (startX !== endX || startY !== endY) {
+                this.dashTrails.push({
+                    startX, startY, endX, endY, alpha: 0.5
+                })
+            }
         }
     }
 
@@ -126,6 +139,7 @@ export class game {
 
             this.testShoot = document.getElementById("testShoot").checked
             this.testDie = document.getElementById("testDie").checked
+            this.dashActiveSetting = document.getElementById("activateDash").checked
             this.Health = parseInt(document.getElementById("testHealth").value)
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
@@ -181,6 +195,8 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.dashEquipment = new Equipment(null, "Dash", null, 0, 0, 0, 0)
+            this.dashEquipment.dashActive = this.dashActiveSetting
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
@@ -335,6 +351,7 @@ export class game {
 
         this.enemies.length = 0
         this.projectiles.length = 0
+        this.dashTrails = []
         this.MapOne = null
         this.PlayerOne = null
         this.mapData = null
@@ -371,6 +388,32 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
+
+        if (this.dashTrails) {
+            for (let i = this.dashTrails.length - 1; i >= 0; i--) {
+                const trail = this.dashTrails[i];
+                const leftBorder = this.PlayerOne.globalEntityX - Entity.FOVwidthMiddle;
+                const topBorder = this.PlayerOne.globalEntityY - Entity.FOVheightMiddle;
+
+                const sX = trail.startX - leftBorder + this.PlayerOne.hitbox.width / 2;
+                const sY = trail.startY - topBorder + this.PlayerOne.hitbox.height / 2;
+                const eX = trail.endX - leftBorder + this.PlayerOne.hitbox.width / 2;
+                const eY = trail.endY - topBorder + this.PlayerOne.hitbox.height / 2;
+
+                ctx.beginPath();
+                ctx.moveTo(sX, sY);
+                ctx.lineTo(eX, eY);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${trail.alpha})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                trail.alpha -= 0.02;
+                if (trail.alpha <= 0) {
+                    this.dashTrails.splice(i, 1);
+                }
+            }
+        }
+
         this.PlayerOne.render(this.MapOne, {
             upPressed: this.upPressed,
             downPressed: this.downPressed,
