@@ -7,7 +7,6 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
-import {Weapon} from "./weapon.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -21,7 +20,7 @@ export class game {
     leftPressed = false
     rightPressed = false
     mapData
-
+    gridWidth = 8
     killCount = 0
     mapChoice = 0 // 0 = Map1, 1 = Map2 Jungle
 
@@ -36,12 +35,19 @@ export class game {
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
 
+    //Tests
+    testShoot = true
+    testDie = true
+    Health = 100
+    maxHealth = 100
+    XP = 0
+
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
-        this.weapon = Weapon.create("basic")
+
     }
 
     loadMap(file) {
@@ -105,20 +111,18 @@ export class game {
     }
 
     settingsListener() {
-        const form = document.getElementById("settingsForm");
-
-        //check if form exists
-        if (!form) return;
-
-        //submit listener
-        form.addEventListener("submit", (e) => {
+        document.getElementById("settingsForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            //logic
-            this.mapChoice = parseInt(document.getElementById("mapChoice").value);
+            // Save logic here
 
-            //go to Home Screen
-            this.home();
-        })
+            this.testShoot = document.getElementById("testShoot").checked
+            this.testDie = document.getElementById("testDie").checked
+            this.Health = parseInt(document.getElementById("testHealth").value)
+            this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
+            this.XP = parseInt(document.getElementById("testXP").value)
+
+            this.home()
+        });
     }
 
     updateTimerDisplay() { // Aktualisiert die Anzeige des Timers im Format mm:ss
@@ -151,31 +155,43 @@ export class game {
 
     start() {
         this.timestamp = Date.now();
-        document.addEventListener("keydown", this.keyDownHandler.bind(this));
-        document.addEventListener("keyup", this.keyUpHandler.bind(this));
+
+        this.keyDownBound = this.keyDownHandler.bind(this);
+        this.keyUpBound = this.keyUpHandler.bind(this);
+        document.addEventListener("keydown", this.keyDownBound);
+        document.addEventListener("keyup", this.keyUpBound);
+
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
+        
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, 100, 100, 0, null, 5, {
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16,
                 height: 16
-            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
             this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
             this.hudXpProgress.value = this.PlayerOne.xp
-
+            // Erstellen des GridArrays für Enemie und Projectile
+            for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
+                this.enemies[row] = []
+                for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
+                    this.enemies[row][column] = {within: []}
+                }
+            }
             this.renderInterval = setInterval(() => this.render(), 5);
-            this.enemySpawnInterval = setInterval(() => Enemy.spawnEnemyAtEdge(this.enemies, this.mapData.width * this.mapData.tilewidth, this.mapData.height * this.mapData.tilewidth), 200); // CHANGE: Gegner werden alle 2 Sekunden gespawnt
+            this.enemySpawnInterval = setInterval(() => {
+                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+            }, 200)
             this.resetTimer()
             this.startGameTimer()
-
         });
 
         // Screen-Wechsel zu Game-Screen
@@ -245,33 +261,35 @@ export class game {
     }
 
     end() {
-        this.stopGameTimer()
-        this.resetTimer()
-
-        document.getElementById("defeatKills").innerHTML = this.killCount
-
-        this.resetGame()
-
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
+        document.getElementById("defeatTime").innerHTML = document.getElementById("hudTime").innerHTML
+        document.getElementById("defeatXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("defeatKills").innerHTML = this.killCount
         document.getElementById("defeatScreen").style.display = "flex";
+
+        this.stopGameTimer()
+        this.resetTimer()
+
+        this.resetGame()
     }
 
     endWin() {
-        this.stopGameTimer()
-        this.resetTimer()
-
-        document.getElementById("winKills").innerHTML = this.killCount
-
-        this.resetGame()
-
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
+        document.getElementById("winTime").innerHTML = document.getElementById("hudTime").innerHTML
+        document.getElementById("winXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("winKills").innerHTML = this.killCount
         document.getElementById("winScreen").style.display = "flex";
+
+        this.stopGameTimer()
+        this.resetTimer()
+
+        this.resetGame()
     }
 
     // Ende der Screen-Wechsel-Funktionen
@@ -279,7 +297,6 @@ export class game {
         this.resetGame()
         this.start()
     }
-
 
     resetGame() {
         // Timer stoppen und zurücksetzen
@@ -297,14 +314,28 @@ export class game {
             this.enemySpawnInterval = null
         }
 
+        if (this.keyDownBound) {
+            document.removeEventListener("keydown", this.keyDownBound);
+            this.keyDownBound = null;
+        }
+        if (this.keyUpBound) {
+            document.removeEventListener("keyup", this.keyUpBound);
+            this.keyUpBound = null;
+        }
+
         // Gegner-Array leeren
-        this.enemies = []
+
+        this.enemies.length = 0
+        this.projectiles.length = 0
         this.MapOne = null
         this.PlayerOne = null
         this.mapData = null
 
-        // Projektile-Array leeren
-        this.projectiles = []
+        this.DropSystem = null
+        this.ProjectileSystem = null
+        this.weapon = null
+        this.Game = null
+
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
@@ -337,22 +368,22 @@ export class game {
             downPressed: this.downPressed,
             leftPressed: this.leftPressed,
             rightPressed: this.rightPressed
-        })
+        }, performance.now(), this.enemies, this.gridWidth)
 
-        this.weapon.render(ctx, this.PlayerOne, this.projectiles, performance.now(), this.enemies, this.MapOne)
 
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
-
-        for (let i = this.enemies.length - 1; i >= 0; i--) {
-            const enemy = this.enemies[i]
-            enemy.render(ctx, this.MapOne, this.PlayerOne, this.enemies, i)
+        for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
+            for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
+                for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
+                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth)
+                }
+            }
         }
-
         this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
-
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
+        document.getElementById("hudXP").innerHTML = this.PlayerOne.xp
     }
 }
 

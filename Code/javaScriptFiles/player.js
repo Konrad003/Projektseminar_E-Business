@@ -1,10 +1,11 @@
 import {MovingEntity} from "./movingEntity.js"
+import {Weapon} from "./weapon.js";
 
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -23,7 +24,9 @@ export class Player extends MovingEntity {
 
         this.canvasWidthMiddle = canvasWidthMiddle
         this.canvasWidthHeight = canvasHeightMiddle
+
         this.xpForNextLevel = this.level * 10;
+        this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
     }
 
     handleInput(map, inputState) {
@@ -49,10 +52,12 @@ export class Player extends MovingEntity {
     lvlUp() {
         Game.lvlUPshow()
         this.level++;
+        this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
+        document.getElementById("hudXpProgress").style.max = this.xpForNextLevel;
     }
 
     die() {
-        console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
+        //console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
         this.onDeath();
     }
 
@@ -71,9 +76,9 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
-    render(map, inputState) {
-        console.log(this.maxHp)
+    render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
+        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth)
         this.draw(this.ctx, this, 'blue')
     }
 }
