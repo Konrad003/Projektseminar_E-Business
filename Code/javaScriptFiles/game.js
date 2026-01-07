@@ -1,6 +1,6 @@
 import {DropSingleUse} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
-//import { Equipment } from "./equipment.js"
+import {Equipment} from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
@@ -93,6 +93,15 @@ export class game {
                 this.pauseGame() // Spiel nur pausieren, wenn Game läuft
             }
         }
+        if (e.key === " ") {
+            console.log("Space")
+            Equipment.dashAction(this.PlayerOne, this.MapOne, {
+                upPressed: this.upPressed,
+                downPressed: this.downPressed,
+                leftPressed: this.leftPressed,
+                rightPressed: this.rightPressed
+            })
+        }
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
@@ -163,15 +172,14 @@ export class game {
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
-        
+
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
-                width: 16,
-                height: 16
+                width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
