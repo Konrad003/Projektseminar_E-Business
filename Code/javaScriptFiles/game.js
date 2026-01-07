@@ -1,6 +1,6 @@
 import {DropSingleUse} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
-import Equipment from "./equipment.js"
+import {Equipment} from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
@@ -77,16 +77,16 @@ export class game {
     }
 
     keyDownHandler(e) { // liest Input der Tastatur aus
-        if ((e.key === "ArrowUp") || (e.key === 'w')) {
+        if ((e.key === "ArrowUp") || (e.key === 'w') || (e.key === 'W')) {
             this.upPressed = true;
         }
-        if ((e.key === "ArrowLeft") || (e.key === 'a')) {
+        if ((e.key === "ArrowLeft") || (e.key === 'a') || (e.key === 'A')) {
             this.leftPressed = true;
         }
-        if ((e.key === "ArrowRight") || (e.key === 'd')) {
+        if ((e.key === "ArrowRight") || (e.key === 'd') || (e.key === 'D')) {
             this.rightPressed = true;
         }
-        if ((e.key === "ArrowDown") || (e.key === 's')) {
+        if ((e.key === "ArrowDown") || (e.key === 's') || (e.key === 'S')) {
             this.downPressed = true;
         }
         // Escape zum Pausieren
@@ -118,16 +118,16 @@ export class game {
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
-        if ((e.key === "ArrowUp") || (e.key === 'w')) {
+        if ((e.key === "ArrowUp") || (e.key === 'w') || (e.key === 'W')) {
             this.upPressed = false;
         }
-        if ((e.key === "ArrowLeft") || (e.key === 'a')) {
+        if ((e.key === "ArrowLeft") || (e.key === 'a') || (e.key === 'A')) {
             this.leftPressed = false;
         }
-        if ((e.key === "ArrowRight") || (e.key === 'd')) {
+        if ((e.key === "ArrowRight") || (e.key === 'd') || (e.key === 'D')) {
             this.rightPressed = false;
         }
-        if ((e.key === "ArrowDown") || (e.key === 's')) {
+        if ((e.key === "ArrowDown") || (e.key === 's') || (e.key === 'S')) {
             this.downPressed = false;
         }
     }

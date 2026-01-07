@@ -1,6 +1,8 @@
 import {Item} from "./item.js"
 
-class Equipment extends Item {
+//import {game} from "./game";
+
+export class Equipment extends Item {
 
     dashActive = false //Gibt an ob der Spieler Dash freigeschaltet hat
     attackBonus
@@ -41,9 +43,17 @@ class Equipment extends Item {
     }
 
     dashLevelUp() {
+        document.getElementById("lvl1Button").onclick(() => {
+            this.dashUnlock()
+            Game.lvlUPhide()
+        })
+        document.getElementById("lvl1Button").innerHTML = "Equip Dash"
+        document.getElementById("lvl1Button").title = "Equip Dash - This will allow you to dash with the Spacebar."
 
     }
 
-}
+    dashUnlock() {
+        this.dashActive = true
+    }
 
-export default Equipment
+}

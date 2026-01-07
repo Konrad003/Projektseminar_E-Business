@@ -1,5 +1,6 @@
 import {MovingEntity} from "./movingEntity.js"
 import {Weapon} from "./weapon.js";
+import {Equipment} from "./equipment.js"
 
 export class Player extends MovingEntity {
     ctx
@@ -16,7 +17,7 @@ export class Player extends MovingEntity {
         this.png = png;
         this.baseSpeed = speed;
         this.hitbox = hitbox;
-        this.ausrüstung = ausrüstung;
+        this.ausrüstung = ausrüstung = [];
         this.weapons = weapons;
         this.regeneration = regeneration;
         this.ctx = ctx;
@@ -51,9 +52,21 @@ export class Player extends MovingEntity {
 
     lvlUp() {
         Game.lvlUPshow()
+        this.lvlUpChoose()
         this.level++;
         this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
         document.getElementById("hudXpProgress").style.max = this.xpForNextLevel;
+    }
+
+    lvlUpChoose() {
+        let zufallszahl = Math.floor(Math.random() * 20);
+        if (zufallszahl <= 0) {
+            Equipment.dashLevelUp();
+        }
+    }
+
+    lvlUpEquipDash() {
+        this.ausrüstung.push(Equipment.create("dash"))
     }
 
     die() {
