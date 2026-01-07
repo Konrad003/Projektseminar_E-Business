@@ -1,4 +1,4 @@
-import {DropSingleUse} from "./dropSingleUse.js"
+import {DropSystem} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -173,7 +173,7 @@ export class game {
                 width: 16,
                 height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
-            this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
+            this.DropSystem = new DropSystem()
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
@@ -323,6 +323,8 @@ export class game {
             this.keyUpBound = null;
         }
 
+        if (this.DropSystem) this.DropSystem.reset()
+
         // Gegner-Array leeren
 
         this.enemies.length = 0
@@ -380,7 +382,7 @@ export class game {
                 }
             }
         }
-        this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
+        this.DropSystem.render(ctx, this.PlayerOne)
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

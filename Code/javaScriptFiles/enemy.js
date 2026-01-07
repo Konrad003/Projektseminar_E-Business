@@ -1,4 +1,4 @@
-import {DropSingleUse, HealDrop, SpeedBoostDrop} from "./dropSingleUse.js"
+import {HealDrop, SpeedBoostDrop, XpDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -164,28 +164,25 @@ export class Enemy extends MovingEntity {
             const roll = Math.random()
 
             if (roll < 0.33) {
-                DropSingleUse.enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
+                Game.DropSystem.addItemDrop(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
             } else if (roll < 0.66) {
-                DropSingleUse.enemyItemDrop.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
+                Game.DropSystem.addItemDrop(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
-            } else {
-                DropSingleUse.enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
-            }
+            } 
         }
 
         Game.killCount++
-        DropSingleUse.enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
+        if (Game.DropSystem) {
+          Game.DropSystem.addXpDrop(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
         }, null))
+    }
     }
 
     shouldShoot(player) {
