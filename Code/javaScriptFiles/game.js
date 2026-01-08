@@ -231,6 +231,10 @@ export class game {
         this.stopGameTimer()
 
         document.getElementById("lvlScreen").style.display = "flex";
+
+        if(this.soundEffects){
+            Sounds.lvlUpSound.play()
+        }
     }
 
     lvlUPhide() {
@@ -310,10 +314,19 @@ export class game {
         this.buttonSound = new Audio('./Sound/click.mp3');
         this.winSound = new Audio('./Sound/Win.mp3');
         this.loseSound = new Audio('./Sound/lose.mp3');
+        this.equipSound = new Audio('./Sound/item-equip.mp3');
+        this.lvlUpSound = new Audio('./Sound/level-up.mp3');
+        this.hpUpSound = new Audio('./Sound/hp-up.mp3');
+        this.shotSound = new Audio('./Sound/shot.mp3');
 
         window.Sounds = {
             buttonSound: this.buttonSound, //backgroundMusic: backgroundMusic,
-            WinSound: this.winSound, loseSound: this.loseSound,
+            WinSound: this.winSound,
+            loseSound: this.loseSound,
+            equipSound: this.equipSound,
+            lvlUpSound: this.lvlUpSound,
+            hpUpSound: this.hpUpSound,
+            shotSound: this.shotSound
         };
     }
 
@@ -323,6 +336,15 @@ export class game {
 
         Sounds.buttonSound.play();
     }
+
+    equipSoundPlay() {
+        if (!this.soundEffects) return;
+        if (!window.Sounds || !window.Sounds.equipSound) return;
+
+        Sounds.equipSound.play();
+    }
+
+
 
     // Ende der Screen-Wechsel-Funktionen
     restart() {

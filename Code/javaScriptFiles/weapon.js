@@ -25,6 +25,17 @@ export class Weapon extends Item {
         }  
     }
 
+    playShotSound() {
+        //if (window.Game && typeof window.Game.playShotSound === 'function') {
+           // return;
+        //}
+        if (window.Game && !window.Game.soundEffects) return;
+        if (window.Sounds && window.Sounds.shotSound) {
+            window.Sounds.shotSound.play();
+        }
+    }
+
+
     static create(type, shooter, mapWidth, mapHeight, gridWidth) {
         switch (type) {
             case "basic":
@@ -65,9 +76,13 @@ export class Weapon extends Item {
         if (!targetEntity && enemies.length === 0) {
             return; // keine Gegner für Auto-Fokus
         }
-        
+
 
         this.lastShotTime = currentTime;
+
+        if (!isEnemyShooter) { // abfragen, ob der Schütze der Spieler ist und später welche waffe er hat somit waffe a = sound a
+            this.playShotSound();
+        }
 
         // Create a projectile
         for (let j = 0; j < this.amount; j++) {
@@ -121,6 +136,7 @@ export class Weapon extends Item {
                 isEnemyShooter,            // NEU: markiert feindliche Projektile
                 {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))}  
             );
+
             if (this.shooter instanceof Enemy){
                                 console.log("4")
 
