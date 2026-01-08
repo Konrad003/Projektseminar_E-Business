@@ -120,7 +120,6 @@ export class Enemy extends MovingEntity {
 
         }else{                                                                         //Bewegung wenn mind eine Achse blockiert ist
             if (this.blockedX && this.blockedY){
-                console.log("2")
                 if(Math.random()<0.5) moveStepX*= -1
                 else moveStepY*=-1 
             }
@@ -177,12 +176,12 @@ export class Enemy extends MovingEntity {
         }
 
         Game.killCount++
-        if (Game.DropSystem) {
-          enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
+        
+        enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
         }, null))
-    }
+    
     }
 
     shouldShoot(player) {
