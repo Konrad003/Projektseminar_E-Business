@@ -79,6 +79,9 @@ export class Player extends MovingEntity {
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth)
-        this.draw(this.ctx, this, 'blue')
+        this.draw(this.ctx, this)
+    }
+     getColor() {
+        return 'blue'
     }
 }

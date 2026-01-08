@@ -2,29 +2,36 @@ import {DropSingleUse, HealDrop, SpeedBoostDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
+
 export class Enemy extends MovingEntity {
 
-   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, level, xpDrop, elite, ranged = false, gridMapTile) {
+   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile) {
             super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
-            // Nur Enemy-spezifische Felder nach Aufruf von super() setzen
-            this.level = level
-            this.xpDrop = xpDrop
-            this.elite = elite
-            this.globalEntityX = globalEntityX   // eigene Positionsvariable für Enemy
-            this.globalEntityY = globalEntityY   // eigene Positionsvariable für Enemy
-            this.ranged = ranged
             this.gridMapTile = gridMapTile
-            // Ranged-Enemy bekommt eine eigene Waffe
-            this.weapon = this.ranged ? Weapon.create("basicEnemy", this,0,0,0) : null;
-            if (this.weapon) {
-            this.weapon.cooldown = 2000; // Gegner schießen langsamer als der Spieler (z.B. 800 ms)
-            }
+            this.oldMoveX=0
+            this.oldMoveY=0
             this.blockedX = false
             this.blockedY = false
-            this.oldmoveX=0
-            this.oldmoveY=0
         }
 
+    static createRandomEnemy(globalX, globalY, gridTile) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
+        const enemyTypes = {
+            slime: EnemySlime,
+            reiter: EnemyReiter,
+            sensenmann: EnemySensenmann,
+            hexe: EnemyHexe,
+            schatzgoblin: EnemySchatzgoblin,
+            gepanzerterRitter: EnemyGepanzerterRitter,
+            skellet: EnemySkellet
+            };
+        const keys = Object.keys(enemyTypes);
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        const EnemyClass = enemyTypes[randomKey];
+
+        return new EnemyClass(globalEntityX,globalEntityY,hp, png,speed,hitbox ,gridMapTile ,oldMoveX ,oldMoveY ,blockedX ,blockedY);
+    }
+    
+    
     // Gegner zufällig am Kartenrand spawnen
     static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth) {
         const offset = 80
@@ -60,19 +67,11 @@ export class Enemy extends MovingEntity {
         }
         if (x<0)x=0
         if (y<0)y=0 // Können außerhalb der Map spawnen, FIXEN
-        // falls x / y > Map spawnen sie da trotzdem
+                    // falls x / y > Map spawnen sie da trotzdem
 
         let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
-        // temporäre Werte, ohne lvl System bisher
-        const hp = 20;
-        const png = null;                 //KEIN enemyImg, damit kein Fehler
-        const speed = 1.0;
-        const hitbox = {width: 16, height: 16};
-        const level = 1;
-        const xpDrop = 2;   
-        const elite = false;
-        const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
-        enemiesArray[gridMapTile.row][gridMapTile.column].within.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged, gridMapTile));
+        
+        enemiesArray[gridMapTile.row][gridMapTile.column].within.push(Enemy.createRandomEnemy(x, y, gridMapTile));
     }
 
     // Gegner bewegt sich in Richtung Player
@@ -105,16 +104,16 @@ export class Enemy extends MovingEntity {
 
         let resultX
         let resultY
-        if (!this.blockedX && !this.blockedY){                                      // BEwegung wenn alles frei ist
+        if (!this.blockedX && !this.blockedY){                                      // Bewegung wenn alles frei ist
             resultX = this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX).success
             resultY = this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY).success
             if (!resultX){
                 this.blockedX = true 
-                this.oldmoveY = Math.sign(moveStepY) * this.speed
+                this.oldMoveY = Math.sign(moveStepY) * this.speed
             }
             if (!resultY){
                 this.blockedY = true
-                this.oldmoveX = Math.sign(moveStepX) * this.speed
+                this.oldMoveX = Math.sign(moveStepX) * this.speed
             }
 
 
@@ -126,14 +125,14 @@ export class Enemy extends MovingEntity {
             }
             if (this.blockedX){                                                         //Bewegung wenn X Achse Blockiert ist
                 resultX = this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX).success        //Versuchen zu Bewegen auf der X-Achse
-                resultY = this.attemptMoveAxis(this, 'y', this.oldmoveY, enemyArray, map, visitedForY).success   // gesamte Bewegung auf der Y-Achse
+                resultY = this.attemptMoveAxis(this, 'y', this.oldMoveY, enemyArray, map, visitedForY).success   // gesamte Bewegung auf der Y-Achse
                 
                 if (resultX){        //Falls auch X-Achse nun nicht mehr Blockiert ist
                     this.blockedX = false
                 }
                 if (!resultY){        //Falls Y-Achse nun auch blockiert
                     this.blockedY = true
-                    this.oldmoveX = Math.sign(moveStepX) * this.speed
+                    this.oldMoveX = Math.sign(moveStepX) * this.speed
                 }
             }
             
@@ -141,14 +140,14 @@ export class Enemy extends MovingEntity {
             visitedForY.clear()
 
             if (this.blockedY){
-                resultX = this.attemptMoveAxis(this, 'x', this.oldmoveX, enemyArray, map, visitedForX).success
+                resultX = this.attemptMoveAxis(this, 'x', this.oldMoveX, enemyArray, map, visitedForX).success
                 resultY = this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY).success
                 if (resultY){    
                     this.blockedY = false
                 }
                 if (!resultX){
                     this.blockedX = true 
-                    this.oldmoveY = Math.sign(moveStepY) * this.speed                   
+                    this.oldMoveY = Math.sign(moveStepY) * this.speed                   
                 }
             }
         }
