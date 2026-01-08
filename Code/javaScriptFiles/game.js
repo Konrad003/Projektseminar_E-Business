@@ -1,4 +1,4 @@
-import {DropSystem} from "./dropSingleUse.js"
+import {DropSingleUse, DropSystem} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -372,7 +372,7 @@ export class game {
             rightPressed: this.rightPressed
         }, performance.now(), this.enemies, this.gridWidth)
 
-
+        
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
@@ -382,7 +382,7 @@ export class game {
                 }
             }
         }
-        this.DropSystem.render(ctx, this.PlayerOne)
+        
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

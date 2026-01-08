@@ -1,4 +1,4 @@
-import { StaticEntity } from "./staticEntity.js"
+  import { StaticEntity } from "./staticEntity.js"
 
 export class DropSingleUse extends StaticEntity {
   constructor(x, y, hitbox, png) {
@@ -9,18 +9,20 @@ export class DropSingleUse extends StaticEntity {
   apply(player) {}
   getColor() { return "white" }
 
-  render(ctx, player) {
-    this.draw(ctx, player, this.getColor())
-  }
-
   tryPickup(player) {
     if (player.checkCollision(this, 0, 0)) {
-      player.collectPickup(this)
+      this.apply(player)
       return true
     }
     return false
   }
-}
+
+  render(ctx, player, enemyItemDrops, position) {
+      if (this.tryPickup(player)) enemyItemDrops.splice(position, 1)
+      this.draw(ctx, player, this.getColor())
+      }
+  }
+
 
 export class SpeedBoostDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
@@ -66,42 +68,5 @@ export class XpDrop extends DropSingleUse {
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
-  }
-}
-
-// in dropSingleUse damit game.js quasi unverändert bleibt? Vllt in Zukunft ändern? 
-export class DropSystem {
-  constructor() {
-    this.enemyItemDrops = []
-    this.enemyXpDrops = []
-  }
-
-  addItemDrop(drop) {
-    this.enemyItemDrops.push(drop)
-  }
-
-  addXpDrop(drop) {
-    this.enemyXpDrops.push(drop)
-  }
-
-  render(ctx, player) {
-    // Items
-    for (let i = this.enemyItemDrops.length - 1; i >= 0; i--) {
-      const d = this.enemyItemDrops[i]
-      d.render(ctx, player)
-      if (d.tryPickup(player)) this.enemyItemDrops.splice(i, 1)
-    }
-
-    // XP
-    for (let i = this.enemyXpDrops.length - 1; i >= 0; i--) {
-      const d = this.enemyXpDrops[i]
-      d.render(ctx, player)
-      if (d.tryPickup(player)) this.enemyXpDrops.splice(i, 1)
-    }
-  }
-
-  reset() {
-    this.enemyItemDrops.length = 0
-    this.enemyXpDrops.length = 0
   }
 }

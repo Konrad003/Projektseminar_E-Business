@@ -155,7 +155,7 @@ export class Enemy extends MovingEntity {
     }
 
     
-    die(enemies, positionWithin) {
+    die(enemies, positionWithin, enemyItemDrops) {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
@@ -164,12 +164,12 @@ export class Enemy extends MovingEntity {
             const roll = Math.random()
 
             if (roll < 0.33) {
-                Game.DropSystem.addItemDrop(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
+                enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
             } else if (roll < 0.66) {
-                Game.DropSystem.addItemDrop(new HealDrop(this.globalEntityX, this.globalEntityY, {
+                enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
@@ -178,7 +178,7 @@ export class Enemy extends MovingEntity {
 
         Game.killCount++
         if (Game.DropSystem) {
-          Game.DropSystem.addXpDrop(new XpDrop(this.globalEntityX, this.globalEntityY, {
+          enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
         }, null))
