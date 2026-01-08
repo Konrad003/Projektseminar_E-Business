@@ -62,14 +62,17 @@ export class game {
         switch (map) {
             case 0:
                 this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.mapChoicePng = './Code/Tiled/map2Jungle.png';
                 this.start()
                 break;
             case 1:
                 this.mapChoice = './Code/Tiled/Map1.json';
+                this.mapChoicePng = './Code/Tiled/Map1.png';
                 this.start()
                 break;
             default:
                 this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.mapChoicePng = './Code/Tiled/map2Jungle.png';
                 this.start()
         }
     }
@@ -168,7 +171,7 @@ export class game {
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
-            this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
+            this.MapOne = new Map(this.mapData, this.mapChoicePng, canvas.width, canvas.height, ctx)
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16,
                 height: 16
