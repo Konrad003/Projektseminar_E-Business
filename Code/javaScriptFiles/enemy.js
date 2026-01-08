@@ -206,7 +206,6 @@ export class Enemy extends MovingEntity {
     render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
-        MapOne.drawMiniEnemy(this)
         if (this.ranged)  this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
             PlayerOne.takeDmg(15, enemies, positionWithin)
