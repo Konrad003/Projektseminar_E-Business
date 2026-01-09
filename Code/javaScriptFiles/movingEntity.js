@@ -53,6 +53,13 @@ export class MovingEntity extends Entity {
         return true // Überschneidung
     }
 
+    static spawnCheck(map, globalEntityX, globalEntityY, hitboxWidth, hitboxHeight){
+        return (map.findTile(globalEntityX , globalEntityY ).walkable &&
+        map.findTile(globalEntityX , globalEntityY + hitboxHeight).walkable &&
+        map.findTile(globalEntityX + hitboxWidth, globalEntityY ).walkable &&
+        map.findTile(globalEntityX + hitboxWidth, globalEntityY + hitboxHeight).walkable)
+    }
+
     attemptMoveAxis(self, axis, move, enemyArray, map, visited = new Set) {
         if (visited.has(self)) {     //Verhindert das selbe Objekt mehrfach besucht wird
             return {success: false}
