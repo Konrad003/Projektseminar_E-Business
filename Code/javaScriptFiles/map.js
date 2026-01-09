@@ -36,12 +36,13 @@ export class Map {
                 this.tilesetDesignImage.onload = () => {
                     this.tilesDesignLoaded = true
                 }
+                this.tilesetDesignImage.src = mapData.tilesets[1].image
             }
             this.loadTileData()
         }
+        console.log(png)
         this.tilesetImage.src = mapData.tilesets[0].image
         this.mapImage.src = png
-        if (mapData.tilesets.length > 1) this.tilesetDesignImage.src = mapData.tilesets[1].image
     }
 
     maxAbs(x, y) {
@@ -197,7 +198,7 @@ export class Map {
     }
 
     drawTile(tileRowWalker, tileColumnWalker, leftBorder, topBorder, i, j) {
-
+        
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);
         if (!(this.isTileOutOfBorder(tileRowWalker, tileColumnWalker))) {
