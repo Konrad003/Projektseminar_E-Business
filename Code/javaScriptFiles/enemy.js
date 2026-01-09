@@ -26,7 +26,7 @@ export class Enemy extends MovingEntity {
         }
 
     // Gegner zufällig am Kartenrand spawnen
-    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth) {
+    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight, map) {
         const offset = 80
         const side = Math.floor(Math.random() * 4)
 
@@ -41,6 +41,7 @@ export class Enemy extends MovingEntity {
             case 0: // oben
                 x = left + Math.random() * (right - left)
                 y = top - offset
+
                 break
 
             case 1: // rechts
@@ -58,8 +59,8 @@ export class Enemy extends MovingEntity {
                 y = top + Math.random() * (bottom - top)
                 break
         }
-        if (x<0)x=0
-        if (y<0)y=0 // Können außerhalb der Map spawnen, FIXEN
+        x = Math.max(0, Math.min(x, mapWidth * tilewidth))
+        y = Math.max(0, Math.min(y, mapHeight * tilewidth)) // Können außerhalb der Map spawnen, FIXEN
         // falls x / y > Map spawnen sie da trotzdem
 
         let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
@@ -72,6 +73,7 @@ export class Enemy extends MovingEntity {
         const xpDrop = 2;   
         const elite = false;
         const ranged = Math.random() < 0.3; // 30% Chance, dass dieser Enemy ein Ranged-Enemy ist
+        if(MovingEntity.spawnCheck(map, x, y, hitbox.width, hitbox.height))
         enemiesArray[gridMapTile.row][gridMapTile.column].within.push(new Enemy(x, y, hp, png, speed, hitbox, level, xpDrop, elite, ranged, gridMapTile));
     }
 
