@@ -37,6 +37,8 @@ export class game {
 
     soundEffects = true
     music = true
+    soundEffectsVol = 1.0
+    musicVol = 1.0
 
     //Tests
     testShoot = true
@@ -121,12 +123,16 @@ export class game {
             this.soundEffects = document.getElementById("effectsOn").checked
             this.music = document.getElementById("musicOn").checked
 
+            this.soundEffectsVol = parseFloat(document.getElementById("soundEffectsVol").value)
+            this.musicVol = parseFloat(document.getElementById("musicVol").value)
+
             this.testShoot = document.getElementById("testShoot").checked
             this.testDie = document.getElementById("testDie").checked
             this.Health = parseInt(document.getElementById("testHealth").value)
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
 
+            this.Sounds()
             this.home()
         });
     }
@@ -209,7 +215,6 @@ export class game {
 
     }
 
-    // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
         this.gamePaused = true; //flag boolean for render function
 
@@ -232,7 +237,7 @@ export class game {
 
         document.getElementById("lvlScreen").style.display = "flex";
 
-        if(this.soundEffects){
+        if (this.soundEffects) {
             Sounds.lvlUpSound.play()
         }
     }
@@ -312,12 +317,25 @@ export class game {
 
     Sounds() {
         this.buttonSound = new Audio('./Sound/click.mp3');
+        this.buttonSound.volume = this.soundEffectsVol;
+
         this.winSound = new Audio('./Sound/Win.mp3');
+        this.winSound.volume = this.soundEffectsVol;
+
         this.loseSound = new Audio('./Sound/lose.mp3');
+        this.loseSound.volume = this.soundEffectsVol;
+
         this.equipSound = new Audio('./Sound/item-equip.mp3');
+        this.equipSound.volume = this.soundEffectsVol;
+
         this.lvlUpSound = new Audio('./Sound/level-up.mp3');
+        this.lvlUpSound.volume = this.soundEffectsVol;
+
         this.hpUpSound = new Audio('./Sound/hp-up.mp3');
+        this.hpUpSound.volume = this.soundEffectsVol;
+
         this.shotSound = new Audio('./Sound/shot.mp3');
+        this.shotSound.volume = this.soundEffectsVol;
 
         window.Sounds = {
             buttonSound: this.buttonSound, //backgroundMusic: backgroundMusic,
@@ -344,9 +362,6 @@ export class game {
         Sounds.equipSound.play();
     }
 
-
-
-    // Ende der Screen-Wechsel-Funktionen
     restart() {
         this.resetGame()
         this.start()
