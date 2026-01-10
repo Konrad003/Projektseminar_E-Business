@@ -6,7 +6,7 @@ export class EnemySchatzgoblin extends Enemy {
         this.hp = 150
         this.speed = 2
         this.png = "EnemySchatzgoblin"
-        this.hitbox = {width: 22, height: 2}
+        this.hitbox = {width: 22, height: 22}
         this.level = 1
         this.xpDrop = 30
         this.baseDamage = 0

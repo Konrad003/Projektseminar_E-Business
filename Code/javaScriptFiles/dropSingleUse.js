@@ -63,6 +63,10 @@ export class DropSingleUse extends StaticEntity {
         this.handleEnemyItemPickups(player)
         this.handleEnemyXpPickups(player)
     }
+
+    getColor() {
+        return "pink"
+    }
 }
 
 export class SpeedBoostDrop extends DropSingleUse {
@@ -94,6 +98,10 @@ export class SpeedBoostDrop extends DropSingleUse {
             player.speedBoostTimeout = null
         }, this.duration)
     }
+
+    getColor() {
+        return "orange"
+    }
 }
 
 export class HealDrop extends DropSingleUse {
@@ -118,5 +126,9 @@ export class HealDrop extends DropSingleUse {
         } else {
             player.hp += this.healAmount
         }
+    }
+    
+    getColor() {
+        return "green"
     }
 }

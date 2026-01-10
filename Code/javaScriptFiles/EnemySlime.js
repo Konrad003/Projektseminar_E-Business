@@ -1,3 +1,4 @@
+import {Enemy} from "./enemy.js"
 
 export class EnemySlime extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY) {

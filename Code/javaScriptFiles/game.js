@@ -7,7 +7,7 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
-
+import { EnemyFactory } from "./EnemyFactory.js"
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
 
@@ -191,7 +191,7 @@ export class game {
             }
             this.renderInterval = setInterval(() => this.render(), 5);
             this.enemySpawnInterval = setInterval(() => {
-                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
             }, 200)
             this.resetTimer()
             this.startGameTimer()
