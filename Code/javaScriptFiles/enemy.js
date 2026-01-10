@@ -130,7 +130,7 @@ export class Enemy extends MovingEntity {
 
     shouldShoot(player) {
         // Nur Ranged-Gegner mit Waffe können schießen
-        if (!this.ranged || !this.weapon) return false;
+        
 
         // Distanzberechnung mit deinen Bezeichnern
         let distanceX = player.globalEntityX - this.globalEntityX;
@@ -146,7 +146,9 @@ export class Enemy extends MovingEntity {
     render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
-        if (this.ranged)  this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
+        if (this.weapon)  {
+            this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
+        }
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
             PlayerOne.takeDmg(15, enemies, positionWithin)
             this.killCount++

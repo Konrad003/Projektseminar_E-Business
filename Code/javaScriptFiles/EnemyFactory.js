@@ -6,6 +6,7 @@ import {EnemySchatzgoblin} from "./EnemySchatzgoblin.js"
 import {EnemyGepanzerterRitter} from "./EnemyGepanzerterRitter.js"
 import {EnemySkellet} from "./EnemySkellet.js" 
 import {Enemy} from "./enemy.js"
+import { Weapon } from "./weapon.js"
 export class EnemyFactory{
     static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth) {
         const offset = 80
@@ -60,11 +61,11 @@ export class EnemyFactory{
 
         let totalWeight = enemyTypes.reduce((sum, enemy) => sum + enemy.weight, 0)
         let random = Math.random() * totalWeight
-
+        let weapon = "dolch"
         for (let enemy of enemyTypes) {
             random -= enemy.weight
             if (random < 0) {
-                return new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false)
+                return new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, weapon)
             }
         }
     }

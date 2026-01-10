@@ -1,7 +1,8 @@
 import {Enemy} from "./enemy.js"
+import { Weapon } from "./weapon.js"
 
 export class EnemySkellet extends Enemy {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.hp = 35
         this.speed = 1
@@ -14,6 +15,7 @@ export class EnemySkellet extends Enemy {
         this.oldMoveY=oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
+        this.weapon = Weapon.create("sniper", this, 420, 420, 8)
     }
 
     getColor() {
