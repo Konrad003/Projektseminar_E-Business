@@ -46,21 +46,26 @@ export class EnemyFactory{
         let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
         
         enemiesArray[gridMapTile.row][gridMapTile.column].within.push(EnemyFactory.createRandomEnemy(x, y, gridMapTile));
-    }
+    }   
     static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
-        const enemyTypes = {
-            slime: EnemySlime,
-            reiter: EnemyReiter,
-            sensenmann: EnemySensenmann,
-            hexe: EnemyHexe,
-            schatzgoblin: EnemySchatzgoblin,
-            gepanzerterRitter: EnemyGepanzerterRitter,
-            skellet: EnemySkellet
-            };
-        const keys = Object.keys(enemyTypes)
-        const randomKey = keys[Math.floor(Math.random() * keys.length)]
-        const EnemyClass = enemyTypes[randomKey]
+        const enemyTypes = [
+            {cls: EnemySlime, weight: 70},
+            {cls: EnemyReiter, weight: 5},
+            {cls: EnemySensenmann, weight: 5},
+            {cls: EnemyHexe, weight: 3},
+            {cls: EnemySchatzgoblin, weight: 1},
+            {cls: EnemyGepanzerterRitter, weight: 1},
+            {cls: EnemySkellet, weight: 15}
+        ];
 
-        return new EnemyClass(globalEntityX,globalEntityY,null, null,null,null ,gridMapTile ,0 ,0 ,false ,false);
+        let totalWeight = enemyTypes.reduce((sum, enemy) => sum + enemy.weight, 0)
+        let random = Math.random() * totalWeight
+
+        for (let enemy of enemyTypes) {
+            random -= enemy.weight
+            if (random < 0) {
+                return new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false)
+            }
+        }
     }
 }
