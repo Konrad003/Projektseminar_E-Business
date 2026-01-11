@@ -30,9 +30,15 @@ export class MovingEntity extends Entity {
         const bTop = other.globalEntityY
         const bBottom = bTop + other.hitbox.height
 
-        if (!((aBottom > bTop) && (aTop < bBottom))) {return false} // keine vertikale Überschneidung --> keine horizontale Kollision
-        if (aRight <= bLeft) {return false}                          // Prüfe ob horizontale Überschneidung
-        if (aLeft >= bRight) {return false}                           // Prüfe ob horizontale Überschneidung
+        if (!((aBottom > bTop) && (aTop < bBottom))) {
+            return false
+        } // keine vertikale Überschneidung --> keine horizontale Kollision
+        if (aRight <= bLeft) {
+            return false
+        }                          // Prüfe ob horizontale Überschneidung
+        if (aLeft >= bRight) {
+            return false
+        }                           // Prüfe ob horizontale Überschneidung
         return true // Überschneidung
     }
 
@@ -47,10 +53,23 @@ export class MovingEntity extends Entity {
         const bLeft = other.globalEntityX
         const bRight = bLeft + other.hitbox.width
 
-        if (!((aRight > bLeft) && (aLeft < bRight))) {return false} // keine horizontale Überschneidung --> keine vertikale Kollision
-        if (aBottom <= bTop) {return false}                        // Prüfe ob vertikale Überschneidung
-        if (aTop >= bBottom) {return false}                           // Prüfe ob vertikale Überschneidung
+        if (!((aRight > bLeft) && (aLeft < bRight))) {
+            return false
+        } // keine horizontale Überschneidung --> keine vertikale Kollision
+        if (aBottom <= bTop) {
+            return false
+        }                        // Prüfe ob vertikale Überschneidung
+        if (aTop >= bBottom) {
+            return false
+        }                           // Prüfe ob vertikale Überschneidung
         return true // Überschneidung
+    }
+
+    static spawnCheck(map, globalEntityX, globalEntityY, hitboxWidth, hitboxHeight){
+        return (map.findTile(globalEntityX , globalEntityY ).walkable &&
+        map.findTile(globalEntityX , globalEntityY + hitboxHeight).walkable &&
+        map.findTile(globalEntityX + hitboxWidth, globalEntityY ).walkable &&
+        map.findTile(globalEntityX + hitboxWidth, globalEntityY + hitboxHeight).walkable)
     }
 
     attemptMoveAxis(self, axis, move, enemyArray, map, visited = new Set) {
@@ -61,9 +80,9 @@ export class MovingEntity extends Entity {
 
         if (move === 0) return {success: true}
         const colliding = [] //Array mit Entitys die gepusht werden müssten damit true
-        for (let row = self.gridMapTile.row - 1; row<= self.gridMapTile.row + 1; row++){
+        for (let row = self.gridMapTile.row - 1; row <= self.gridMapTile.row + 1; row++) {
             if (!enemyArray[row]) continue // abfangen von out of Border
-            for (let column = self.gridMapTile.column - 1; column<= self.gridMapTile.column + 1; column++){
+            for (let column = self.gridMapTile.column - 1; column <= self.gridMapTile.column + 1; column++) {
                 if (!enemyArray[row][column]) continue // abfangen von out of Border
                 for (const other of enemyArray[row][column].within) {
                     if (other === self) continue
@@ -77,7 +96,7 @@ export class MovingEntity extends Entity {
                         }
                     }
                 }
-            }    
+            }
         }// alle Enemys die Kollidieren mit diesen einem Enemy eingetragen
 
         for (const other of colliding) { // jedes Objekt welches bisher kollidierte
@@ -112,34 +131,39 @@ export class MovingEntity extends Entity {
     }
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
-    takeDmg(amount, enemies, positionWithin) {
+    takeDmg(amount, enemies, positionWithin, enemyItemDrops) {
         this.hp -= amount;
         document.getElementById("hudHealthProgress").style.value = this.hp
-        if (this.hp <= 0 && Game.testDie) {
+
+        const isPlayer = (typeof Game !== 'undefined') && Game.PlayerOne === this;
+        const testDieEnabled = (typeof Game !== 'undefined') && Game.testDie;
+        if (this.hp <= 0) {
             this.hp = 0;
-            this.die(enemies, positionWithin);
+            if (!isPlayer || testDieEnabled) {
+                this.die(enemies, positionWithin, enemyItemDrops);
+            }
         }
     }
 
     die() {
     }
 
-    updateGridPlace(tilelength, objectArray, positionWithin, gridWidth){
-        let newGridMapTile = {column : Math.floor(this.globalEntityX / (gridWidth*tilelength)),
-                              row : Math.floor(this.globalEntityY / (gridWidth*tilelength))}   //8 kann später noch maybe noch variabel gemacht werden
-        if (this.gridMapTile== null || 
-            this.gridMapTile.row !== newGridMapTile.row ||
-            this.gridMapTile.column !== newGridMapTile.column){
+    updateGridPlace(tilelength, objectArray, positionWithin, gridWidth) {
+        let newGridMapTile = {
+            column: Math.floor(this.globalEntityX / (gridWidth * tilelength)),
+            row: Math.floor(this.globalEntityY / (gridWidth * tilelength))
+        }   //8 kann später noch maybe noch variabel gemacht werden
+        if (this.gridMapTile == null || this.gridMapTile.row !== newGridMapTile.row || this.gridMapTile.column !== newGridMapTile.column) {
 
-            
-            if (this.gridMapTile!=null){
+
+            if (this.gridMapTile != null) {
                 objectArray[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
             }
             objectArray[newGridMapTile.row][newGridMapTile.column].within.push(this)
-            this.gridMapTile=newGridMapTile
-            
-            
-            positionWithin=objectArray[this.gridMapTile.row][this.gridMapTile.column].within.length-1
+            this.gridMapTile = newGridMapTile
+
+
+            positionWithin = objectArray[this.gridMapTile.row][this.gridMapTile.column].within.length - 1
         }
         return {gridMapTile: this.gridMapTile, positionWithin: positionWithin}
     }
