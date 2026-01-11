@@ -7,6 +7,7 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
+import {Dash} from "./dash.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -19,6 +20,7 @@ export class game {
     downPressed = false
     leftPressed = false
     rightPressed = false
+    spacePressed = false;
     mapData
     gridWidth = 8
     killCount = 0
@@ -38,7 +40,6 @@ export class game {
     //Tests
     testShoot = true
     testDie = true
-    dashActiveSetting = false
     Health = 100
     maxHealth = 100
     XP = 0
@@ -89,6 +90,10 @@ export class game {
         if ((e.key === "ArrowDown") || (e.key === 's') || (e.key === 'S')) {
             this.downPressed = true;
         }
+        if (e.code === "Space") {
+            this.spacePressed = true;
+        }
+
         // Escape zum Pausieren
         if (e.key === "Escape") {
             if (document.getElementById("gameScreen").style.display === "flex") {
@@ -129,6 +134,9 @@ export class game {
         }
         if ((e.key === "ArrowDown") || (e.key === 's') || (e.key === 'S')) {
             this.downPressed = false;
+        }
+        if (e.code === "Space") {
+            this.spacePressed = false;
         }
     }
 
@@ -192,9 +200,10 @@ export class game {
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 2, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.PlayerOne.acquireEquipment(new Dash()); // Test-Ausrüstung
             this.dashEquipment = new Equipment(null, "Dash", null, 0, 0, 0, 0)
             this.dashEquipment.dashActive = this.dashActiveSetting
             this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
@@ -418,7 +427,8 @@ export class game {
             upPressed: this.upPressed,
             downPressed: this.downPressed,
             leftPressed: this.leftPressed,
-            rightPressed: this.rightPressed
+            rightPressed: this.rightPressed,
+            spacePressed: this.spacePressed
         }, performance.now(), this.enemies, this.gridWidth)
 
 

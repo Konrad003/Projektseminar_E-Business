@@ -1,12 +1,11 @@
 import {MovingEntity} from "./movingEntity.js"
 import {Weapon} from "./weapon.js";
-import {Equipment} from "./equipment.js"
 
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, equipmentSlots = [null, null, null], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -17,8 +16,7 @@ export class Player extends MovingEntity {
         this.png = png;
         this.baseSpeed = speed;
         this.hitbox = hitbox;
-        this.ausrüstung = ausrüstung = [];
-        this.weapons = weapons;
+        this.equipmentSlots = [null, null, null]; // Drei leere Slots für Equipment
         this.regeneration = regeneration;
         this.ctx = ctx;
         this.onDeath = onDeath;
@@ -58,17 +56,6 @@ export class Player extends MovingEntity {
         document.getElementById("hudXpProgress").style.max = this.xpForNextLevel;
     }
 
-    lvlUpChoose() {
-        let zufallszahl = Math.floor(Math.random() * 20);
-        if (zufallszahl <= 0) {
-            Equipment.dashLevelUp();
-        }
-    }
-
-    lvlUpEquipDash() {
-        this.ausrüstung.push(Equipment.create("dash"))
-    }
-
     die() {
         //console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game
         this.onDeath();
@@ -89,8 +76,26 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
+    acquireEquipment(newEquipment) {
+    for (let i = 0; i < this.equipmentSlots.length; i++) {
+        if (this.equipmentSlots[i] === null) {
+            this.equipmentSlots[i] = newEquipment;
+            console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+            return true; 
+        }
+    }
+    console.log("Inventar voll!");
+    return false;
+    }
+
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
+
+        this.equipmentSlots.forEach(item => { // Jedes ausgerüstete Equipment updaten
+            if (item) {
+                item.update(this, map, inputState);
+            }
+        });
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth)
         this.draw(this.ctx, this, 'blue')
     }
