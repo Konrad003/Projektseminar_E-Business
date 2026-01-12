@@ -61,17 +61,146 @@ export class HealDrop extends DropSingleUse {
   }
 }
 
+export class XpMagnetDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.radius = 5000
+    this.pullSpeed = 10
+  }
+
+  getColor() { return "pink" }
+
+  apply(player) {
+    if (!player || !player.enemyItemDrops) return
+
+    for (const drop of player.enemyItemDrops) {
+      if (!(drop instanceof XpDrop)) continue
+
+      const dx = player.globalEntityX - drop.globalEntityX
+      const dy = player.globalEntityY - drop.globalEntityY
+      const dist = Math.sqrt(dx * dx + dy * dy)
+
+      if (dist <= this.radius) {
+        drop.startPullTo(player, this.pullSpeed)
+      }
+    }
+  }
+}
+
 export class XpDrop extends DropSingleUse {
   constructor(x, y, hitbox, png, amount = 2) {
     super(x, y, hitbox, png)
     this.amount = amount
+    this.pullTarget = null
+    this.pullSpeed = 0
   }
-  
+
+  getColor() { return "brown" }
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
   }
-      getColor() {
-        return "green"
+
+  startPullTo(player, pullSpeed) {
+    this.pullTarget = player
+    this.pullSpeed = pullSpeed
+  }
+
+  updatePull() {
+    if (!this.pullTarget) return
+
+    const dx = this.pullTarget.globalEntityX - this.globalEntityX
+    const dy = this.pullTarget.globalEntityY - this.globalEntityY
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist <= 0) return
+
+    this.globalEntityX += (dx / dist) * this.pullSpeed
+    this.globalEntityY += (dy / dist) * this.pullSpeed
+  }
+
+  render(ctx, player, enemyItemDrops, position) {
+    this.updatePull()
+    if (this.tryPickup(player)) {
+      enemyItemDrops.splice(position, 1)
+      return
     }
+    this.draw(ctx, player, this.getColor())
+  }
+}
+
+
+class ShockwaveNukeEffect extends StaticEntity {
+  constructor(x, y) {
+    super(x, y, { width: 0, height: 0 }, null)
+
+    this.radius = 0               
+    this.speed = 20               
+    this.maxRadius = 2500         
+  }
+
+  render(ctx, player, enemyItemDrops, position) {
+    // Shockwave wächst pro Frame
+    this.radius += this.speed
+
+    const leftBorder = player.globalEntityX - StaticEntity.FOVwidthMiddle
+    const topBorder = player.globalEntityY - StaticEntity.FOVheightMiddle
+
+    // Shockwave zeichnen (einfacher Kreis)
+    ctx.beginPath()
+    ctx.arc(
+      this.globalEntityX - leftBorder,
+      this.globalEntityY - topBorder,
+      this.radius,
+      0,
+      Math.PI * 2
+    )
+    ctx.strokeStyle = "cyan"
+    ctx.lineWidth = 2
+    ctx.stroke()
+
+    
+     // Alle Gegner durchgehen und prüfen: Ist ein Gegner innerhalb des aktuellen Radius, wird er sofort getötet.
+    
+    const enemies = Game.enemies
+    for (let row = 0; row < enemies.length; row++) { //Reihe Y-Richtung
+      for (let col = 0; col < enemies[row].length; col++) { //Spalte X-Richtung
+        const list = enemies[row][col].within // Enemy-Liste für dieses Grid-Feld (row/col)
+
+        for (let i = list.length - 1; i >= 0; i--) {
+          const enemy = list[i]
+
+          // Distanz Gegner <-> Zentrum der Shockwave
+          const dx = enemy.globalEntityX - this.globalEntityX
+          const dy = enemy.globalEntityY - this.globalEntityY
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          // Wenn die Shockwave den Gegner erreicht -> tot
+          if (dist <= this.radius) {
+          enemy.takeDmg(999999, enemies, i, player.enemyItemDrops)
+          }
+        }
+      }
+    }
+
+    // Wenn die Shockwave "fertig" ist, Effekt entfernen
+    if (this.radius >= this.maxRadius) {
+      enemyItemDrops.splice(position, 1)
+    }
+  }
+}
+
+export class NukeDrop extends DropSingleUse {
+  getColor() { return "cyan" }
+
+  apply(player) {
+    if (!player || !player.enemyItemDrops) return
+
+    // Shockwave startet genau an der Player-Position
+    player.enemyItemDrops.push(
+      new ShockwaveNukeEffect(
+        player.globalEntityX,
+        player.globalEntityY
+      )
+    )
+  }
 }
