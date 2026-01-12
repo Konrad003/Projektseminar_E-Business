@@ -1,6 +1,6 @@
 import { Equipment } from "./equipment.js";
 
-export class Dash extends Equipment {
+export class equipmentDash extends Equipment {
     constructor() {
         super("Dash", "dash_icon.png");
         this.cooldown = 0;

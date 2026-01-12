@@ -63,6 +63,11 @@ export class Player extends MovingEntity {
         this.onDeath();
     }
 
+    collectPickup(item) { //wird von game aufgerufen wenn collision mit item, übergibt logik an itemklasse
+        if (!item) return;
+        item.apply(this);
+    }
+
     collectXp(xpAmount) {
         this.xp += xpAmount;
 
@@ -87,7 +92,7 @@ export class Player extends MovingEntity {
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
-      
+
         this.equipmentSlots.forEach(item => { // Jedes ausgerüstete Equipment updaten
             if (item) {
                 item.update(this, map, inputState);
