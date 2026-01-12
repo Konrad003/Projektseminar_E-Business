@@ -1,4 +1,4 @@
-import {HealDrop, SpeedBoostDrop, XpDrop} from "./dropSingleUse.js"
+import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -98,28 +98,38 @@ export class Enemy extends MovingEntity {
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
 
-            const roll = Math.random()
-
-            if (roll < 0.33) {
+            let roll = Math.random()
+            if (roll < 0.1) {
                 enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
-            } else if (roll < 0.66) {
+            } else if (roll < 0.4) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
-            } 
-        }
-
-        Game.killCount++
+            }   else if (roll < 0.65) {
+                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
+                    width: 16, 
+                    height: 16 
+                }, null))
+            }  else if (roll < 0.80) {
+                enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, { 
+                    width: 16,
+                    height: 16
+                    }, null))
+                }
         
-        enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
+
+            //Game.killCount++
+        }
+            enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
-        }, null))
+            }, null))
     
+        
     }
 
     shouldShoot(player) {
