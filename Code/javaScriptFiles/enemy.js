@@ -14,10 +14,10 @@ export class Enemy extends MovingEntity {
         }    
 
     // Gegner bewegt sich in Richtung Player
-    chasePlayer(map, player, enemyArray) {
+    chasePlayer(map, playerX, playerY, enemyArray) {
         
-        let distanceX = player.globalEntityX - this.globalEntityX
-        let distanceY = player.globalEntityY - this.globalEntityY
+        let distanceX = playerX - this.globalEntityX
+        let distanceY = playerY - this.globalEntityY
 
         let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
         if (distance <= 0) return //bleibt stehen bei distance = 0
@@ -149,15 +149,14 @@ export class Enemy extends MovingEntity {
      
     render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
-        this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
+        this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
         if (this.weapon)  {
             this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
         }
+        this.draw(ctx, PlayerOne) // Gegner im Sichtbereich zeichnen
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
             PlayerOne.takeDmg(15, enemies, positionWithin)
             this.killCount++
-        } else {
-            this.draw(ctx, PlayerOne, this.ranged ? 'yellow' : 'red') // Gegner im Sichtbereich zeichnen
-        }
+        } 
     }
 }

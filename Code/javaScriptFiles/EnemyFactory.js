@@ -54,7 +54,7 @@ export class EnemyFactory{
             {cls: EnemyReiter, weight: 5, weapon: "dolch"},
             {cls: EnemySensenmann, weight: 5, weapon: "dolch"},
             {cls: EnemyHexe, weight: 3, weapon: "Feuerball"},
-            {cls: EnemySchatzgoblin, weight: 1, weapon: "dolch"},
+            {cls: EnemySchatzgoblin, weight: 100, weapon: "dolch"},
             {cls: EnemyGepanzerterRitter, weight: 1, weapon: "Schwert"},
             {cls: EnemySkellet, weight: 15, weapon: "Bogen"}
         ];
