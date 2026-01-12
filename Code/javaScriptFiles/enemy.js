@@ -1,4 +1,4 @@
-import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop} from "./dropSingleUse.js"
+import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -174,12 +174,18 @@ export class Enemy extends MovingEntity {
                     width: 16,
                     height: 16
                 }, null))
-            }   else if (roll < 0.75) {
+            }   else if (roll < 0.65) {
                 enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
                     width: 16, 
                     height: 16 
                 }, null))
     }
+            }  else if (roll < 0.80) {
+                enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, { 
+                    width: 16,
+                    height: 16
+                }, null))
+  }
         }
 
         Game.killCount++
