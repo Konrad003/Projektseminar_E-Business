@@ -191,7 +191,7 @@ export class game {
             }
             this.renderInterval = setInterval(() => this.render(), 5);
             this.enemySpawnInterval = setInterval(() => {
-                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height)
             }, 200)
             this.resetTimer()
             this.startGameTimer()

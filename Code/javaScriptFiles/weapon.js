@@ -28,7 +28,7 @@ export class Weapon extends Item {
     static create(type, shooter, mapWidth, mapHeight, gridWidth) {
         switch (type) {
             case "basic":
-                return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+                return new Weapon(null, "Basic Gun", null, 100, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
 
             case "basicEnemy":
                 return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight,  gridWidth);

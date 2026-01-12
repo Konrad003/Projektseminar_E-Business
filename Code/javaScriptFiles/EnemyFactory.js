@@ -6,9 +6,9 @@ import {EnemySchatzgoblin} from "./EnemySchatzgoblin.js"
 import {EnemyGepanzerterRitter} from "./EnemyGepanzerterRitter.js"
 import {EnemySkellet} from "./EnemySkellet.js" 
 import {Enemy} from "./enemy.js"
-import { Weapon } from "./weapon.js"
+import {Weapon} from "./weapon.js"
 export class EnemyFactory{
-    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth) {
+    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight) {
         const offset = 80
         const side = Math.floor(Math.random() * 4)
 
@@ -46,17 +46,17 @@ export class EnemyFactory{
 
         let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
         
-        enemiesArray[gridMapTile.row][gridMapTile.column].within.push(EnemyFactory.createRandomEnemy(x, y, gridMapTile));
+        enemiesArray[gridMapTile.row][gridMapTile.column].within.push(EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth));
     }   
-    static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
+    static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
         const enemyTypes = [
-            {cls: EnemySlime, weight: 70},
-            {cls: EnemyReiter, weight: 5},
-            {cls: EnemySensenmann, weight: 5},
-            {cls: EnemyHexe, weight: 3},
-            {cls: EnemySchatzgoblin, weight: 1},
-            {cls: EnemyGepanzerterRitter, weight: 1},
-            {cls: EnemySkellet, weight: 15}
+            {cls: EnemySlime, weight: 70 , weapon: "dolch"},
+            {cls: EnemyReiter, weight: 5, weapon: "dolch"},
+            {cls: EnemySensenmann, weight: 5, weapon: "dolch"},
+            {cls: EnemyHexe, weight: 3, weapon: "Feuerball"},
+            {cls: EnemySchatzgoblin, weight: 1, weapon: "dolch"},
+            {cls: EnemyGepanzerterRitter, weight: 1, weapon: "Schwert"},
+            {cls: EnemySkellet, weight: 15, weapon: "Bogen"}
         ];
 
         let totalWeight = enemyTypes.reduce((sum, enemy) => sum + enemy.weight, 0)
@@ -65,7 +65,7 @@ export class EnemyFactory{
         for (let enemy of enemyTypes) {
             random -= enemy.weight
             if (random < 0) {
-                return new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, weapon)
+                return new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, Weapon.create(enemy.weapon, Enemy,mapWidth, mapHeight, gridWidth))
             }
         }
     }

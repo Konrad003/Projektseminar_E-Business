@@ -17,7 +17,7 @@ export class Enemy extends MovingEntity {
     
 
     // Gegner bewegt sich in Richtung Player
-    chasePlayer(map, player, enemyArray = null) {
+    chasePlayer(map, player, enemyArray) {
         
         let distanceX = player.globalEntityX - this.globalEntityX
         let distanceY = player.globalEntityY - this.globalEntityY

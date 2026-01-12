@@ -22,7 +22,7 @@ export class Entity {
         ctx.rect(this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
         ctx.fillStyle = color
         ctx.fill();
-        ctx.strokeStyle = color
+        ctx.strokeStyle = "black"
         ctx.stroke();
     }
 }

@@ -14,6 +14,7 @@ export class EnemyHexe extends Enemy {
         this.oldMoveY=oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
+        this.ranged = true
     }
 
     getColor() {
