@@ -1,4 +1,3 @@
-import {DropSingleUse} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
 //import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
@@ -176,7 +175,6 @@ export class game {
                 width: 16,
                 height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
-            this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
@@ -325,7 +323,6 @@ export class game {
             document.removeEventListener("keyup", this.keyUpBound);
             this.keyUpBound = null;
         }
-
         // Gegner-Array leeren
 
         this.enemies.length = 0
@@ -334,7 +331,6 @@ export class game {
         this.PlayerOne = null
         this.mapData = null
 
-        this.DropSystem = null
         this.ProjectileSystem = null
         this.weapon = null
         this.Game = null
@@ -373,7 +369,7 @@ export class game {
             rightPressed: this.rightPressed
         }, performance.now(), this.enemies, this.gridWidth)
 
-
+        
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
@@ -383,7 +379,7 @@ export class game {
                 }
             }
         }
-        this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
+        
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

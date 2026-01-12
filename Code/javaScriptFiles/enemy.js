@@ -1,4 +1,4 @@
-import {DropSingleUse, HealDrop, SpeedBoostDrop} from "./dropSingleUse.js"
+import {HealDrop, SpeedBoostDrop, XpDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -12,9 +12,6 @@ export class Enemy extends MovingEntity {
             this.blockedX = false
             this.blockedY = false
         }    
-    
-    // Gegner zufällig am Kartenrand spawnen
-    
 
     // Gegner bewegt sich in Richtung Player
     chasePlayer(map, player, enemyArray) {
@@ -95,7 +92,7 @@ export class Enemy extends MovingEntity {
     }
 
     
-    die(enemies, positionWithin) {
+    die(enemies, positionWithin, enemyItemDrops) {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
@@ -104,28 +101,25 @@ export class Enemy extends MovingEntity {
             const roll = Math.random()
 
             if (roll < 0.33) {
-                DropSingleUse.enemyItemDrop.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
+                enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
             } else if (roll < 0.66) {
-                DropSingleUse.enemyItemDrop.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
+                enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
-            } else {
-                DropSingleUse.enemyItemDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
-            }
+            } 
         }
 
         Game.killCount++
-        DropSingleUse.enemyXpDrop.push(new DropSingleUse(this.globalEntityX, this.globalEntityY, {
+        
+        enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
         }, null))
+    
     }
 
     shouldShoot(player) {
