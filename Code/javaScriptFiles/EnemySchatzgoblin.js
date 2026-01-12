@@ -3,8 +3,8 @@ import {Enemy} from "./enemy.js"
 export class EnemySchatzgoblin extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 150
-        this.speed = 2
+        this.currentHPHP = this.hp = 1500
+        this.speed = 10
         this.png = "EnemySchatzgoblin"
         this.hitbox = {width: 22, height: 22}
         this.level = 1
@@ -16,6 +16,42 @@ export class EnemySchatzgoblin extends Enemy {
         this.blockedY = blockedY
         this.ranged = false
         this.weapon = null  // wenn Waffen implementiert sind, durch weapon ersetzen
+        this.elite = true 
+        this.radius = 64;
+        this.centerX = globalEntityX;
+        this.centerY = globalEntityY;
+        // Startwinkel zufällig
+        this.angle = Math.random() * Math.PI * 2;
+        this.angularSpeed = 1.0 / 60.0; // Eine Umdrehung alle 6 Sekunden
+        this.scared = false
+        this.ticker = 0
+        }
+
+    move(PlayerOne, MapOne, enemies) {
+        if (!this.scared) {
+        this.angle += this.angularSpeed;
+        this.globalEntityX = this.centerX + Math.cos(this.angle) * this.radius;
+        this.globalEntityY = this.centerY + Math.sin(this.angle) * this.radius;
+        } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen        
+            this.chasePlayer(MapOne, this.globalEntityX * 2 - PlayerOne.globalEntityX, this.globalEntityY * 2 - PlayerOne.globalEntityY, enemies)
+            this.ticker++
+            if (this.ticker > 300){          // Nach 5 Sekunden ist der Schatzgoblin nicht mehr verängstigt
+                this.scared = false
+                this.ticker = 0
+                this.currentHP = this.hp
+                this.centerX = this.globalEntityX;
+                this.centerY = this.globalEntityY;
+            }
+        }
+    }
+
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){  
+        let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)        
+        this.draw(ctx, PlayerOne)
+        this.move(PlayerOne, MapOne, enemies)
+        if (this.hp != this.currentHP){
+            this.scared = true
+        }
     }
 
     getColor() {

@@ -96,6 +96,7 @@ export class XpDrop extends DropSingleUse {
   }
 
   getColor() { return "brown" }
+  
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
@@ -175,7 +176,7 @@ class ShockwaveNukeEffect extends StaticEntity {
           const dist = Math.sqrt(dx * dx + dy * dy)
 
           // Wenn die Shockwave den Gegner erreicht -> tot
-          if (dist <= this.radius) {
+          if (dist <= this.radius && !enemy.elite) {
           enemy.takeDmg(999999, enemies, i, player.enemyItemDrops)
           }
         }
