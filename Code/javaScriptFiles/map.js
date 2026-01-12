@@ -1,15 +1,27 @@
 export class Map {
 
-    constructor(mapData, FOVwidth, FOVheight, ctx) {
+    constructor(mapData, png, FOVwidth, FOVheight, ctx) {
         this.mapWidthTile = mapData.width
         this.mapHeightTile = mapData.height
         this.tilelength = mapData.tilewidth
+        this.miniMapWidth = 200
+        this.miniMapHeight = 150 
+        this.miniMapX = 10           
+        this.miniMapY = 10 
+        this.mapImage = new Image()
+        this.miniMapLoaded = false
+        this.mapImage.onload = () => {
+            this.miniMapTilePixelSizeX = this.mapImage.width / this.mapWidthTile
+            this.miniMapTilePixelSizeY = this.mapImage.height / this.mapHeightTile
+            this.mapCutHeight = this.miniMapTileView * this.miniMapTilePixelSizeY
+            this.mapCutWidth = this.miniMapTileView * this.miniMapTilePixelSizeX
+            this.miniMapLoaded = true
+        }
+        this.miniMapTileView = 75 
         this.FOVwidth = FOVwidth
         this.FOVheight = FOVheight
         this.ctx = ctx
         this.mapDataTiles = mapData.layers
-        this.mapImage = new Image()
-        this.map1Loaded = false
         this.tilesetImage = new Image()
         this.tilesLoaded = false
         if (mapData.tilesets.length > 1) {
@@ -17,9 +29,6 @@ export class Map {
             this.tilesDesignLoaded = false
         } else this.tilesDesignLoaded = true
         this.tileData = []
-        this.mapImage.onload = () => {
-            this.map1Loaded = true
-        }
         this.tilesetImage.onload = () => {
             this.tilesLoaded = true;
             this.tilesPerRow = Math.round(this.tilesetImage.width / this.tilelength)
@@ -27,13 +36,13 @@ export class Map {
                 this.tilesetDesignImage.onload = () => {
                     this.tilesDesignLoaded = true
                 }
+                this.tilesetDesignImage.src = mapData.tilesets[1].image
             }
             this.loadTileData()
         }
-
+        console.log(png)
         this.tilesetImage.src = mapData.tilesets[0].image
-        if (mapData.tilesets.length > 1) this.tilesetDesignImage.src = mapData.tilesets[1].image
-        this.mapImage.src = 'Graphics/map1.png'
+        this.mapImage.src = png
     }
 
     maxAbs(x, y) {
@@ -189,7 +198,7 @@ export class Map {
     }
 
     drawTile(tileRowWalker, tileColumnWalker, leftBorder, topBorder, i, j) {
-
+        
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);
         if (!(this.isTileOutOfBorder(tileRowWalker, tileColumnWalker))) {
@@ -220,7 +229,7 @@ export class Map {
     }
 
     draw(player) {
-        if (this.map1Loaded && this.tilesLoaded && this.tilesDesignLoaded) {
+        if (this.miniMapLoaded && this.tilesLoaded && this.tilesDesignLoaded) {
             let leftBorder = player.globalEntityX - this.FOVwidth / 2
             let topBorder = player.globalEntityY - this.FOVheight / 2
             let tileRow = Math.floor(topBorder / this.tilelength)
@@ -246,20 +255,39 @@ export class Map {
                     this.drawTile(tileRowWalker, tileColumnWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
                 }
             }
-            //this.drawMiniMap(player)
+            
         }
     }
 
     drawMiniMap(player) {
-        let multiplier = 1
-        this.drawSqr(0, 0, 72, 92, "black")
-        this.ctx.drawImage(this.mapImage, 1, 1, this.mapWidthTile * multiplier, this.mapHeightTile * multiplier)
-        this.drawSqr(player.globalEntityX, player.globalEntityY, 1, 1, "blue")
+        if (!this.miniMapLoaded) return 
 
-    }
+   
+        this.ctx.fillStyle = 'black'     // rahmen hintergrund
+        this.ctx.fillRect(this.miniMapX-4, this.miniMapY-4, this.miniMapWidth+8, this.miniMapHeight+8)
+        this.ctx.strokeStyle = 'white'       //Rahmen
+        this.ctx.lineWidth = 2
+        this.ctx.strokeRect(this.miniMapX-4, this.miniMapY-4, this.miniMapWidth+8, this.miniMapHeight+8)
 
-    drawMiniEnemy(enemy) {
-        //this.drawSqr(enemy.globalEntityX , enemy.globalEntityY, 1, 1, "red")
+        let startTileX = player.globalEntityX / this.tilelength - this.miniMapTileView / 2      // Ausschnitt berechnen, dass Spieler in der Mitte ist
+        let startTileY = player.globalEntityY / this.tilelength - this.miniMapTileView / 2
+        startTileX = Math.max(0, Math.min(startTileX, this.mapWidthTile - this.miniMapTileView)) //damit die Map am Maprand stehen bleibt und nicht wie der Bildauschnitt sich bewegt
+        startTileY = Math.max(0, Math.min(startTileY, this.mapHeightTile - this.miniMapTileView))
+
+       
+        this.ctx.drawImage( // MiniMap-Ausschnitt zeichnen
+            this.mapImage,      //Bild
+            startTileX * this.miniMapTilePixelSizeX, startTileY * this.miniMapTilePixelSizeY,     // startkoords im Bild
+            this.mapCutWidth, this.mapCutHeight,    //Ausschnitt größe
+            this.miniMapX, this.miniMapY,   //Startpunkt auf dem Canvas
+            this.miniMapWidth, this.miniMapHeight   //größe auf dem Canvas
+        )
+
+        this.ctx.fillStyle = 'red'
+        this.ctx.fillRect(
+            this.miniMapX + (player.globalEntityX - startTileX * this.tilelength) * (this.miniMapWidth / (this.miniMapTileView * this.tilelength)) - 2,  //startkoordinateX
+            this.miniMapY + (player.globalEntityY - startTileY * this.tilelength) * (this.miniMapHeight / (this.miniMapTileView * this.tilelength)) - 2, //startkoordinateY
+            4, 4)                                       //Player größe
     }
 
     drawSqr(x, y, width, height, color) {
@@ -274,5 +302,6 @@ export class Map {
 
     render(player){
         this.draw(player)
+        this.drawMiniMap(player)
     }
 }

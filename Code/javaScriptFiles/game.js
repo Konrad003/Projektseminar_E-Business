@@ -1,4 +1,3 @@
-import {DropSingleUse} from "./dropSingleUse.js"
 import {Entity} from "./entity.js"
 import {Equipment} from "./equipment.js"
 //import { Item } from "./item.js"
@@ -65,14 +64,17 @@ export class game {
         switch (map) {
             case 0:
                 this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.mapChoicePng = './Code/Tiled/map2Jungle.png';
                 this.start()
                 break;
             case 1:
                 this.mapChoice = './Code/Tiled/Map1.json';
+                this.mapChoicePng = './Code/Tiled/Map1.png';
                 this.start()
                 break;
             default:
                 this.mapChoice = './Code/Tiled/map2Jungle.json';
+                this.mapChoicePng = './Code/Tiled/map2Jungle.png';
                 this.start()
         }
     }
@@ -199,14 +201,11 @@ export class game {
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
-            this.MapOne = new Map(this.mapData, canvas.width, canvas.height, ctx)
+            this.MapOne = new Map(this.mapData, this.mapChoicePng, canvas.width, canvas.height, ctx)
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 2, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.PlayerOne.acquireEquipment(new Dash()); // Test-Ausrüstung
-            this.dashEquipment = new Equipment(null, "Dash", null, 0, 0, 0, 0)
-            this.dashEquipment.dashActive = this.dashActiveSetting
-            this.DropSystem = new DropSingleUse(ctx, this.PlayerOne, this.MapOne, null)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
@@ -221,7 +220,7 @@ export class game {
             }
             this.renderInterval = setInterval(() => this.render(), 5);
             this.enemySpawnInterval = setInterval(() => {
-                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth)
+                Enemy.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne)
             }, 200)
             this.resetTimer()
             this.startGameTimer()
@@ -355,7 +354,6 @@ export class game {
             document.removeEventListener("keyup", this.keyUpBound);
             this.keyUpBound = null;
         }
-
         // Gegner-Array leeren
 
         this.enemies.length = 0
@@ -365,7 +363,6 @@ export class game {
         this.PlayerOne = null
         this.mapData = null
 
-        this.DropSystem = null
         this.ProjectileSystem = null
         this.weapon = null
         this.Game = null
@@ -431,7 +428,7 @@ export class game {
             spacePressed: this.spacePressed
         }, performance.now(), this.enemies, this.gridWidth)
 
-
+        
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
@@ -441,7 +438,7 @@ export class game {
                 }
             }
         }
-        this.DropSystem.render(ctx, this.PlayerOne, this.MapOne)
+        
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

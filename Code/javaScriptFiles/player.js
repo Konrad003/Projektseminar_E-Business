@@ -26,6 +26,8 @@ export class Player extends MovingEntity {
 
         this.xpForNextLevel = this.level * 10;
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
+        this.enemyItemDrops = []
+
     }
 
     handleInput(map, inputState) {
@@ -61,11 +63,6 @@ export class Player extends MovingEntity {
         this.onDeath();
     }
 
-    collectPickup(item) { //wird von game aufgerufen wenn collision mit item, übergibt logik an itemklasse
-        if (!item) return;
-        item.apply(this);
-    }
-
     collectXp(xpAmount) {
         this.xp += xpAmount;
 
@@ -96,7 +93,11 @@ export class Player extends MovingEntity {
                 item.update(this, map, inputState);
             }
         });
-        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth)
+        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
+        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
+            let item = this.enemyItemDrops[i]
+            item.render(this.ctx, this, this.enemyItemDrops, i)
+        }
         this.draw(this.ctx, this, 'blue')
     }
 }
