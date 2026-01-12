@@ -1,12 +1,11 @@
 import {Entity} from "./entity.js"
-import {Equipment} from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
 import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
-import {Dash} from "./dash.js";
+import {equipmentDash} from "./equipmentDash.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -205,7 +204,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 2, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
-            this.PlayerOne.acquireEquipment(new Dash()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new equipmentDash()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
