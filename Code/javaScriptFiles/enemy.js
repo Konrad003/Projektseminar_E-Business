@@ -162,8 +162,7 @@ export class Enemy extends MovingEntity {
         const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
 
-            const roll = Math.random()
-
+            let roll = Math.random()
             if (roll < 0.1) {
                 enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
@@ -179,22 +178,22 @@ export class Enemy extends MovingEntity {
                     width: 16, 
                     height: 16 
                 }, null))
-    }
             }  else if (roll < 0.80) {
                 enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, { 
                     width: 16,
                     height: 16
-                }, null))
-  }
-        }
-
-        Game.killCount++
+                    }, null))
+                }
         
-        enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
+
+            //Game.killCount++
+        }
+            enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 8,
             height: 8
-        }, null))
+            }, null))
     
+        
     }
 
     shouldShoot(player) {
