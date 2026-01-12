@@ -59,14 +59,69 @@ export class HealDrop extends DropSingleUse {
   }
 }
 
+export class XpMagnetDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.radius = 5000
+    this.pullSpeed = 10
+  }
+
+  getColor() { return "pink" }
+
+  apply(player) {
+    if (!player || !player.enemyItemDrops) return
+
+    for (const drop of player.enemyItemDrops) {
+      if (!(drop instanceof XpDrop)) continue
+
+      const dx = player.globalEntityX - drop.globalEntityX
+      const dy = player.globalEntityY - drop.globalEntityY
+      const dist = Math.sqrt(dx * dx + dy * dy)
+
+      if (dist <= this.radius) {
+        drop.startPullTo(player, this.pullSpeed)
+      }
+    }
+  }
+}
+
 export class XpDrop extends DropSingleUse {
   constructor(x, y, hitbox, png, amount = 2) {
     super(x, y, hitbox, png)
     this.amount = amount
+    this.pullTarget = null
+    this.pullSpeed = 0
   }
+
   getColor() { return "brown" }
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
+  }
+
+  startPullTo(player, pullSpeed) {
+    this.pullTarget = player
+    this.pullSpeed = pullSpeed
+  }
+
+  updatePull() {
+    if (!this.pullTarget) return
+
+    const dx = this.pullTarget.globalEntityX - this.globalEntityX
+    const dy = this.pullTarget.globalEntityY - this.globalEntityY
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist <= 0) return
+
+    this.globalEntityX += (dx / dist) * this.pullSpeed
+    this.globalEntityY += (dy / dist) * this.pullSpeed
+  }
+
+  render(ctx, player, enemyItemDrops, position) {
+    this.updatePull()
+    if (this.tryPickup(player)) {
+      enemyItemDrops.splice(position, 1)
+      return
+    }
+    this.draw(ctx, player, this.getColor())
   }
 }
