@@ -30,7 +30,6 @@ export class SpeedBoostDrop extends DropSingleUse {
     this.duration = 10000
     this.speedMultiplier = 3
   }
-  getColor() { return "orange" }
   apply(player) {
     if (!player) return
     if (player.baseSpeed == null) player.baseSpeed = player.speed
@@ -42,6 +41,9 @@ export class SpeedBoostDrop extends DropSingleUse {
       player.speed = player.baseSpeed
       player.speedBoostTimeout = null
     }, this.duration)
+  }
+  getColor() {
+        return "orange"
   }
 }
 

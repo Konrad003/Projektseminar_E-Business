@@ -40,7 +40,6 @@ export class Map {
             }
             this.loadTileData()
         }
-        console.log(png)
         this.tilesetImage.src = mapData.tilesets[0].image
         this.mapImage.src = png
     }

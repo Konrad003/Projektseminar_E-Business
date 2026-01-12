@@ -17,8 +17,7 @@ export class Projectile extends MovingEntity {
         // 1. Move projectile
         this.move(map, projectiles, projectileIndex, gridWidth);
         // 2. Draw projectile relative to the camera/player
-        const color = this.isEnemy ? "purple" : "lightblue"; //damit gegnerische Projektile rot sind
-        this.draw(ctx, player, color);
+        this.draw(ctx, player);
         // 3. Check collision with Player
         if (this.isEnemy) {
         // Feindliches Projektil trifft den Spieler
@@ -74,5 +73,9 @@ export class Projectile extends MovingEntity {
 
     render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops){
         this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops)
+    }
+
+    getColor() {
+        return this.isEnemy ? 'orange' :'cyan'
     }
 }
