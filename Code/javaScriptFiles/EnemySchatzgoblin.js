@@ -34,7 +34,7 @@ export class EnemySchatzgoblin extends Enemy {
         } else {        
             this.chasePlayer(MapOne, PlayerOne, enemies)                   // Gegner läuft auf den Spieler zu
         }
-        if (PlayerOne.globalEntityX -)
+        if (PlayerOne.globalEntityX) {}
     }
 
     render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){  
