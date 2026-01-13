@@ -11,14 +11,13 @@ export class Projectile extends MovingEntity {
         this.gridMapTile = gridMapTile
     }
 
-    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth) {
+    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth, enemyItemDrops) {
         // Loop through projectiles for movement, drawing, and collision
         let killCount=0
         // 1. Move projectile
         this.move(map, projectiles, projectileIndex, gridWidth);
         // 2. Draw projectile relative to the camera/player
-        const color = this.isEnemy ? "purple" : "lightblue"; //damit gegnerische Projektile rot sind
-        this.draw(ctx, player, color);
+        this.draw(ctx, player);
         // 3. Check collision with Player
         if (this.isEnemy) {
         // Feindliches Projektil trifft den Spieler
@@ -34,7 +33,7 @@ export class Projectile extends MovingEntity {
                     for (let j = enemies[i][n].within.length - 1; j >= 0 ;j--){
                         let enemy = enemies[i][n].within[j]
                         if (this.checkCollision(enemy, 0, 0)) {
-                            enemy.takeDmg(this.dmg, enemies, j);
+                            enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
                             if (!this.piercing) {
                                 projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1) 
                             }else{
@@ -72,7 +71,11 @@ export class Projectile extends MovingEntity {
         }
     }
 
-    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth){
-        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth)
+    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops){
+        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops)
+    }
+
+    getColor() {
+        return this.isEnemy ? 'orange' :'cyan'
     }
 }

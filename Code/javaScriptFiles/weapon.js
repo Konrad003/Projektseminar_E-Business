@@ -39,7 +39,7 @@ export class Weapon extends Item {
     static create(type, shooter, mapWidth, mapHeight, gridWidth) {
         switch (type) {
             case "basic":
-                return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+                return new Weapon(null, "Basic Gun", null, 100, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
 
             case "basicEnemy":
                 return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight,  gridWidth);
@@ -138,17 +138,14 @@ export class Weapon extends Item {
             );
 
             if (this.shooter instanceof Enemy){
-                                console.log("4")
-
                 this.projectiles.push(p)
             }else{
-                console.log("3")
                 this.projectiles[p.gridMapTile.row][p.gridMapTile.column].within.push(p)
             }
         }
     }
 
-    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth){
+    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
                 if (Game.testShoot === true) {
                   this.shoot(
                   PlayerOne,         // immer der Player 
@@ -167,9 +164,8 @@ export class Weapon extends Item {
             for (let i = this.projectiles.length - 1; i >= 0; i--) {
                 for (let n = this.projectiles[i].length - 1; n >= 0; n--){
                     for (let j = this.projectiles[i][n].within.length - 1; j >= 0 ;j--){
-                                        console.log("2")
                         let projectile = this.projectiles[i][n].within[j]
-                        projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth)
+                        projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops)
                     }
                 }
             }
