@@ -207,20 +207,8 @@ export class game {
         const spawn = () => {
             if (this.gamePaused) return;
 
-            EnemyFactory.spawnEnemyOutsideView(
-                this.enemies,
-                this.PlayerOne,
-                canvas,
-                this.mapData.tilewidth,
-                this.gridWidth,
-                this.mapData.width,
-                this.mapData.height,
-                this.MapOne,
-                8
-            );
-
-            const nextInterval = this.getCurrentSpawnInterval();
-            this.enemySpawnInterval = setTimeout(spawn, nextInterval)       // quasi rekursiver Aufruf mit sich veränderbaren Intervall
+            EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8 /*Anzahl der Gegner pro Spawn*/)
+            this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
     
     spawn();
