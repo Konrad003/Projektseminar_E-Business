@@ -3,7 +3,7 @@ import {Item} from "./item.js";
 import {Enemy} from "./enemy.js";
 
 export class Weapon extends Item {
-    constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth) {
+    constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth, projectileSize = 8, projectileDuration = -1) {
         super(icon, description, picture);
         this.dmg = dmg;
         this.cooldown = cooldown; // Time between shots in milliseconds
@@ -15,6 +15,8 @@ export class Weapon extends Item {
         this.lastShotTime = 0; // Timestamp of the last shot
         this.shooter=shooter
         this.projectiles = []
+        this.projectileSize = projectileSize;
+        this.projectileDuration = projectileDuration;
         if (!(shooter instanceof Enemy)){
             for (let row = 0; row<=Math.floor(mapHeight / (gridWidth)) ;row++){
                 this.projectiles[row] = []
@@ -34,7 +36,7 @@ export class Weapon extends Item {
                 return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight,  gridWidth);
 
             case "shotgun":
-                return new Weapon(null, "Shotgun", null, 6, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight,  gridWidth);
+                return new Weapon(null, "Shotgun", null, 6, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight,  gridWidth, 16, 1250);
 
 
             case "sniper":
@@ -113,13 +115,14 @@ export class Weapon extends Item {
                 this.shooter.globalEntityY, 1, // hp
                 null, // png
                 (isEnemyShooter ? 3 : 5), // langsamer für Gegner-Projektile (z. B. 3 statt 5)
-                {width: 8, height: 8}, // hitbox
+                {width: this.projectileSize, height: this.projectileSize}, // hitbox
                 false, // piercing
-                8, // size
+                this.projectileSize, // size
                 dir, // direction
                 this.dmg, // damage
                 isEnemyShooter,            // NEU: markiert feindliche Projektile
-                {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))}  
+                {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))},  
+                currentTime, this.projectileDuration
             );
             if (this.shooter instanceof Enemy){
                 this.projectiles.push(p)
@@ -142,14 +145,14 @@ export class Weapon extends Item {
         if (this.shooter instanceof Enemy){
             for (let j = this.projectiles.length-1; j>= 0; j--){
                 let projectile = this.projectiles[j]
-                projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth)
+                projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow)
             }
         }else{
             for (let i = this.projectiles.length - 1; i >= 0; i--) {
                 for (let n = this.projectiles[i].length - 1; n >= 0; n--){
                     for (let j = this.projectiles[i][n].within.length - 1; j >= 0 ;j--){
                         let projectile = this.projectiles[i][n].within[j]
-                        projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops)
+                        projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow)
                     }
                 }
             }

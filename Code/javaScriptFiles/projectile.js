@@ -1,7 +1,7 @@
 import {MovingEntity} from "./movingEntity.js";
 
 export class Projectile extends MovingEntity {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg, isEnemy = false, gridMapTile) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg, isEnemy = false, gridMapTile, creationTime, duration) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox);
         this.piercing = piercing;
         this.size = size;
@@ -9,9 +9,11 @@ export class Projectile extends MovingEntity {
         this.dmg = dmg;
         this.isEnemy = isEnemy;
         this.gridMapTile = gridMapTile
+        this.creationTime = creationTime;
+        this.duration = duration;
     }
 
-    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth, enemyItemDrops) {
+    handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth, enemyItemDrops, currentTime) {
         // Loop through projectiles for movement, drawing, and collision
         let killCount=0
         // 1. Move projectile
@@ -45,6 +47,10 @@ export class Projectile extends MovingEntity {
                 }
             }
         }
+         if (this.duration > 0 && currentTime - this.creationTime > this.duration) {
+            if (this.isEnemy)projectiles.splice(projectileIndex)
+            else projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1);
+        }
     }
        
 
@@ -71,8 +77,8 @@ export class Projectile extends MovingEntity {
         }
     }
 
-    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops){
-        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops)
+    render(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops, currentTime){
+        this.handleProjectiles(ctx, projectiles, projectileIndex, enemies, PlayerOne, MapOne, gridWidth, enemyItemDrops, currentTime)
     }
 
     getColor() {
