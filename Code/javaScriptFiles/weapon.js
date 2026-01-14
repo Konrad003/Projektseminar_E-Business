@@ -3,7 +3,7 @@ import {Item} from "./item.js";
 import {Enemy} from "./enemy.js";
 
 export class Weapon extends Item {
-    constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth, projectileSize = 8, projectileDuration = -1) {
+    constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth, projectileSize = 8, projectileDuration = -1, orbiting = false, orbitProperties = null) {
         super(icon, description, picture);
         this.dmg = dmg;
         this.cooldown = cooldown; // Time between shots in milliseconds
@@ -17,6 +17,8 @@ export class Weapon extends Item {
         this.projectiles = []
         this.projectileSize = projectileSize;
         this.projectileDuration = projectileDuration;
+        this.orbiting = orbiting;
+        this.orbitProperties = orbitProperties;
         if (!(shooter instanceof Enemy)){
             for (let row = 0; row<=Math.floor(mapHeight / (gridWidth)) ;row++){
                 this.projectiles[row] = []
@@ -38,10 +40,11 @@ export class Weapon extends Item {
             case "shotgun":
                 return new Weapon(null, "Shotgun", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight,  gridWidth, 16, 1250);
 
-
             case "sniper":
                 return new Weapon(null, "Sniper", null, 300, 1200, 0, 0, 2000, 1, 1,shooter, mapWidth, mapHeight,  gridWidth);
 
+            case "shuriken":
+                return new Weapon(null, "Shuriken", null, 25, 150, 1, 0, 700, 1, 3, shooter, mapWidth, mapHeight,  gridWidth, 6, 1000, true, { radius: 100, speed: 2 });
 
             default:
                 return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 2, shooter, mapWidth, mapHeight,  gridWidth);
@@ -49,6 +52,29 @@ export class Weapon extends Item {
     }
 
     shoot(player, currentTime, enemies, tilelength, gridWidth) {
+        if (this.orbiting) {
+            if (this.projectiles.length < this.amount) {
+                for (let i = 0; i < this.amount; i++) {
+                    const angle = (2 * Math.PI / this.amount) * i;
+                    const p = new Projectile(
+                        this.shooter.globalEntityX,
+                        this.shooter.globalEntityY,
+                        1, null, 0,
+                        {width: this.projectileSize, height: this.projectileSize},
+                        true, this.projectileSize, {}, this.dmg, false, {},
+                        currentTime, -1, true,
+                        {
+                            radius: this.orbitProperties.radius,
+                            speed: this.orbitProperties.speed,
+                            shooter: this.shooter,
+                            angle: angle
+                        }
+                    );
+                    this.projectiles.push(p);
+                }
+            }
+            return;
+        }
         // Check if the cooldown has passed
         
         if (currentTime - this.lastShotTime < this.cooldown) {
@@ -142,7 +168,7 @@ export class Weapon extends Item {
                   gridWidth
                   )
                 }
-        if (this.shooter instanceof Enemy){
+        if (this.shooter instanceof Enemy || this.orbiting){
             for (let j = this.projectiles.length-1; j>= 0; j--){
                 let projectile = this.projectiles[j]
                 projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow)

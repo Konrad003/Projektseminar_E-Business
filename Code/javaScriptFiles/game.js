@@ -108,6 +108,9 @@ export class game {
         if (e.key === '4') {
             this.PlayerOne.switchWeapon(4);
         }
+        if (e.key === '5') {
+            this.PlayerOne.switchWeapon(5);
+        }
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus

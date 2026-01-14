@@ -1,7 +1,7 @@
 import {MovingEntity} from "./movingEntity.js";
 
 export class Projectile extends MovingEntity {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg, isEnemy = false, gridMapTile, creationTime, duration) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, piercing, size, direction, dmg, isEnemy = false, gridMapTile, creationTime, duration, orbiting = false, orbitProperties = null) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox);
         this.piercing = piercing;
         this.size = size;
@@ -11,13 +11,15 @@ export class Projectile extends MovingEntity {
         this.gridMapTile = gridMapTile
         this.creationTime = creationTime;
         this.duration = duration;
+        this.orbiting = orbiting;
+        this.orbitProperties = orbitProperties;
     }
 
     handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth, enemyItemDrops, currentTime) {
         // Loop through projectiles for movement, drawing, and collision
         let killCount=0
         // 1. Move projectile
-        this.move(map, projectiles, projectileIndex, gridWidth);
+        this.move(map, projectiles, projectileIndex, gridWidth, player, currentTime);
         // 2. Draw projectile relative to the camera/player
         this.draw(ctx, player);
         // 3. Check collision with Player
@@ -31,8 +33,8 @@ export class Projectile extends MovingEntity {
         } else {
             // Spieler-Projektil trifft Gegner
             for (let i = enemies.length - 1; i >= 0; i--) {
-                for (let n = enemies[i].length - 1; n >= 0; n--){
-                    for (let j = enemies[i][n].within.length - 1; j >= 0 ;j--){
+                for (let n = enemies[i].length - 1; n >= 0; n--) {
+                    for (let j = enemies[i][n].within.length - 1; j >= 0 ;j--) {
                         let enemy = enemies[i][n].within[j]
                         if (this.checkCollision(enemy, 0, 0)) {
                             enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
@@ -54,7 +56,14 @@ export class Projectile extends MovingEntity {
     }
        
 
-    move(map, projectiles, projectileIndex, gridWidth) {
+    move(map, projectiles, projectileIndex, gridWidth, player, currentTime) {
+        if (this.orbiting) {
+            const { radius, speed, shooter } = this.orbitProperties;
+            const time = (currentTime - this.creationTime) / 1000; // in seconds
+            this.globalEntityX = shooter.globalEntityX + radius * Math.cos(time * speed + this.orbitProperties.angle);
+            this.globalEntityY = shooter.globalEntityY + radius * Math.sin(time * speed + this.orbitProperties.angle);
+            return;
+        }
         let position
         if (!(this.isEnemy)) position=this.updateGridPlace(map.tilelength, projectiles, projectileIndex, gridWidth)
         // direction is a vector like {x: 0.5, y: -0.2}

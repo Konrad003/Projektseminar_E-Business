@@ -68,6 +68,9 @@ export class Player extends MovingEntity {
             case 4:
                 this.weapon = Weapon.create("default", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
+            case 5:
+                this.weapon = Weapon.create("shuriken", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
         }
     }
 
