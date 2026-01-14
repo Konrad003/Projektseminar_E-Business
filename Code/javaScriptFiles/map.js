@@ -137,9 +137,6 @@ export class Map {
         for (let i = 0; i < this.mapHeightTile; i++) {
             this.tileData[i] = []
             for (let j = 0; j < this.mapWidthTile; j++) {
-                let tileSetNr = hoehe0[this.getTileNr(i, j)] -1
-                if (design != null) {
-                    tileSetNrDesign = design[this.getTileNr(i, j)] -1}
                 let tileHeight = 0
                 let walkable = true
                 let designBoolean = false
@@ -148,31 +145,36 @@ export class Map {
                 let tilesPerRow = null
                 let tilesPerRowDesign = null
                 let linkToTileSetDesignIndex = null
-        
+                let tileSetNr = null
+                if (design != null) {
+                    tileSetNrDesign = design[this.getTileNr(i, j)] -1}
                 if (hoehe0 != null && hoehe0[this.getTileNr(i, j)] > 0) {
                     linkToTileSet = this.getTilesetPathByNr(hoehe0[this.getTileNr(i, j)])
-                    tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)}       
+                    tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)
+                    tileSetNr = hoehe0[this.getTileNr(i, j)] - linkToTileSet.data.firstgid
+                }       
                 if (wall != null && wall[this.getTileNr(i, j)] > 0) {
                     walkable = false
                     linkToTileSet = this.getTilesetPathByNr(wall[this.getTileNr(i, j)])
                     tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)
-
+                    //tileSetNr = wall[this.getTileNr(i, j)] - linkToTileSet.data.firstgid
                 } else if (hoehe1 != null && hoehe1[this.getTileNr(i, j)] > 0) {
                     tileHeight = 1
                     linkToTileSet = this.getTilesetPathByNr(hoehe1[this.getTileNr(i, j)])
                     tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)
-                    
+                    //tileSetNr = hoehe1[this.getTileNr(i, j)] - linkToTileSet.data.firstgid
                 } else if (hoehe2 != null && hoehe2[this.getTileNr(i, j)] > 0) {
                     tileHeight = 2
                     linkToTileSet = this.getTilesetPathByNr(hoehe2[this.getTileNr(i, j)])
                     tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)
+                    //tileSetNr = hoehe2[this.getTileNr(i, j)] - linkToTileSet.data.firstgid
                 }
                 if (design != undefined && design[this.getTileNr(i, j)] > 0) {
                     designBoolean = true
                     linkToTileSetDesign = this.getTilesetPathByNr(design[this.getTileNr(i, j)])
-                    //console.log(this.getTilesetPathByNr(463))
                     tilesPerRowDesign = Math.round(linkToTileSetDesign.data.imagewidth / this.tilelength)
                     linkToTileSetDesignIndex = linkToTileSetDesign.index
+                    tileSetNrDesign = design[this.getTileNr(i, j)] - linkToTileSetDesign.data.firstgid
                 }
                 //console.log(linkToTileSetDesign)
                 //console.log(tilesPerRow[1])
@@ -203,7 +205,7 @@ export class Map {
     getTilesetPathByNr(tileNr) {
         if (tileNr <= 0) return null;
         for (let i = 0; i < this.mapDataTilesets-1 ; i++) {
-            if (tileNr <= this.mapDataTilesetsData[i+1].firstgid) {
+            if (tileNr < this.mapDataTilesetsData[i+1].firstgid) {
                 return {data :this.mapDataTilesetsData[i] , index : i};
             }
         }
@@ -234,7 +236,7 @@ export class Map {
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);
         if (!(this.isTileOutOfBorder(tileRowWalker, tileColumnWalker))) {
-            let leftOffset = this.tilelength - this.offsetToBorder(leftBorder)
+            let leftOffset = this.tilelength - this.offsetToBorder(leftBorder) 
             let topOffset = this.tilelength - this.offsetToBorder(topBorder)                                //Wie viel von dem TileSetTile gezeichnet werden muss, falls oben am Bildrand nur die hälft z.B. gezeichnet wurde
             let tile = this.tileData[tileRowWalker][tileColumnWalker]
             this.ctx.drawImage(this.tilesetImage[tile.linkToTileSet.index],                                      //Datei aus der das Tile stammt
@@ -262,8 +264,8 @@ export class Map {
 
     draw(player) {
         if (this.miniMapLoaded && this.tilesSetsLoaded.every(v => v === true) && this.tileDataLoaded) {
-            let leftBorder = player.globalEntityX - this.FOVwidth / 2
-            let topBorder = player.globalEntityY - this.FOVheight / 2
+            let leftBorder = Math.floor(player.globalEntityX - this.FOVwidth / 2)//Math.floor verhindern subPixelRendering --> flackern
+            let topBorder = Math.floor(player.globalEntityY - this.FOVheight / 2)
             let tileRow = Math.floor(topBorder / this.tilelength)
             let tileRowWalker = tileRow
             let tileColumn = Math.floor(leftBorder / this.tilelength)
