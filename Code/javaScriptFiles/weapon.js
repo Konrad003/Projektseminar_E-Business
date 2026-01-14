@@ -19,14 +19,14 @@ export class Weapon extends Item {
         this.projectileDuration = projectileDuration;
         this.orbiting = orbiting;
         this.orbitProperties = orbitProperties;
-        if (!(shooter instanceof Enemy)){
+        if (!(shooter instanceof Enemy) && !orbiting){
             for (let row = 0; row<=Math.floor(mapHeight / (gridWidth)) ;row++){
                 this.projectiles[row] = []
                 for (let column = 0; column<=Math.floor(mapWidth / (gridWidth));column++){
                     this.projectiles[row][column] ={within: []}
                 }
             }
-        }  
+        }
     }
 
     static create(type, shooter, mapWidth, mapHeight, gridWidth) {
@@ -76,7 +76,7 @@ export class Weapon extends Item {
             return;
         }
         // Check if the cooldown has passed
-        
+
         if (currentTime - this.lastShotTime < this.cooldown) {
             return; // Still on cooldown
         }
@@ -93,7 +93,7 @@ export class Weapon extends Item {
         if (!targetEntity && enemies.length === 0) {
             return; // keine Gegner für Auto-Fokus
         }
-        
+
 
         this.lastShotTime = currentTime;
 
@@ -101,7 +101,7 @@ export class Weapon extends Item {
         for (let j = 0; j < this.amount; j++) {
             let dir
             if (targetEntity) {
-                
+
                 // Gegner schießt gezielt auf targetEntity (z. B. den Player)
                 const dx = targetEntity.globalEntityX - this.shooter.globalEntityX;
                 const dy = targetEntity.globalEntityY - this.shooter.globalEntityY;
@@ -147,7 +147,7 @@ export class Weapon extends Item {
                 dir, // direction
                 this.dmg, // damage
                 isEnemyShooter,            // NEU: markiert feindliche Projektile
-                {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))},  
+                {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))},
                 currentTime, this.projectileDuration
             );
             if (this.shooter instanceof Enemy){
@@ -161,7 +161,7 @@ export class Weapon extends Item {
     render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
                 if (Game.testShoot === true) {
                   this.shoot(
-                  PlayerOne,         // immer der Player 
+                  PlayerOne,         // immer der Player
                   performanceNow,     // für cooldown
                   enemies,          // enemies-Liste (wird hier nicht genutzt, da targetEntity gesetzt)
                   map.tilelength,

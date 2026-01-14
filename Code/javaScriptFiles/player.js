@@ -55,6 +55,21 @@ export class Player extends MovingEntity {
     }
 
     switchWeapon(weaponNumber) {
+        // Alte Projektile clearen
+        if (this.weapon && this.weapon.projectiles) {
+            if (Array.isArray(this.weapon.projectiles) && this.weapon.projectiles.length > 0 && typeof this.weapon.projectiles[0] === 'object' && !Array.isArray(this.weapon.projectiles[0])) {
+                // Orbiting weapon (simple array)
+                this.weapon.projectiles = [];
+            } else {
+                // Grid-based weapon (3D array)
+                for (let row = 0; row < this.weapon.projectiles.length; row++) {
+                    for (let column = 0; column < this.weapon.projectiles[row].length; column++) {
+                        this.weapon.projectiles[row][column].within = [];
+                    }
+                }
+            }
+        }
+
         switch (weaponNumber) {
             case 1:
                 this.weapon = Weapon.create("basic", this, this.mapWidth, this.mapHeight, this.gridWidth);
