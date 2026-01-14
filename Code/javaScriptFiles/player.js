@@ -29,6 +29,9 @@ export class Player extends MovingEntity {
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
         this.enemyItemDrops = []
 
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+        this.gridWidth = gridWidth;
     }
 
     handleInput(map, inputState) {
@@ -48,6 +51,23 @@ export class Player extends MovingEntity {
         }
         if (inputState.downPressed) {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+        }
+    }
+
+    switchWeapon(weaponNumber) {
+        switch (weaponNumber) {
+            case 1:
+                this.weapon = Weapon.create("basic", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
+            case 2:
+                this.weapon = Weapon.create("shotgun", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
+            case 3:
+                this.weapon = Weapon.create("sniper", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
+            case 4:
+                this.weapon = Weapon.create("default", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
         }
     }
 
@@ -72,6 +92,8 @@ export class Player extends MovingEntity {
         }
         Game.hudXpProgress.value = this.xp;
     }
+
+
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)

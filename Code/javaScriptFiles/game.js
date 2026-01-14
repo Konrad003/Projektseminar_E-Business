@@ -95,6 +95,19 @@ export class game {
                 this.pauseGame() // Spiel nur pausieren, wenn Game läuft
             }
         }
+        // Switch weapon
+        if (e.key === '1') {
+            this.PlayerOne.switchWeapon(1);
+        }
+        if (e.key === '2') {
+            this.PlayerOne.switchWeapon(2);
+        }
+        if (e.key === '3') {
+            this.PlayerOne.switchWeapon(3);
+        }
+        if (e.key === '4') {
+            this.PlayerOne.switchWeapon(4);
+        }
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus

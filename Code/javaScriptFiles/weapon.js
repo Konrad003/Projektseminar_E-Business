@@ -42,7 +42,7 @@ export class Weapon extends Item {
 
 
             default:
-                return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 1, shooter, mapWidth, mapHeight,  gridWidth);
+                return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 2, shooter, mapWidth, mapHeight,  gridWidth);
         }
     }
 
