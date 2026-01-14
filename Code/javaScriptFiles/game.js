@@ -9,46 +9,40 @@ import {Projectile} from "./projectile.js"
 import { EnemyFactory } from "./EnemyFactory.js"
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
-{                   // Canvas Skalierung je nach Fenstergröße --> soll flackern der Grafik verhindern
-ctx.imageSmoothingEnabled = false;             // soll Flackern verhindern
-
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
-let BasicHeight = 1440;
-
+let BasicHeight = 1440;  
 canvas.width  = BasicWidth * zoomFactor;
 canvas.height = BasicHeight * zoomFactor;
 
-let windowWidth  = window.innerWidth;   // von dem Browserfenster
-let windowHeight = window.innerHeight;
+function resizeCanvas(){              // Canvas Skalierung je nach Fenstergröße --> soll flackern der Grafik verhindern
 
-let targetRatio = BasicWidth / BasicHeight; // Verhältnis von internem Canvas
-let windowRatio = windowWidth / windowHeight;
+    let windowWidth  = window.innerWidth;   // von dem Browserfenster
+    let windowHeight = window.innerHeight;// von dem Browserfenster
+    let targetRatio = BasicWidth / BasicHeight; // Verhältnis von internem Canvas
+    let windowRatio = windowWidth / windowHeight;// Verhältnis von internem Canvas
+    let newWidth, newHeight;
 
-let newWidth, newHeight;
-
-if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen
-        
-    newHeight = windowHeight;// Bildschirm breiter --> volle Höhe nutzen, Breite anpassen
-    newWidth  = newHeight * targetRatio;
-} else {
-        
-    newWidth  = windowWidth;// Bildschirm schmaler --> volle Breite nutzen, Höhe anpassen
-    newHeight = newWidth / targetRatio;
+    if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen   
+        newHeight = windowHeight;// Bildschirm breiter --> volle Höhe nutzen, Breite anpassen
+        newWidth  = newHeight * targetRatio;
+    } else {
+        newWidth  = windowWidth;// Bildschirm schmaler --> volle Breite nutzen, Höhe anpassen
+        newHeight = newWidth / targetRatio;
+    }
+    canvas.style.width  = newWidth + "px";  // Not sure ob das besser geht mit CSS Skalierung
+    canvas.style.height = newHeight + "px";
 }
 
-canvas.style.width  = newWidth + "px";  // Not sure ob das besser geht mit CSS Skalierung
-canvas.style.height = newHeight + "px";
-}
-
+resizeCanvas()
+window.addEventListener('resize', resizeCanvas);
 window.addEventListener("keydown", function(e) {
     
     if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {// Blockiere Strg  +, Strg  -, Strg 0  und Stgr = (Zoom / Zoomreset)
         e.preventDefault(); // wenn man unbedingt zoomen will, dann über das Stgr Shift und dann auf die Taste mit (~+*) / (_-)
     }
 });
-
-
 window.addEventListener("wheel", function(e) {// Mausrad-Zoom blockieren
     if (e.ctrlKey) {
         e.preventDefault();
