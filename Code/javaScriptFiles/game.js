@@ -31,6 +31,9 @@ export class game {
 
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
+    playerSelect = 1
+    playerPngPath = './players/Peters/1.png'
+
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
 
@@ -165,19 +168,15 @@ export class game {
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
-        
+
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, this.mapChoicePng, canvas.width, canvas.height, ctx)
 
-            const petersImage = new Image();
-            petersImage.src = "./players/Peters/1.png";
-
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, petersImage, 5, {
-                width: 48,
-                height: 48
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, this.playerPngPath, 5, {
+                width: 48, height: 48
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
@@ -254,6 +253,41 @@ export class game {
         document.getElementById("settingsScreen").style.display = "flex";
     }
 
+    selectPlayerScreen() {
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("playerSelectScreen").style.display = "flex";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("player" + this.playerSelect).style.display = "flex";
+    }
+
+    selectPlayer(src) {
+        this.playerPngPath = src
+        this.home()
+    }
+
+    nextPlayer() {
+        document.getElementById("player" + this.playerSelect).style.display = "none";
+        this.playerSelect++;
+        if (this.playerSelect > 6) {
+            this.playerSelect = 1;
+        } else if (this.playerSelect < 1) {
+            this.playerSelect = 6;
+        }
+        document.getElementById("player" + this.playerSelect).style.display = "flex";
+    }
+
+    prevPlayer() {
+        document.getElementById("player" + this.playerSelect).style.display = "none";
+        this.playerSelect--;
+        if (this.playerSelect > 6) {
+            this.playerSelect = 1;
+        } else if (this.playerSelect < 1) {
+            this.playerSelect = 6;
+        }
+        document.getElementById("player" + this.playerSelect).style.display = "flex";
+    }
+
     home() {
         this.resetGame()
 
@@ -262,6 +296,8 @@ export class game {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("defeatScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
+        document.getElementById("lvlScreen").style.display = "none";
+        document.getElementById("playerSelectScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "flex";
     }
 
@@ -373,7 +409,7 @@ export class game {
             rightPressed: this.rightPressed
         }, performance.now(), this.enemies, this.gridWidth)
 
-        
+
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
@@ -383,7 +419,7 @@ export class game {
                 }
             }
         }
-        
+
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

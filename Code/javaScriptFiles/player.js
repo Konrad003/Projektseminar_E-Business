@@ -13,7 +13,6 @@ export class Player extends MovingEntity {
         this.maxHp = maxHp;
         this.xp = xp;
         this.level = 1;
-        this.png = png;
         this.baseSpeed = speed;
         this.hitbox = hitbox;
         this.ausrüstung = ausrüstung;
@@ -77,7 +76,7 @@ export class Player extends MovingEntity {
         this.handleInput(map, inputState)
         this.draw(this.ctx, this)
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
-        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
+        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--) {
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)
         }

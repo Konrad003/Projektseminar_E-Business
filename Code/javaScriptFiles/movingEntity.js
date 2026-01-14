@@ -8,12 +8,15 @@ export class MovingEntity extends Entity {
         this.globalEntityY = globalEntityY;
         this.hp = hp;
         this.maxHp = hp; // MaxHP entspricht Startwert
-        this.png = png;
         this.speed = speed;
         this.hitbox = hitbox;
     }
 
     // Prüft, ob zwei Entities kollidieren (AABB-Kollision)
+
+    static spawnCheck(map, globalEntityX, globalEntityY, hitboxWidth, hitboxHeight) {
+        return (map.findTile(globalEntityX, globalEntityY).walkable && map.findTile(globalEntityX, globalEntityY + hitboxHeight).walkable && map.findTile(globalEntityX + hitboxWidth, globalEntityY).walkable && map.findTile(globalEntityX + hitboxWidth, globalEntityY + hitboxHeight).walkable)
+    }
 
     checkCollision(other, proposedMoveX, proposedMoveY) {
         return (this.checkCollisionHorizontal(other, proposedMoveX) && this.checkCollisionVertical(other, proposedMoveY))
@@ -63,13 +66,6 @@ export class MovingEntity extends Entity {
             return false
         }                           // Prüfe ob vertikale Überschneidung
         return true // Überschneidung
-    }
-
-    static spawnCheck(map, globalEntityX, globalEntityY, hitboxWidth, hitboxHeight){
-        return (map.findTile(globalEntityX , globalEntityY ).walkable &&
-        map.findTile(globalEntityX , globalEntityY + hitboxHeight).walkable &&
-        map.findTile(globalEntityX + hitboxWidth, globalEntityY ).walkable &&
-        map.findTile(globalEntityX + hitboxWidth, globalEntityY + hitboxHeight).walkable)
     }
 
     attemptMoveAxis(self, axis, move, enemyArray, map, visited = new Set) {

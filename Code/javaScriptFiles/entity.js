@@ -1,21 +1,31 @@
 export class Entity {
 
+    static FOVwidthMiddle
+    static FOVheightMiddle
     globalEntityX
     globalEntityY
     hitbox
     png
-    static FOVwidthMiddle
-    static FOVheightMiddle
-    
+
     constructor(globalEntityX, globalEntityY, hitbox, png) {
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
         this.hitbox = hitbox
-        this.png = png
+
+        if (typeof png === 'string') {
+            this.png = new Image()
+            this.png.src = png
+        } else {
+            this.png = png
+        }
     }
 
-    draw(ctx, player) {
-        let color = this.getColor()
+    getColor() {
+        return "magenta"
+    }
+
+    draw(ctx, player, overrideColor = null) {
+        let color = overrideColor || this.getColor()
         let leftBorder = player.globalEntityX - Entity.FOVwidthMiddle
         let topBorder = player.globalEntityY - Entity.FOVheightMiddle
 
