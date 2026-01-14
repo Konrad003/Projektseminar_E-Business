@@ -34,6 +34,10 @@ export class SpeedBoostDrop extends DropSingleUse {
     if (!player) return
     if (player.baseSpeed == null) player.baseSpeed = player.speed
 
+    if (window.Game.soundEffects) {
+      window.Sounds.hpUpSound.play()
+    }
+
     if (player.speedBoostTimeout) clearTimeout(player.speedBoostTimeout)
     else player.speed = player.baseSpeed * this.speedMultiplier
 
@@ -42,6 +46,7 @@ export class SpeedBoostDrop extends DropSingleUse {
       player.speedBoostTimeout = null
     }, this.duration)
   }
+
   getColor() {
         return "orange"
   }
@@ -58,6 +63,9 @@ export class HealDrop extends DropSingleUse {
     this.used = true
     if (typeof player.maxHp === "number") player.hp = Math.min(player.hp + this.healAmount, player.maxHp)
     else player.hp += this.healAmount
+    if (window.Game.soundEffects) {
+      window.Sounds.hpUpSound.play()
+    }
   }
 }
 
@@ -82,6 +90,9 @@ export class XpMagnetDrop extends DropSingleUse {
 
       if (dist <= this.radius) {
         drop.startPullTo(player, this.pullSpeed)
+      }
+      if (window.Game.soundEffects) {
+        window.Sounds.xpMagnetSound.play()
       }
     }
   }
@@ -158,6 +169,10 @@ class ShockwaveNukeEffect extends StaticEntity {
     ctx.strokeStyle = "cyan"
     ctx.lineWidth = 2
     ctx.stroke()
+
+    if (window.Game.soundEffects) {
+      window.Sounds.nukeSound.play()
+    }
 
     
      // Alle Gegner durchgehen und prüfen: Ist ein Gegner innerhalb des aktuellen Radius, wird er sofort getötet.

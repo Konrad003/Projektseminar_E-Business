@@ -337,6 +337,15 @@ export class game {
         this.shotSound = new Audio('./Sound/shot.mp3');
         this.shotSound.volume = this.soundEffectsVol;
 
+        this.nukeSound = new Audio('./Sound/nuke-sound.mp3');
+        this.nukeSound.volume = this.soundEffectsVol;
+
+        this.xpMagnetSound = new Audio('./Sound/xp-magnet-sound.mp3');
+        this.xpMagnetSound.volume = this.soundEffectsVol;
+
+        this.freezeSound = new Audio('./Sound/freeze-sound.mp3');
+        this.freezeSound.volume = this.soundEffectsVol;
+
         window.Sounds = {
             buttonSound: this.buttonSound, //backgroundMusic: backgroundMusic,
             WinSound: this.winSound,
@@ -344,7 +353,10 @@ export class game {
             equipSound: this.equipSound,
             lvlUpSound: this.lvlUpSound,
             hpUpSound: this.hpUpSound,
-            shotSound: this.shotSound
+            shotSound: this.shotSound,
+            nukeSound: this.nukeSound,
+            xpMagnetSound: this.xpMagnetSound,
+            freezeSound: this.freezeSound,
         };
     }
 
