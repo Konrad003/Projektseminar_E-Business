@@ -171,9 +171,13 @@ export class game {
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, this.mapChoicePng, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
-                width: 16,
-                height: 16
+
+            const petersImage = new Image();
+            petersImage.src = "./players/Peters/1.png";
+
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, petersImage, 5, {
+                width: 48,
+                height: 48
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp

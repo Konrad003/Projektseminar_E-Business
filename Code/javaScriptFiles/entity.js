@@ -14,14 +14,20 @@ export class Entity {
         this.png = png
     }
 
-    draw(ctx,player, color) {
+    draw(ctx, player) {
+        let color = this.getColor()
         let leftBorder = player.globalEntityX - Entity.FOVwidthMiddle
         let topBorder = player.globalEntityY - Entity.FOVheightMiddle
-        ctx.beginPath();
-        ctx.rect(this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.strokeStyle = color;
-        ctx.stroke();
+
+        if (this.png && this.png.complete && this.png.naturalWidth !== 0) {
+            ctx.drawImage(this.png, this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
+        } else {
+            ctx.beginPath();
+            ctx.rect(this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
     }
 }
