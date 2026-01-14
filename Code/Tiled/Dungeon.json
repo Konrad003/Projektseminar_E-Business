@@ -1718,7 +1718,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":420,
          "id":4,
-         "name":"Hoehe2",
+         "name":"Wall",
          "opacity":1,
          "type":"tilelayer",
          "visible":false,
@@ -1736,7 +1736,7 @@
         {
          "columns":10,
          "firstgid":1,
-         "image":"..\/..\/Graphics\/DungeonTiles.png",
+         "image":"Graphics/DungeonTiles.png",
          "imageheight":288,
          "imagewidth":320,
          "margin":0,
@@ -1749,7 +1749,7 @@
         {
          "columns":7,
          "firstgid":91,
-         "image":"..\/..\/Graphics\/DungeonDesign.png",
+         "image":"Graphics/DungeonDesign.png",
          "imageheight":192,
          "imagewidth":224,
          "margin":0,
@@ -1762,7 +1762,7 @@
         {
          "columns":12,
          "firstgid":133,
-         "image":"..\/..\/Graphics\/Idle1-imageonline.co-merged-imageonline.co-merged.png",
+         "image":"Graphics/Idle1-imageonline.co-merged-imageonline.co-merged.png",
          "imageheight":563,
          "imagewidth":384,
          "margin":0,
@@ -1775,7 +1775,7 @@
         {
          "columns":7,
          "firstgid":337,
-         "image":"..\/..\/Graphics\/supplies_objects.png",
+         "image":"/Graphics/supplies_objects.png",
          "imageheight":592,
          "imagewidth":240,
          "margin":0,
@@ -1788,7 +1788,7 @@
         {
          "columns":11,
          "firstgid":463,
-         "image":"..\/..\/Graphics\/Other_objects.png",
+         "image":"/Graphics/Other_objects.png",
          "imageheight":128,
          "imagewidth":368,
          "margin":0,

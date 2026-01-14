@@ -134,13 +134,12 @@ export class Map {
                     break;
             }
         }
-
         for (let i = 0; i < this.mapHeightTile; i++) {
             this.tileData[i] = []
             for (let j = 0; j < this.mapWidthTile; j++) {
-                let tileSetNr = hoehe0[this.getTileNr(i, j)] - 1
+                let tileSetNr = hoehe0[this.getTileNr(i, j)] -1
                 if (design != null) {
-                    tileSetNrDesign = design[this.getTileNr(i, j)]}
+                    tileSetNrDesign = design[this.getTileNr(i, j)] -1}
                 let tileHeight = 0
                 let walkable = true
                 let designBoolean = false
@@ -149,10 +148,11 @@ export class Map {
                 let tilesPerRow = null
                 let tilesPerRowDesign = null
                 let linkToTileSetDesignIndex = null
+        
                 if (hoehe0 != null && hoehe0[this.getTileNr(i, j)] > 0) {
                     linkToTileSet = this.getTilesetPathByNr(hoehe0[this.getTileNr(i, j)])
                     tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)}       
-                else if (wall != null && wall[this.getTileNr(i, j)] > 0) {
+                if (wall != null && wall[this.getTileNr(i, j)] > 0) {
                     walkable = false
                     linkToTileSet = this.getTilesetPathByNr(wall[this.getTileNr(i, j)])
                     tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)
