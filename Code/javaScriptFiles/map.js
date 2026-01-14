@@ -17,29 +17,32 @@ export class Map {
             this.mapCutWidth = this.miniMapTileView * this.miniMapTilePixelSizeX
             this.miniMapLoaded = true
         }
+        this.mapDataTilesets = mapData.tilesets.length
         this.miniMapTileView = 75 
         this.FOVwidth = FOVwidth
         this.FOVheight = FOVheight
         this.ctx = ctx
         this.mapDataTiles = mapData.layers
-        this.tilesetImage = new Image()
-        this.tilesLoaded = false
-        if (mapData.tilesets.length > 1) {
-            this.tilesetDesignImage = new Image()
-            this.tilesDesignLoaded = false
-        } else this.tilesDesignLoaded = true
+        this.mapDataTilesetsData = mapData.tilesets
+        this.tilesetImage = []
+        this.tilesSetsLoaded = []
         this.tileData = []
-        this.tilesetImage.onload = () => {
-            this.tilesLoaded = true;
-            this.tilesPerRow = Math.round(this.tilesetImage.width / this.tilelength)
-            if (mapData.tilesets.length > 1) {
-                this.tilesetDesignImage.onload = () => {
-                    this.tilesDesignLoaded = true
-                }
-                this.tilesetDesignImage.src = mapData.tilesets[1].image
-            }
-            this.loadTileData()
+        this.tilesPerRow = []
+        for  (let i = 0; i < this.mapDataTilesets; i++) {
+            this.tilesetImage[i] = new Image()
+            this.tilesSetsLoaded[i] = false
         }
+        for  (let i = 0; i < this.mapDataTilesets; i++) {
+            this.tilesetImage[i].onload = () => {
+            this.tilesSetsLoaded[i] = true;            
+            this.tilesPerRow[i] = Math.round(this.tilesetImage[i].width / this.tilelength)
+            console.log(this.tilesPerRow)
+            
+            }
+
+            this.tilesetImage[i].src = mapData.tilesets[i].image
+            }
+        this.loadTileData(mapData)
         this.tilesetImage.src = mapData.tilesets[0].image
         this.mapImage.src = png
     }
@@ -106,13 +109,12 @@ export class Map {
         return (this.checkIfFree(entityX, entityY, 0, moveLength, this.mapHeightTile, hitbox.width, hitbox.height, 0, hitbox.height))
     }
 
-    loadTileData() {
-
-        let hoehe0
-        let hoehe1
-        let hoehe2
-        let wall
-        let design
+    loadTileData(mapData, tilesetImage) {
+        let hoehe0 = null
+        let hoehe1 = null
+        let hoehe2 = null
+        let wall = null
+        let design = null
         let tileSetNrDesign
 
         for (let i = 0; i < this.mapDataTiles.length; i++) {
@@ -131,7 +133,6 @@ export class Map {
                     break;
                 case "Design":
                     design = this.mapDataTiles[i].data
-                    this.tilesPerRowDesign = Math.round(this.tilesetDesignImage.width / this.tilelength)
                     break;
             }
         }
@@ -140,41 +141,67 @@ export class Map {
             this.tileData[i] = []
             for (let j = 0; j < this.mapWidthTile; j++) {
                 let tileSetNr = hoehe0[this.getTileNr(i, j)] - 1
-                if (design != undefined) tileSetNrDesign = design[this.getTileNr(i, j)] - 129
+                if (design != null) {
+                    tileSetNrDesign = design[this.getTileNr(i, j)]}
+                //if (j == 10 && i == 0){console.log(tileSetNrDesign)}
                 let tileHeight = 0
                 let walkable = true
                 let designBoolean = false
                 let linkToTileSet = null
-
-                if (wall[this.getTileNr(i, j)] > 0) {
+                let linkToTileSetDesign = null
+                let tilesPerRow = null
+                let tilesPerRowDesign = null
+                if (wall != null && wall[this.getTileNr(i, j)] > 0) {
                     walkable = false
-                } else if (hoehe1[this.getTileNr(i, j)] > 0) {
+                    linkToTileSet = this.getTilesetPathByNr(wall[this.getTileNr(i, j)])
+                    //tilesPerRow = Math.round(linkToTileSet.image.width / this.tilelength)
+                } else if (hoehe1 != null && hoehe1[this.getTileNr(i, j)] > 0) {
                     tileHeight = 1
-                } else if (hoehe2[this.getTileNr(i, j)] > 0) {
+                    linkToTileSet = this.getTilesetPathByNr(hoehe1[this.getTileNr(i, j)])
+                    tilesPerRow = Math.round(linkToTileSet.image.width / this.tilelength)
+                } else if (hoehe2 != null && hoehe2[this.getTileNr(i, j)] > 0) {
                     tileHeight = 2
+                    linkToTileSet = this.getTilesetPathByNr(hoehe2[this.getTileNr(i, j)])
+                    tilesPerRow = Math.round(linkToTileSet.image.width / this.tilelength)
                 }
                 if (design != undefined && design[this.getTileNr(i, j)] > 0) {
                     designBoolean = true
-                    linkToTileSet = this.tilesetDesignImage
+                    //if (j == 10 && i == 0){console.log(design[this.getTileNr(i, j)])}
 
+                    linkToTileSetDesign = this.getTilesetPathByNr(design[this.getTileNr(i, j)])
+                    //tilesPerRowDesign = Math.round(linkToTileSetDesign.image.width / this.tilelength)
                 }
+                console.log(tilesPerRow[1])
                 this.tileData[i][j] = {
                     walkable: walkable,
                     height: tileHeight,
-                    tileSetX: (tileSetNr % this.tilesPerRow) * this.tilelength,
-                    tileSetY: (Math.floor(tileSetNr / this.tilesPerRow) * this.tilelength),
+                    tileSetX: (tileSetNr % tilesPerRow[linkToTileSet.index]) * this.tilelength,
+                    tileSetY: (Math.floor(tileSetNr / tilesPerRow) * this.tilelength),
                     tileMapX: j * this.tilelength,
                     tileMapY: i * this.tilelength,
+                    linkToTileSet: linkToTileSet,
                     design: {
+                        linkToTileSetDesign: linkToTileSetDesign,
                         designBoolean: designBoolean,
-                        linkToTileSet: linkToTileSet,
-                        tileSetX: (tileSetNrDesign % this.tilesPerRowDesign) * this.tilelength,
-                        tileSetY: (Math.floor(tileSetNrDesign / this.tilesPerRowDesign) * this.tilelength),
+                        tileSetX: (tileSetNrDesign % tilesPerRow[linkToTileSetDesign.index]) * this.tilelength,
+                        tileSetY: (Math.floor(tileSetNrDesign / tilesPerRow[linkToTileSetDesign.index]) * this.tilelength),
 
                     }
                 }
             }
         }
+        console.log(this.tileData[0][10])
+    }
+
+    
+    getTilesetPathByNr(tileNr) {
+        if (tileNr <= 0) return null;
+        for (let i = 0; i < this.mapDataTilesets ; i++) {
+            if (tileNr <= this.mapDataTilesetsData[i].firstgid) {
+                return {data :this.mapDataTilesetsData[i] , index : i};
+            }
+        }
+        return null;
     }
 
     isTileOutOfBorder(tileRowWalker, tileColumnWalker,) {
@@ -204,7 +231,7 @@ export class Map {
             let leftOffset = this.tilelength - this.offsetToBorder(leftBorder)
             let topOffset = this.tilelength - this.offsetToBorder(topBorder)                                //Wie viel von dem TileSetTile gezeichnet werden muss, falls oben am Bildrand nur die hälft z.B. gezeichnet wurde
             let tile = this.tileData[tileRowWalker][tileColumnWalker]
-            this.ctx.drawImage(this.tilesetImage,                                      //Datei aus der das Tile stammt
+            this.ctx.drawImage(tile.linkToTileSet,                                      //Datei aus der das Tile stammt
                 tile.tileSetX + leftOffset,                                               //X Koordinate im TileSet
                 tile.tileSetY + topOffset,                                               //Y Koordinate im TileSet
                 this.offsetToBorder(leftBorder),                        //Breite des Ausgeschnittenen Tiles
@@ -214,7 +241,7 @@ export class Map {
                 this.offsetToBorder(leftBorder),                        //Breite im Canvas
                 this.offsetToBorder(topBorder))                         //Höhe im Canvas
             if (tile.design.designBoolean) {
-                this.ctx.drawImage(tile.design.linkToTileSet,                          //Datei aus der das Tile stammt
+                this.ctx.drawImage(tile.design.linkToTileSetDesign,                          //Datei aus der das Tile stammt
                     tile.design.tileSetX + leftOffset,                             //X Koordinate im TileSet
                     tile.design.tileSetY + topOffset,                              //Y Koordinate im TileSet
                     this.offsetToBorder(leftBorder),                        //Breite des Ausgeschnittenen Tiles
@@ -228,7 +255,7 @@ export class Map {
     }
 
     draw(player) {
-        if (this.miniMapLoaded && this.tilesLoaded && this.tilesDesignLoaded) {
+        if (this.miniMapLoaded && this.tilesSetsLoaded.every(v => v === true)) {
             let leftBorder = player.globalEntityX - this.FOVwidth / 2
             let topBorder = player.globalEntityY - this.FOVheight / 2
             let tileRow = Math.floor(topBorder / this.tilelength)
