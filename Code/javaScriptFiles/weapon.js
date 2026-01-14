@@ -36,11 +36,11 @@ export class Weapon extends Item {
                 return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight,  gridWidth);
 
             case "shotgun":
-                return new Weapon(null, "Shotgun", null, 6, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight,  gridWidth, 16, 1250);
+                return new Weapon(null, "Shotgun", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight,  gridWidth, 16, 1250);
 
 
             case "sniper":
-                return new Weapon(null, "Sniper", null, 30, 1200, 0, 0, 2000, 1, 1,shooter, mapWidth, mapHeight,  gridWidth);
+                return new Weapon(null, "Sniper", null, 300, 1200, 0, 0, 2000, 1, 1,shooter, mapWidth, mapHeight,  gridWidth);
 
 
             default:
