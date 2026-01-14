@@ -91,7 +91,13 @@ export class Enemy extends MovingEntity {
         }
     }
 
-    
+    takeDmg(dmg, enemies, positionWithin, enemyItemDrops) {
+        this.hp -= dmg;
+        if (this.hp <= 0) {
+            this.die(enemies, positionWithin, enemyItemDrops);
+        }
+    }
+
     die(enemies, positionWithin, enemyItemDrops) {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
