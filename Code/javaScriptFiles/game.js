@@ -65,8 +65,8 @@ export class game {
                 this.start()
                 break;
             case 1:
-                this.mapChoice = './Code/Tiled/Map1.json';
-                this.mapChoicePng = './Code/Tiled/Map1.png';
+                this.mapChoice = './Code/Tiled/Dungeon.json';
+                this.mapChoicePng = './Code/Tiled/Dungeon.png';
                 this.start()
                 break;
             default:
