@@ -412,24 +412,15 @@ export class FireballWeapon extends Weapon {
         }
         for (let j = this.projectiles.length - 1; j >= 0; j--) {
             let projectile = this.projectiles[j];
-            const elapsedTime = performanceNow - projectile.creationTime;
-            const durationExpired = projectile.duration > 0 && elapsedTime > projectile.duration;
 
             if (!projectile.exploded) {
-                // Normale Projektil-Bewegung, Zeichnen und Hit Detection über die Projectile-Klasse
+                // Normale Projektil-Bewegung, Zeichnen und Hit Detection via Projectile
                 projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow);
-
-                // Zusätzlich: Prüfe ob Timeout erreicht ist -> Explosion
-                if (durationExpired) {
-                    projectile.exploded = true;
-                    projectile.explodedTime = performanceNow;
-                    this.damageEnemiesInRadius(enemies, projectile.globalEntityX, projectile.globalEntityY);
-                }
             } else {
-                // Explosion animieren und danach löschen
+                // Explosion Animation (jetzt in Projectile.render())
                 const explosionElapsed = performanceNow - projectile.explodedTime;
                 if (explosionElapsed < 300) {
-                    this.drawExplosionCircle(ctx, PlayerOne, projectile, explosionElapsed);
+                    projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow);
                 } else {
                     // Schaden austeilen, wenn noch nicht geschehen
                     if (!projectile.explosionDamageDealt) {
@@ -456,19 +447,6 @@ export class FireballWeapon extends Weapon {
                 }
             }
         }
-    }
-
-    drawExplosionCircle(ctx, PlayerOne, projectile, elapsed) {
-        const screenX = projectile.globalEntityX - PlayerOne.globalEntityX + PlayerOne.canvasWidthMiddle;
-        const screenY = projectile.globalEntityY - PlayerOne.globalEntityY + PlayerOne.canvasWidthHeight;
-        const opacity = 1 - (elapsed / 300);
-        ctx.fillStyle = `rgba(255, 50, 0, ${0.7 * opacity})`;
-        ctx.beginPath();
-        ctx.arc(screenX, screenY, this.explosionRadius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = `rgba(255, 0, 0, ${opacity})`;
-        ctx.lineWidth = 2;
-        ctx.stroke();
     }
 }
 
