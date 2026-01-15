@@ -40,62 +40,38 @@ export class Weapon extends Item {
     static create(type, shooter, mapWidth, mapHeight, gridWidth) {
         switch (type) {
             case "basic":
-                return new Weapon(null, "Basic Gun", null, 100, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+                return new BasicWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             case "basicEnemy":
-                return new Weapon(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight,  gridWidth);
+                return new BasicEnemyWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             case "shotgun":
-                return new Weapon(null, "Shotgun", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight,  gridWidth, 16, 1250);
+                return new ShotgunWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             case "sniper":
-                return new Weapon(null, "Sniper", null, 300, 1200, 0, 0, 2000, 1, 1,shooter, mapWidth, mapHeight,  gridWidth);
+                return new SniperWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             case "shuriken":
-                return new Weapon(null, "Shuriken", null, 25, 150, 1, 0, 700, 1, 3, shooter, mapWidth, mapHeight,  gridWidth, 6, 1000, true, { radius: 100, speed: 2 });
+                return new ShurikanWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             case "aura":
-                return new Weapon(null, "Aura", null, 50, 0, 0, 0, 0, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 8, -1, false, null, true, 150, 500);
+                return new AuraWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             default:
-                return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 2, shooter, mapWidth, mapHeight,  gridWidth);
+                return new DefaultWeapon(shooter, mapWidth, mapHeight, gridWidth);
         }
     }
 
     shoot(player, currentTime, enemies, tilelength, gridWidth) {
-        if (this.orbiting) {
-            if (this.projectiles.length < this.amount) {
-                for (let i = 0; i < this.amount; i++) {
-                    const angle = (2 * Math.PI / this.amount) * i;
-                    const p = new Projectile(
-                        this.shooter.globalEntityX,
-                        this.shooter.globalEntityY,
-                        1, null, 0,
-                        {width: this.projectileSize, height: this.projectileSize},
-                        true, this.projectileSize, {}, this.dmg, false, {},
-                        currentTime, -1, true,
-                        {
-                            radius: this.orbitProperties.radius,
-                            speed: this.orbitProperties.speed,
-                            shooter: this.shooter,
-                            angle: angle
-                        }
-                    );
-                    this.projectiles.push(p);
-                }
-            }
-            return;
-        }
         // Check if the cooldown has passed
-
         if (currentTime - this.lastShotTime < this.cooldown) {
             return; // Still on cooldown
         }
 
-        let isEnemyShooter=this.shooter instanceof Enemy
+        let isEnemyShooter = this.shooter instanceof Enemy
         let targetEntity
         if (isEnemyShooter)
-            targetEntity=player
+            targetEntity = player
         if (this.shooter instanceof Enemy && !(this.shooter.shouldShoot(player))) {
             return
         }
@@ -105,14 +81,12 @@ export class Weapon extends Item {
             return; // keine Gegner für Auto-Fokus
         }
 
-
         this.lastShotTime = currentTime;
 
-        // Create a projectile
+        // Create projectiles
         for (let j = 0; j < this.amount; j++) {
             let dir
             if (targetEntity) {
-
                 // Gegner schießt gezielt auf targetEntity (z. B. den Player)
                 const dx = targetEntity.globalEntityX - this.shooter.globalEntityX;
                 const dy = targetEntity.globalEntityY - this.shooter.globalEntityY;
@@ -126,7 +100,7 @@ export class Weapon extends Item {
                         for (let enemy of enemies[i][n].within){
                             let distanceX = this.shooter.globalEntityX - enemy.globalEntityX
                             let distanceY = this.shooter.globalEntityY - enemy.globalEntityY
-                            let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
+                            let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY)
                             if (distance < closestEnemy.distance) {
                                 closestEnemy = {enemy: enemy, distance: distance}
                             }
@@ -140,7 +114,7 @@ export class Weapon extends Item {
                     dir = {x: Math.cos(angle), y: Math.sin(angle)};
                 }
                 else {
-                    let angle = Math.random() * Math.PI * 2; // Fires in a random direction
+                    let angle = Math.random() * Math.PI * 2;
                     dir = {x: Math.cos(angle), y: Math.sin(angle)};
                 }
             } else {
@@ -148,16 +122,16 @@ export class Weapon extends Item {
                 const angle = Math.random() * Math.PI * 2;
                 dir = { x: Math.cos(angle), y: Math.sin(angle) }
             }
-            const p = new Projectile(this.shooter.globalEntityX, // Use the player's current position
-                this.shooter.globalEntityY, 1, // hp
-                null, // png
-                (isEnemyShooter ? 3 : 5), // langsamer für Gegner-Projektile (z. B. 3 statt 5)
-                {width: this.projectileSize, height: this.projectileSize}, // hitbox
-                false, // piercing
-                this.projectileSize, // size
-                dir, // direction
-                this.dmg, // damage
-                isEnemyShooter,            // NEU: markiert feindliche Projektile
+            const p = new Projectile(this.shooter.globalEntityX,
+                this.shooter.globalEntityY, 1,
+                null,
+                (isEnemyShooter ? 3 : 5),
+                {width: this.projectileSize, height: this.projectileSize},
+                false,
+                this.projectileSize,
+                dir,
+                this.dmg,
+                isEnemyShooter,
                 {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))},
                 currentTime, this.projectileDuration
             );
@@ -170,17 +144,18 @@ export class Weapon extends Item {
     }
 
     render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
-                // Aura schießt keine Projektile
-                if (Game.testShoot === true && !this.isAura) {
-                  this.shoot(
-                  PlayerOne,         // immer der Player
-                  performanceNow,     // für cooldown
-                  enemies,          // enemies-Liste (wird hier nicht genutzt, da targetEntity gesetzt)
-                  map.tilelength,
-                  gridWidth
-                  )
-                }
-        if (this.shooter instanceof Enemy || this.orbiting){
+        if (Game.testShoot === true) {
+            this.shoot(
+                PlayerOne,
+                performanceNow,
+                enemies,
+                map.tilelength,
+                gridWidth
+            )
+        }
+
+        // Render normal projectiles (nicht orbiting)
+        if (this.shooter instanceof Enemy){
             for (let j = this.projectiles.length-1; j>= 0; j--){
                 let projectile = this.projectiles[j]
                 projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow)
@@ -195,15 +170,96 @@ export class Weapon extends Item {
                 }
             }
         }
+    }
+}
 
-        // Aura zeichnen und Schaden zufügen
-        if (this.isAura) {
-            this.drawAura(ctx, PlayerOne);
-            this.damageEnemiesInAura(enemies, performanceNow);
+// ===== WAFFEN-SUBKLASSEN =====
+
+export class BasicWeapon extends Weapon {
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Basic Gun", null, 100, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+    }
+}
+
+export class BasicEnemyWeapon extends Weapon {
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Basic Gun", null, 10, 300, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+    }
+}
+
+export class ShotgunWeapon extends Weapon {
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Shotgun", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight, gridWidth, 16, 1250);
+    }
+}
+
+export class SniperWeapon extends Weapon {
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Sniper", null, 300, 1200, 0, 0, 2000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+    }
+}
+
+export class ShurikanWeapon extends Weapon {
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Shurikan", null, 25, 150, 1, 0, 700, 1, 3, shooter, mapWidth, mapHeight, gridWidth, 6, 1000, true, { radius: 100, speed: 2 });
+    }
+
+    shoot(player, currentTime, enemies, tilelength, gridWidth) {
+        // Shurikan: Orbiting projectiles
+        if (this.projectiles.length < this.amount) {
+            for (let i = 0; i < this.amount; i++) {
+                const angle = (2 * Math.PI / this.amount) * i;
+                const p = new Projectile(
+                    this.shooter.globalEntityX,
+                    this.shooter.globalEntityY,
+                    1, null, 0,
+                    {width: this.projectileSize, height: this.projectileSize},
+                    true, this.projectileSize, {}, this.dmg, false, {},
+                    currentTime, -1, true,
+                    {
+                        radius: this.orbitProperties.radius,
+                        speed: this.orbitProperties.speed,
+                        shooter: this.shooter,
+                        angle: angle
+                    }
+                );
+                this.projectiles.push(p);
+            }
         }
     }
 
-    drawAura(ctx, playerOne) {
+    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
+        // Shurikan ist eine orbiting weapon - schießt orbiting Projektile
+        if (Game.testShoot === true) {
+            this.shoot(
+                PlayerOne,
+                performanceNow,
+                enemies,
+                map.tilelength,
+                gridWidth
+            )
+        }
+
+        // Render orbiting projectiles
+        for (let j = this.projectiles.length-1; j>= 0; j--){
+            let projectile = this.projectiles[j]
+            projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow)
+        }
+    }
+}
+
+export class AuraWeapon extends Weapon {
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Aura", null, 15, 0, 0, 0, 0, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 8, -1, false, null, true, 150, 500);
+    }
+
+    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
+        // Aura schießt keine Projektile - zeichnen und Schaden zufügen
+        this.draw(ctx, PlayerOne);
+        this.damageEnemies(enemies, performanceNow);
+    }
+
+    draw(ctx, playerOne) {
         const screenX = this.shooter.globalEntityX - playerOne.globalEntityX + playerOne.canvasWidthMiddle;
         const screenY = this.shooter.globalEntityY - playerOne.globalEntityY + playerOne.canvasWidthHeight;
 
@@ -214,12 +270,12 @@ export class Weapon extends Item {
         ctx.fill();
 
         // Optionaler Border
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.strokeStyle = 'rgba(255, 255, 100, 0.6)';
         ctx.lineWidth = 2;
         ctx.stroke();
     }
 
-    damageEnemiesInAura(enemies, currentTime) {
+    damageEnemies(enemies, currentTime) {
         // Sammle alle Gegner, die Schaden nehmen sollen
         const enemiesToDamage = [];
 
@@ -274,3 +330,13 @@ export class Weapon extends Item {
         }
     }
 }
+
+export class DefaultWeapon extends Weapon {
+    // FALLBACK-WAFFE: Standard Logik ohne Spezialeffekte
+    // Erbt alle Methoden direkt von der Basis-Klasse (shoot, render)
+    // Verwendet keine Custom-Logik, daher keine Überschreibungen nötig
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Default", null, 5, 500, 0, 0, 800, 1, 2, shooter, mapWidth, mapHeight, gridWidth);
+    }
+}
+
