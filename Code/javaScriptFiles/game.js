@@ -111,6 +111,10 @@ export class game {
         if (e.key === '5') {
             this.PlayerOne.switchWeapon(5);
         }
+        if (e.key === '6') {
+            this.PlayerOne.switchWeapon(6);
+        }
+
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
@@ -181,7 +185,7 @@ export class game {
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
-        
+
         //Map Switch
         this.mapData = []
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
@@ -385,7 +389,7 @@ export class game {
             rightPressed: this.rightPressed
         }, performance.now(), this.enemies, this.gridWidth)
 
-        
+
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
@@ -395,7 +399,7 @@ export class game {
                 }
             }
         }
-        
+
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

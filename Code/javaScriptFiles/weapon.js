@@ -3,7 +3,7 @@ import {Item} from "./item.js";
 import {Enemy} from "./enemy.js";
 
 export class Weapon extends Item {
-    constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth, projectileSize = 8, projectileDuration = -1, orbiting = false, orbitProperties = null) {
+    constructor(icon, description, picture, dmg, cooldown, focus, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth, projectileSize = 8, projectileDuration = -1, orbiting = false, orbitProperties = null, isAura = false, auraRadius = 0, auraDmgInterval = 500) {
         super(icon, description, picture);
         this.dmg = dmg;
         this.cooldown = cooldown; // Time between shots in milliseconds
@@ -19,6 +19,14 @@ export class Weapon extends Item {
         this.projectileDuration = projectileDuration;
         this.orbiting = orbiting;
         this.orbitProperties = orbitProperties;
+
+        // Aura-spezifische Eigenschaften
+        this.isAura = isAura;
+        this.auraRadius = auraRadius;
+        this.auraDmgInterval = auraDmgInterval;
+        this.lastAuraDmgTime = 0;
+        this.auraColor = 'rgba(255, 255, 100, 0.3)'; // Leicht gelb, durchsichtig
+
         if (!(shooter instanceof Enemy) && !orbiting){
             for (let row = 0; row<=Math.floor(mapHeight / (gridWidth)) ;row++){
                 this.projectiles[row] = []
@@ -45,6 +53,9 @@ export class Weapon extends Item {
 
             case "shuriken":
                 return new Weapon(null, "Shuriken", null, 25, 150, 1, 0, 700, 1, 3, shooter, mapWidth, mapHeight,  gridWidth, 6, 1000, true, { radius: 100, speed: 2 });
+
+            case "aura":
+                return new Weapon(null, "Aura", null, 50, 0, 0, 0, 0, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 8, -1, false, null, true, 150, 500);
 
             default:
                 return new Weapon(null, "Default", null, 5, 500, 0, 0, 800, 1, 2, shooter, mapWidth, mapHeight,  gridWidth);
@@ -159,7 +170,8 @@ export class Weapon extends Item {
     }
 
     render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
-                if (Game.testShoot === true) {
+                // Aura schießt keine Projektile
+                if (Game.testShoot === true && !this.isAura) {
                   this.shoot(
                   PlayerOne,         // immer der Player
                   performanceNow,     // für cooldown
@@ -179,6 +191,83 @@ export class Weapon extends Item {
                     for (let j = this.projectiles[i][n].within.length - 1; j >= 0 ;j--){
                         let projectile = this.projectiles[i][n].within[j]
                         projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow)
+                    }
+                }
+            }
+        }
+
+        // Aura zeichnen und Schaden zufügen
+        if (this.isAura) {
+            this.drawAura(ctx, PlayerOne);
+            this.damageEnemiesInAura(enemies, performanceNow);
+        }
+    }
+
+    drawAura(ctx, playerOne) {
+        const screenX = this.shooter.globalEntityX - playerOne.globalEntityX + playerOne.canvasWidthMiddle;
+        const screenY = this.shooter.globalEntityY - playerOne.globalEntityY + playerOne.canvasWidthHeight;
+
+        // Zeichne den Aura-Kreis
+        ctx.fillStyle = this.auraColor;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, this.auraRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Optionaler Border
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    damageEnemiesInAura(enemies, currentTime) {
+        // Sammle alle Gegner, die Schaden nehmen sollen
+        const enemiesToDamage = [];
+
+        // Durchsuche alle Gegner
+        for (let row = 0; row < enemies.length; row++) {
+            for (let column = 0; column < enemies[row].length; column++) {
+                for (let i = 0; i < enemies[row][column].within.length; i++) {
+                    const enemy = enemies[row][column].within[i];
+                    const distX = enemy.globalEntityX - this.shooter.globalEntityX;
+                    const distY = enemy.globalEntityY - this.shooter.globalEntityY;
+                    const distance = Math.sqrt(distX * distX + distY * distY);
+
+                    // Wenn Gegner im Radius, zur Liste hinzufügen
+                    if (distance <= this.auraRadius) {
+                        // Initialisiere Cooldown für diesen Gegner, falls nicht vorhanden
+                        if (!enemy.lastAuraDmgTime) {
+                            enemy.lastAuraDmgTime = 0;
+                        }
+
+                        // Überprüfe individuelle Cooldown für diesen Gegner
+                        if (currentTime - enemy.lastAuraDmgTime >= this.auraDmgInterval) {
+                            enemy.lastAuraDmgTime = currentTime;
+                            enemiesToDamage.push({ enemy, row, column, index: i });
+                        }
+                    }
+                }
+            }
+        }
+
+        // Verteile Schaden NACH der Iteration - nur HP reduzieren, nicht löschen
+        for (let dmgInfo of enemiesToDamage) {
+            const enemy = dmgInfo.enemy;
+            // Reduziere nur die HP, ohne takeDmg() zu verwenden (das würde löschen)
+            enemy.hp -= this.dmg;
+
+            // Wenn HP <= 0, merke den Gegner für später
+            if (enemy.hp <= 0) {
+                enemy.hp = 0;
+            }
+        }
+
+        // NACH allen Schaden-Berechnungen: Lösche tote Gegner rückwärts
+        for (let row = enemies.length - 1; row >= 0; row--) {
+            for (let column = enemies[row].length - 1; column >= 0; column--) {
+                for (let i = enemies[row][column].within.length - 1; i >= 0; i--) {
+                    const enemy = enemies[row][column].within[i];
+                    if (enemy.hp <= 0) {
+                        enemies[row][column].within.splice(i, 1);
                     }
                 }
             }
