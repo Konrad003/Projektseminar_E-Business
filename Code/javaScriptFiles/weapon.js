@@ -57,6 +57,9 @@ export class Weapon extends Item {
             case "aura":
                 return new AuraWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
+            case "fireball":
+                return new FireballWeapon(shooter, mapWidth, mapHeight, gridWidth);
+
             default:
                 return new DefaultWeapon(shooter, mapWidth, mapHeight, gridWidth);
         }
@@ -328,6 +331,144 @@ export class AuraWeapon extends Weapon {
                 }
             }
         }
+    }
+}
+
+export class FireballWeapon extends Weapon {
+    // EXPLOSIONS-WAFFE: Rote Feuerball-Projektile
+    // Nutzt Standard shoot() Methode, aber speichert Projektile in einfachem Array
+    // Spezial: Explosion wenn Gegner getroffen ODER Lebenszeit endet
+    constructor(shooter, mapWidth, mapHeight, gridWidth) {
+        super(null, "Fireball", null, 40, 2000, 0, 0, 800, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 10, 1250, false, null, false, 0, 0);
+        this.explosionRadius = 100; // AoE-Radius für Explosionsschaden
+        this.projectiles = []; // Einfaches Array für Projektile
+    }
+
+    shoot(player, currentTime, enemies, tilelength, gridWidth) {
+        // Nutzt Standard-Logik, aber speichert Projektil im einfachen Array
+        if (currentTime - this.lastShotTime < this.cooldown) return;
+        let isEnemyShooter = this.shooter instanceof Enemy;
+        let targetEntity = isEnemyShooter ? player : null;
+        if (this.shooter instanceof Enemy && !(this.shooter.shouldShoot(player))) return;
+        // Nur für Player: Wenn kein spezielles Ziel und keine Gegner -> abbrechen
+        if (!targetEntity && enemies.length === 0) return;
+        this.lastShotTime = currentTime;
+        for (let j = 0; j < this.amount; j++) {
+            let dir;
+            if (targetEntity) {
+                const dx = targetEntity.globalEntityX - this.shooter.globalEntityX;
+                const dy = targetEntity.globalEntityY - this.shooter.globalEntityY;
+                const angle = Math.atan2(dy, dx);
+                dir = { x: Math.cos(angle), y: Math.sin(angle) };
+            } else if (this.focus === 1) {
+                let closestEnemy = {enemy: null, distance: 99999};
+                for (let i = enemies.length - 1; i >= 0; i--) {
+                    for (let n = enemies[i].length -1 ; n>= 0; n--){
+                        for (let enemy of enemies[i][n].within){
+                            let distanceX = this.shooter.globalEntityX - enemy.globalEntityX;
+                            let distanceY = this.shooter.globalEntityY - enemy.globalEntityY;
+                            let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                            if (distance < closestEnemy.distance) {
+                                closestEnemy = {enemy: enemy, distance: distance};
+                            }
+                        }
+                    }
+                }
+                if (closestEnemy.enemy) {
+                    let distanceX = (closestEnemy.enemy.globalEntityX - this.shooter.globalEntityX);
+                    let distanceY = (closestEnemy.enemy.globalEntityY - this.shooter.globalEntityY);
+                    let angle = Math.atan2(distanceY, distanceX);
+                    dir = {x: Math.cos(angle), y: Math.sin(angle)};
+                } else {
+                    let angle = Math.random() * Math.PI * 2;
+                    dir = {x: Math.cos(angle), y: Math.sin(angle)};
+                }
+            } else {
+                const angle = Math.random() * Math.PI * 2;
+                dir = { x: Math.cos(angle), y: Math.sin(angle) };
+            }
+            const p = new Projectile(this.shooter.globalEntityX,
+                this.shooter.globalEntityY, 1,
+                null,
+                (isEnemyShooter ? 3 : 5),
+                {width: this.projectileSize, height: this.projectileSize},
+                false,
+                this.projectileSize,
+                dir,
+                this.dmg,
+                false, // Fireball ist IMMER ein Player-Projektil (nicht isEnemyShooter!)
+                {}, // KEIN gridMapTile nötig
+                currentTime, this.projectileDuration
+            );
+            p.isFireball = true;
+            p.fireballColor = 'rgba(255, 80, 0, 0.9)';
+            this.projectiles.push(p);
+        }
+    }
+
+    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops) {
+        if (Game.testShoot === true) {
+            this.shoot(PlayerOne, performanceNow, enemies, map.tilelength, gridWidth);
+        }
+        for (let j = this.projectiles.length - 1; j >= 0; j--) {
+            let projectile = this.projectiles[j];
+            const elapsedTime = performanceNow - projectile.creationTime;
+            const durationExpired = projectile.duration > 0 && elapsedTime > projectile.duration;
+
+            if (!projectile.exploded) {
+                // Normale Projektil-Bewegung, Zeichnen und Hit Detection über die Projectile-Klasse
+                projectile.render(ctx, this.projectiles, j, enemies, PlayerOne, map, gridWidth, enemyItemDrops, performanceNow);
+
+                // Zusätzlich: Prüfe ob Timeout erreicht ist -> Explosion
+                if (durationExpired) {
+                    projectile.exploded = true;
+                    projectile.explodedTime = performanceNow;
+                    this.damageEnemiesInRadius(enemies, projectile.globalEntityX, projectile.globalEntityY);
+                }
+            } else {
+                // Explosion animieren und danach löschen
+                const explosionElapsed = performanceNow - projectile.explodedTime;
+                if (explosionElapsed < 300) {
+                    this.drawExplosionCircle(ctx, PlayerOne, projectile, explosionElapsed);
+                } else {
+                    // Schaden austeilen, wenn noch nicht geschehen
+                    if (!projectile.explosionDamageDealt) {
+                        projectile.explosionDamageDealt = true;
+                        this.damageEnemiesInRadius(enemies, projectile.globalEntityX, projectile.globalEntityY);
+                    }
+                    this.projectiles.splice(j, 1);
+                }
+            }
+        }
+    }
+
+    damageEnemiesInRadius(enemies, centerX, centerY) {
+        for (let row = 0; row < enemies.length; row++) {
+            for (let column = 0; column < enemies[row].length; column++) {
+                for (let i = 0; i < enemies[row][column].within.length; i++) {
+                    const enemy = enemies[row][column].within[i];
+                    const distX = enemy.globalEntityX - centerX;
+                    const distY = enemy.globalEntityY - centerY;
+                    const distance = Math.sqrt(distX * distX + distY * distY);
+                    if (distance <= this.explosionRadius) {
+                        enemy.takeDmg(this.dmg, enemies, i, []);
+                    }
+                }
+            }
+        }
+    }
+
+    drawExplosionCircle(ctx, PlayerOne, projectile, elapsed) {
+        const screenX = projectile.globalEntityX - PlayerOne.globalEntityX + PlayerOne.canvasWidthMiddle;
+        const screenY = projectile.globalEntityY - PlayerOne.globalEntityY + PlayerOne.canvasWidthHeight;
+        const opacity = 1 - (elapsed / 300);
+        ctx.fillStyle = `rgba(255, 50, 0, ${0.7 * opacity})`;
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, this.explosionRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = `rgba(255, 0, 0, ${opacity})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 }
 

@@ -114,6 +114,9 @@ export class game {
         if (e.key === '6') {
             this.PlayerOne.switchWeapon(6);
         }
+        if (e.key === '7') {
+            this.PlayerOne.switchWeapon(7);
+        }
 
     }
 

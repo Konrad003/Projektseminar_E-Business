@@ -37,11 +37,18 @@ export class Projectile extends MovingEntity {
                     for (let j = enemies[i][n].within.length - 1; j >= 0 ;j--) {
                         let enemy = enemies[i][n].within[j]
                         if (this.checkCollision(enemy, 0, 0)) {
-                            enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
-                            if (!this.piercing) {
-                                projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1) 
-                            }else{
-                            }//piercing nur für x Enemys
+                            // Fireball-Projektile triggern Explosion statt direkten Schaden
+                            if (!this.isFireball) {
+                                enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
+                            }
+                            // Nur normal Projektile aus Grid löschen, nicht Fireballs
+                            if (!this.piercing && !this.isFireball) {
+                                projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1)
+                            }else if (this.isFireball) {
+                                // Fireball: Explosion triggern
+                                this.exploded = true;
+                                this.explodedTime = currentTime;
+                            }
                             // Since the projectile is gone, break the inner loop and continue to the next projectile
                             break;
                         }
@@ -49,12 +56,13 @@ export class Projectile extends MovingEntity {
                 }
             }
         }
-         if (this.duration > 0 && currentTime - this.creationTime > this.duration) {
-            if (this.isEnemy)projectiles.splice(projectileIndex)
-            else projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1);
+        // Timeout handling - aber nur für Nicht-Fireballs
+        if (this.duration > 0 && currentTime - this.creationTime > this.duration) {
+            if (this.isEnemy) projectiles.splice(projectileIndex);
+            else if (!this.isFireball) projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1);
         }
     }
-       
+
 
     move(map, projectiles, projectileIndex, gridWidth, player, currentTime) {
         if (this.orbiting) {
@@ -64,8 +72,9 @@ export class Projectile extends MovingEntity {
             this.globalEntityY = shooter.globalEntityY + radius * Math.sin(time * speed + this.orbitProperties.angle);
             return;
         }
+        // Fireball und Enemy Projektile nutzen einfaches Array
         let position
-        if (!(this.isEnemy)) position=this.updateGridPlace(map.tilelength, projectiles, projectileIndex, gridWidth)
+        if (!(this.isEnemy) && !this.isFireball) position=this.updateGridPlace(map.tilelength, projectiles, projectileIndex, gridWidth)
         // direction is a vector like {x: 0.5, y: -0.2}
         let oldGlobalEntityX = this.globalEntityX
         let oldGlobalEntityY = this.globalEntityY
@@ -81,7 +90,7 @@ export class Projectile extends MovingEntity {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, (this.direction.y * this.speed), this.hitbox)
         }
         if ((oldGlobalEntityX === this.globalEntityX && this.direction.x !== 0) || (oldGlobalEntityY === this.globalEntityY && this.direction.y !== 0)) { // Kollision mit Wand
-            if (this.isEnemy)projectiles.splice(projectileIndex)
+            if (this.isEnemy || this.isFireball)projectiles.splice(projectileIndex)
             else projectiles[position.gridMapTile.row][position.gridMapTile.column].within.splice(position.positionWithin, 1);
         }
     }
@@ -91,6 +100,9 @@ export class Projectile extends MovingEntity {
     }
 
     getColor() {
+        if (this.isFireball) {
+            return this.fireballColor || 'rgba(255, 50, 0, 0.9)'; // Fireball ist rot-orange
+        }
         return this.isEnemy ? 'orange' :'cyan'
     }
 }
