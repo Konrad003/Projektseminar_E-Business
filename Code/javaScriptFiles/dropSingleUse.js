@@ -205,3 +205,44 @@ export class NukeDrop extends DropSingleUse {
     )
   }
 }
+
+export class FreezeDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.duration = 3000 // 3 Sekunden
+    this.radius = 1500   // Radius um den Spieler 
+  }
+
+  getColor() { return "lightcyan" }
+
+  apply(player) {
+    if (!player) return
+    if (typeof Game === "undefined" || !Game.enemies) return
+
+    const now = performance.now()
+    const enemies = Game.enemies
+
+    // alle enemies im Grid prüfen, aber nur die im Radius einfrieren
+    for (let row = 0; row < enemies.length; row++) {
+      for (let col = 0; col < enemies[row].length; col++) {
+        const list = enemies[row][col].within // alle Enemies in diesem Grid-Feld
+
+        for (let i = 0; i < list.length; i++) {
+          const enemy = list[i]
+
+          // Distanz Player <-> Enemy
+          const dx = enemy.globalEntityX - player.globalEntityX
+          const dy = enemy.globalEntityY - player.globalEntityY
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          // nur im Radius einfrieren
+          if (dist <= this.radius) {
+            // friert den Enemy bis (now + duration) ein;
+            enemy.freeze(now, this.duration)
+          }
+        }
+      }
+    }
+  }
+}
+
