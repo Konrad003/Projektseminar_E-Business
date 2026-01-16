@@ -7,14 +7,14 @@ export class Map {
         this.miniMapWidth = 200
         this.miniMapHeight = 150 
         this.miniMapX = 10           
-        this.miniMapY = 10 
+        this.miniMapY = 60 
         this.mapImage = new Image()
         this.miniMapLoaded = false
         this.mapImage.onload = () => {
             this.miniMapTilePixelSizeX = this.mapImage.width / this.mapWidthTile
             this.miniMapTilePixelSizeY = this.mapImage.height / this.mapHeightTile
             this.mapCutHeight = this.miniMapTileView * this.miniMapTilePixelSizeY
-            this.mapCutWidth = this.miniMapTileView * this.miniMapTilePixelSizeX
+            this.mapCutWidth = this.miniMapTileView * this.miniMapTilePixelSizeX 
             this.miniMapLoaded = true
         }
         this.mapDataTilesets = mapData.tilesets.length
@@ -307,7 +307,8 @@ export class Map {
         let startTileY = player.globalEntityY / this.tilelength - this.miniMapTileView / 2
         startTileX = Math.max(0, Math.min(startTileX, this.mapWidthTile - this.miniMapTileView)) //damit die Map am Maprand stehen bleibt und nicht wie der Bildauschnitt sich bewegt
         startTileY = Math.max(0, Math.min(startTileY, this.mapHeightTile - this.miniMapTileView))
-
+        startTileX = Math.floor(startTileX)
+        startTileY = Math.floor(startTileY)
        
         this.ctx.drawImage( // MiniMap-Ausschnitt zeichnen
             this.mapImage,      //Bild
@@ -319,8 +320,8 @@ export class Map {
 
         this.ctx.fillStyle = 'red'
         this.ctx.fillRect(
-            this.miniMapX + (player.globalEntityX - startTileX * this.tilelength) * (this.miniMapWidth / (this.miniMapTileView * this.tilelength)) - 2,  //startkoordinateX
-            this.miniMapY + (player.globalEntityY - startTileY * this.tilelength) * (this.miniMapHeight / (this.miniMapTileView * this.tilelength)) - 2, //startkoordinateY
+            Math.floor(this.miniMapX + (player.globalEntityX - startTileX * this.tilelength) * (this.miniMapWidth / (this.miniMapTileView * this.tilelength)) - 2),  //startkoordinateX
+            Math.floor(this.miniMapY + (player.globalEntityY - startTileY * this.tilelength) * (this.miniMapHeight / (this.miniMapTileView * this.tilelength)) - 2), //startkoordinateY
             4, 4)                                       //Player größe
     }
 
