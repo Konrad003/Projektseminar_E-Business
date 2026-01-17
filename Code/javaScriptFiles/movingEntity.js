@@ -132,6 +132,9 @@ export class MovingEntity extends Entity {
 
     // Schadensfunktion: reduziert HP und gibt Status + aktuelle HP zurück
     takeDmg(amount, enemies, positionWithin, enemyItemDrops) {
+        if (this.isInvincible) { // bei aktiver holy aura kein schaden
+            return;
+        }
         this.hp -= amount;
         document.getElementById("hudHealthProgress").style.value = this.hp
 
