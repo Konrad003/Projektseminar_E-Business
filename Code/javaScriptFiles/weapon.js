@@ -3,7 +3,7 @@ import {Item} from "./item.js";
 import {Enemy} from "./enemy.js";
 
 export class Weapon extends Item {
-    constructor(icon, description, picture, dmg, cooldown, piercing, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth, projectileSize = 8, projectileDuration = -1, orbiting = false, orbitProperties = null, isAura = false, auraRadius = 0, auraDmgInterval = 500) {
+    constructor(icon, description, picture, dmg, cooldown, piercing, splash, range, lvl, amount, shooter, mapWidth, mapHeight, gridWidth) {
         super(icon, description, picture);
         this.dmg = dmg;
         this.cooldown = cooldown; // Time between shots in milliseconds
@@ -13,25 +13,23 @@ export class Weapon extends Item {
         this.lvl = lvl;
         this.amount = amount;
         this.lastShotTime = 0; // Timestamp of the last shot
-        this.shooter=shooter
-        this.projectiles = []
-        this.projectileSize = projectileSize;
-        this.projectileDuration = projectileDuration;
-        this.orbiting = orbiting;
-        this.orbitProperties = orbitProperties;
+        this.shooter = shooter;
+        this.projectiles = [];
 
-        // Aura-spezifische Eigenschaften
-        this.isAura = isAura;
-        this.auraRadius = auraRadius;
-        this.auraDmgInterval = auraDmgInterval;
-        this.lastAuraDmgTime = 0;
-        this.auraColor = 'rgba(255, 255, 100, 0.3)'; // Leicht gelb, durchsichtig
+        // Default properties (werden von Subklassen überschrieben wenn nötig)
+        this.projectileSize = 8;
+        this.projectileDuration = -1;
 
-        if (!(shooter instanceof Enemy) && !orbiting){
-            for (let row = 0; row<=Math.floor(mapHeight / (gridWidth)) ;row++){
-                this.projectiles[row] = []
-                for (let column = 0; column<=Math.floor(mapWidth / (gridWidth));column++){
-                    this.projectiles[row][column] ={within: []}
+        // Grid initialization (can be overridden in subclasses)
+        this._initializeGrid(shooter, mapWidth, mapHeight, gridWidth);
+    }
+
+    _initializeGrid(shooter, mapWidth, mapHeight, gridWidth) {
+        if (!(shooter instanceof Enemy)) {
+            for (let row = 0; row <= Math.floor(mapHeight / gridWidth); row++) {
+                this.projectiles[row] = [];
+                for (let column = 0; column <= Math.floor(mapWidth / gridWidth); column++) {
+                    this.projectiles[row][column] = { within: [] };
                 }
             }
         }
@@ -71,9 +69,6 @@ export class Weapon extends Item {
 
             case "molotov":
                 return new MolotovWeapon(shooter, mapWidth, mapHeight, gridWidth);
-
-            case "default":
-                return new BasicEnemyWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             default:
                 return new BasicEnemyWeapon(shooter, mapWidth, mapHeight, gridWidth);
@@ -265,8 +260,8 @@ export class SwordWeapon extends Weapon {
                 shooter: this.shooter,
                 startAngle: startAngle,
                 endAngle: startAngle + (Math.PI * 0.5), // 90 Grad Schlag (12 bis 4 Uhr)
-                radius: 100,
-                minCutRadius: 40,
+                radius: 200,
+                minCutRadius: 80,
                 startTime: currentTime,
                 duration: 200,
                 hitEnemies: new Set()
@@ -283,6 +278,8 @@ export class SwordWeapon extends Weapon {
 export class BowWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
         super(null, "bow", null, 100, 1000, 0, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 8;
+        this.projectileDuration = -1;
         this.tilelength = mapWidth / gridWidth;
         this.gridWidth = gridWidth;
     }
@@ -325,7 +322,7 @@ export class BowWeapon extends Weapon {
         };
 
         // Erstelle Arrow-Projektil
-        const p = new ArrowProjectile(this.shooter, dir, gridMapTile, currentTime);
+        const p = new ArrowProjectile(this.shooter, dir, gridMapTile, currentTime, this.projectileDuration);
 
         // Speichere im Grid
         if (this.projectiles[p.gridMapTile.row] && this.projectiles[p.gridMapTile.row][p.gridMapTile.column]) {
@@ -342,13 +339,172 @@ export class BasicEnemyWeapon extends Weapon {
 
 export class ThunderstrikeWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Thunderstrike", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight, gridWidth, 16, 1250);
+        super(null, "Thunderstrike", null, 5, 400, 0, 0, 300, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 16, 0);
+        this.lightningLength = 300; // Length of lightning bolt
+        this.lightningDuration = 150; // How long the visual effect stays (ms)
+        this.lightningCount = 4; // Number of lightning bolts
+        this.lastLightningTime = 0;
+        this.lastLightningDirections = [];
+    }
+
+    shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null) {
+        // Check cooldown
+        if (currentTime - this.lastShotTime < this.cooldown) {
+            return;
+        }
+
+        let isEnemyShooter = this.shooter instanceof Enemy;
+        let targetEntity = isEnemyShooter ? player : null;
+        if (this.shooter instanceof Enemy && !(this.shooter.shouldShoot(player))) {
+            return;
+        }
+
+        this.lastShotTime = currentTime;
+
+        // Determine base direction
+        let baseDir = { x: 1, y: 0 };
+
+        if (targetEntity) {
+            // Enemy shoots at player
+            const dx = targetEntity.globalEntityX - this.shooter.globalEntityX;
+            const dy = targetEntity.globalEntityY - this.shooter.globalEntityY;
+            const angle = Math.atan2(dy, dx);
+            baseDir = { x: Math.cos(angle), y: Math.sin(angle) };
+        } else if (!isEnemyShooter) {
+            // Player targets closest enemy
+            let closestEnemy = { enemy: null, distance: 99999 };
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                for (let n = enemies[i].length - 1; n >= 0; n--) {
+                    for (let enemy of enemies[i][n].within) {
+                        let distanceX = this.shooter.globalEntityX - enemy.globalEntityX;
+                        let distanceY = this.shooter.globalEntityY - enemy.globalEntityY;
+                        let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                        if (distance < closestEnemy.distance) {
+                            closestEnemy = { enemy: enemy, distance: distance };
+                        }
+                    }
+                }
+            }
+
+            if (closestEnemy.enemy) {
+                let distanceX = closestEnemy.enemy.globalEntityX - this.shooter.globalEntityX;
+                let distanceY = closestEnemy.enemy.globalEntityY - this.shooter.globalEntityY;
+                let angle = Math.atan2(distanceY, distanceX);
+                baseDir = { x: Math.cos(angle), y: Math.sin(angle) };
+            } else {
+                let angle = Math.random() * Math.PI * 2;
+                baseDir = { x: Math.cos(angle), y: Math.sin(angle) };
+            }
+        }
+
+        // Create multiple lightning bolts spread around the base direction
+        this.lastLightningDirections = [];
+        const spreadAngle = Math.PI / 6; // 30 degrees total spread (15 each side)
+
+        for (let i = 0; i < this.lightningCount; i++) {
+            // Calculate offset angle for this lightning bolt
+            const offset = (i - (this.lightningCount - 1) / 2) * (spreadAngle / (this.lightningCount - 1));
+            const baseAngle = Math.atan2(baseDir.y, baseDir.x);
+            const lightningAngle = baseAngle + offset;
+
+            const lightningDir = {
+                x: Math.cos(lightningAngle),
+                y: Math.sin(lightningAngle)
+            };
+
+            this.lastLightningDirections.push(lightningDir);
+
+            // Damage all enemies hit by this lightning bolt
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                for (let n = enemies[i].length - 1; n >= 0; n--) {
+                    for (let j = enemies[i][n].within.length - 1; j >= 0; j--) {
+                        let enemy = enemies[i][n].within[j];
+                        const dx = enemy.globalEntityX - this.shooter.globalEntityX;
+                        const dy = enemy.globalEntityY - this.shooter.globalEntityY;
+                        const distToEnemy = Math.sqrt(dx * dx + dy * dy);
+
+                        // Check if enemy is in line with lightning bolt
+                        if (distToEnemy <= this.lightningLength) {
+                            // Calculate angle to enemy
+                            const angleToEnemy = Math.atan2(dy, dx);
+                            const angleDiff = Math.abs(angleToEnemy - lightningAngle);
+
+                            // If within ~15 degrees of the bolt direction, hit them
+                            if (angleDiff < Math.PI / 12 || Math.abs(angleDiff - Math.PI * 2) < Math.PI / 12) {
+                                enemy.takeDmg(this.dmg, enemies, j, this.shooter.enemyItemDrops || []);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Store lightning effect for rendering
+        this.lastLightningTime = currentTime;
+    }
+
+    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState) {
+        // Handle shooting
+        if (Game.testShoot === true) {
+            this.shoot(
+                PlayerOne,
+                performanceNow,
+                enemies,
+                map.tilelength,
+                gridWidth,
+                inputState
+            );
+        }
+
+        // Draw lightning effects if recently fired
+        const timeSinceLightning = performanceNow - this.lastLightningTime;
+        if (timeSinceLightning < this.lightningDuration && this.lastLightningDirections.length > 0) {
+            for (let dir of this.lastLightningDirections) {
+                this.drawLightning(ctx, PlayerOne, dir);
+            }
+        }
+    }
+
+    drawLightning(ctx, playerOne, direction) {
+        const screenX = this.shooter.globalEntityX - playerOne.globalEntityX + playerOne.canvasWidthMiddle;
+        const screenY = this.shooter.globalEntityY - playerOne.globalEntityY + playerOne.canvasWidthHeight;
+
+        // Draw dark blue lightning bolt
+        const endX = screenX + direction.x * this.lightningLength;
+        const endY = screenY + direction.y * this.lightningLength;
+
+        ctx.save();
+
+        // Draw main bolt
+        ctx.strokeStyle = '#0033FF'; // Dark blue
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(screenX, screenY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+
+        // Draw glowing effect with lighter blue
+        ctx.strokeStyle = '#6699FF'; // Light blue glow
+        ctx.lineWidth = 12;
+        ctx.globalAlpha = 0.4;
+
+        ctx.beginPath();
+        ctx.moveTo(screenX, screenY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+
+        ctx.restore();
     }
 }
 
 export class SpeerWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
         super(null, "Speer", null, 300, 1200, 1, 0, 2000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 12;
+        this.projectileDuration = -1;
         this.tilelength = mapWidth / gridWidth;
         this.gridWidth = gridWidth;
     }
@@ -396,7 +552,12 @@ export class SpeerWeapon extends Weapon {
 
 export class ShurikanWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Shurikan", null, 25, 150, 1, 0, 700, 1, 3, shooter, mapWidth, mapHeight, gridWidth, 6, 1000, true, { radius: 100, speed: 2 });
+        super(null, "Shurikan", null, 25, 150, 1, 0, 700, 1, 3, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 6;
+        this.projectileDuration = 1000;
+        this.orbiting = true;
+        this.orbitProperties = { radius: 100, speed: 2 };
+        this.projectiles = [];
     }
 
     shoot(player, currentTime, enemies, tilelength, gridWidth) {
@@ -445,7 +606,12 @@ export class ShurikanWeapon extends Weapon {
 
 export class AuraWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Aura", null, 15, 0, 0, 0, 0, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 8, -1, false, null, true, 150, 500);
+        super(null, "Aura", null, 15, 0, 0, 0, 0, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.isAura = true;
+        this.auraRadius = 150;
+        this.auraDmgInterval = 500;
+        this.lastAuraDmgTime = 0;
+        this.auraColor = 'rgba(255, 255, 100, 0.3)';
     }
 
     render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops){
@@ -514,7 +680,9 @@ export class FireballWeapon extends Weapon {
     // Nutzt Standard shoot() Methode, aber speichert Projektile in einfachem Array
     // Spezial: Explosion wenn Gegner getroffen ODER Lebenszeit endet
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Fireball", null, 40, 2000, 0, 0, 800, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 10, 1250, false, null, false, 0, 0);
+        super(null, "Fireball", null, 40, 2000, 0, 0, 800, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 10;
+        this.projectileDuration = 1250;
         this.explosionRadius = 100; // AoE-Radius für Explosionsschaden
         this.projectiles = []; // Einfaches Array für Projektile
     }
@@ -630,6 +798,8 @@ export class Knife extends Weapon {
     // Schießt in die aktuelle Bewegungsrichtung, falls keine Bewegung: letzte Richtung
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
         super(null, "Knife", null, 12, 300, 0, 0, 800, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 6;
+        this.projectileDuration = -1;
         this.lastDirection = { x: 1, y: 0 }; // Standard: nach rechts
     }
 
@@ -713,7 +883,9 @@ export class AxeWeapon extends Weapon {
     // Fliegt zum Ziel und kehrt zum Spieler zurück
     // Macht Schaden auf Hinweg und Rückweg
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Axe", null, 40, 1200, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 16, -1, false, null, false, 0, 0);
+        super(null, "Axe", null, 40, 1200, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 16;
+        this.projectileDuration = -1;
         this.boomerangRange = 300; // Maximale Distanz vor Rückweg
     }
 
@@ -778,7 +950,9 @@ export class AxeWeapon extends Weapon {
 
 export class MolotovWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Molotov", null, 0, 1000, 0, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 8, 1000, false, null, false, 0, 0);
+        super(null, "Molotov", null, 0, 1000, 0, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.projectileSize = 8;
+        this.projectileDuration = 1000;
         this.projectiles = []; // Einfaches Array
     }
 

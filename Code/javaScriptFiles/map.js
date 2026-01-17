@@ -5,9 +5,9 @@ export class Map {
         this.mapHeightTile = mapData.height
         this.tilelength = mapData.tilewidth
         this.miniMapWidth = 200
-        this.miniMapHeight = 150 
-        this.miniMapX = 10           
-        this.miniMapY = 10 
+        this.miniMapHeight = 150
+        this.miniMapX = 10
+        this.miniMapY = 10
         this.mapImage = new Image()
         this.miniMapLoaded = false
         this.mapImage.onload = () => {
@@ -17,7 +17,7 @@ export class Map {
             this.mapCutWidth = this.miniMapTileView * this.miniMapTilePixelSizeX
             this.miniMapLoaded = true
         }
-        this.miniMapTileView = 75 
+        this.miniMapTileView = 75
         this.FOVwidth = FOVwidth
         this.FOVheight = FOVheight
         this.ctx = ctx
@@ -55,7 +55,7 @@ export class Map {
             walkable: false, height: 0
         };
 
-        if (!this.tileData[row]) {
+        if (!this.tileData[row] || !this.tileData[row][column]) {
             return {walkable: false, height: 0};
         }
 
@@ -197,7 +197,7 @@ export class Map {
     }
 
     drawTile(tileRowWalker, tileColumnWalker, leftBorder, topBorder, i, j) {
-        
+
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);
         if (!(this.isTileOutOfBorder(tileRowWalker, tileColumnWalker))) {
@@ -254,14 +254,14 @@ export class Map {
                     this.drawTile(tileRowWalker, tileColumnWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
                 }
             }
-            
+
         }
     }
 
     drawMiniMap(player) {
-        if (!this.miniMapLoaded) return 
+        if (!this.miniMapLoaded) return
 
-   
+
         this.ctx.fillStyle = 'black'     // rahmen hintergrund
         this.ctx.fillRect(this.miniMapX-4, this.miniMapY-4, this.miniMapWidth+8, this.miniMapHeight+8)
         this.ctx.strokeStyle = 'white'       //Rahmen
@@ -273,7 +273,7 @@ export class Map {
         startTileX = Math.max(0, Math.min(startTileX, this.mapWidthTile - this.miniMapTileView)) //damit die Map am Maprand stehen bleibt und nicht wie der Bildauschnitt sich bewegt
         startTileY = Math.max(0, Math.min(startTileY, this.mapHeightTile - this.miniMapTileView))
 
-       
+
         this.ctx.drawImage( // MiniMap-Ausschnitt zeichnen
             this.mapImage,      //Bild
             startTileX * this.miniMapTilePixelSizeX, startTileY * this.miniMapTilePixelSizeY,     // startkoords im Bild

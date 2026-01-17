@@ -501,7 +501,7 @@ export class Projectile extends MovingEntity {
 // ============ SPEZIALISIERTE PROJEKTIL-KLASSEN ============
 
 export class ArrowProjectile extends Projectile {
-    constructor(shooter, direction, gridMapTile, currentTime) {
+    constructor(shooter, direction, gridMapTile, currentTime, duration = -1) {
         super(
             shooter.globalEntityX,
             shooter.globalEntityY,
@@ -516,7 +516,7 @@ export class ArrowProjectile extends Projectile {
             false,
             gridMapTile,
             currentTime,
-            2000 // Duration
+            duration // Duration (default: -1 = unbegrenzt)
         );
         this.isArrow = true;
     }
