@@ -414,31 +414,6 @@ export class game {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
 
-        if (this.dashTrails) {
-            for (let i = this.dashTrails.length - 1; i >= 0; i--) {
-                const trail = this.dashTrails[i];
-                const leftBorder = this.PlayerOne.globalEntityX - Entity.FOVwidthMiddle;
-                const topBorder = this.PlayerOne.globalEntityY - Entity.FOVheightMiddle;
-
-                const sX = trail.startX - leftBorder + this.PlayerOne.hitbox.width / 2;
-                const sY = trail.startY - topBorder + this.PlayerOne.hitbox.height / 2;
-                const eX = trail.endX - leftBorder + this.PlayerOne.hitbox.width / 2;
-                const eY = trail.endY - topBorder + this.PlayerOne.hitbox.height / 2;
-
-                ctx.beginPath();
-                ctx.moveTo(sX, sY);
-                ctx.lineTo(eX, eY);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${trail.alpha})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                trail.alpha -= 0.02;
-                if (trail.alpha <= 0) {
-                    this.dashTrails.splice(i, 1);
-                }
-            }
-        }
-
         this.PlayerOne.render(this.MapOne, {
             upPressed: this.upPressed,
             downPressed: this.downPressed,

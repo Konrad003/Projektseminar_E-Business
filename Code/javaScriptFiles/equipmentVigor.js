@@ -18,7 +18,7 @@ export class EquipmentVigor extends Equipment {
     }
 
     apply(player, targetBonus) {
-        // Differenz berechnen (Wichtig für spätere Level-Ups!)
+        // Differenz berechnen (Wichtig für Level-Ups)
         const difference = targetBonus - this.currentAppliedBonus;
         
         // Werte am Player anpassen
