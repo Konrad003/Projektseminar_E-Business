@@ -49,7 +49,10 @@ export class Weapon extends Item {
     shoot(player, currentTime, enemies, tilelength, gridWidth) {
         // Check if the cooldown has passed
         
-        if (currentTime - this.lastShotTime < this.cooldown) {
+        // Wir multiplizieren den Basis-Cooldown der Waffe mit dem multiplier von rapid fire mit 1 als sicherheit, damit es nicht zu fehlern kommt.
+        const effectiveCooldown = this.cooldown * (this.shooter.cooldownMultiplier || 1);
+
+        if (currentTime - this.lastShotTime < effectiveCooldown) {
             return; // Still on cooldown
         }
 
