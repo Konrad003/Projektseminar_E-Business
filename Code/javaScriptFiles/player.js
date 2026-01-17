@@ -1,5 +1,6 @@
 import {MovingEntity} from "./movingEntity.js"
 import {Weapon} from "./weapon.js";
+import { EquipmentDash } from "./equipmentDash.js";
 
 export class Player extends MovingEntity {
     ctx
@@ -91,21 +92,50 @@ export class Player extends MovingEntity {
     }
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
-        this.handleInput(map, inputState)
+        // Start neuer Trail-Logik
+        if (EquipmentDash.dashTrails && EquipmentDash.dashTrails.length > 0) {
+            this.ctx.save();
+            
+            // Kamera-Berechnung
+            let leftBorder = this.globalEntityX - (this.ctx.canvas.width / 2);
+            let topBorder = this.globalEntityY - (this.ctx.canvas.height / 2);
 
+            for (let i = EquipmentDash.dashTrails.length - 1; i >= 0; i--) {
+                let trail = EquipmentDash.dashTrails[i];
+
+                this.ctx.beginPath();
+                this.ctx.strokeStyle = `rgba(0, 255, 255, ${trail.alpha})`;
+                this.ctx.lineWidth = 20;
+                this.ctx.lineCap = "round";
+
+                this.ctx.moveTo(trail.startX - leftBorder, trail.startY - topBorder);
+                this.ctx.lineTo(trail.endX - leftBorder, trail.endY - topBorder);
+                this.ctx.stroke();
+
+                // Ausfaden
+                trail.alpha -= 0.03;
+                if (trail.alpha <= 0) {
+                    EquipmentDash.dashTrails.splice(i, 1);
+                }
+            }
+            this.ctx.restore();
+        }
+        // Ende neuer Trail-Logik
+
+        this.handleInput(map, inputState)
+        this.draw(this.ctx, this)
         this.equipmentSlots.forEach(item => { // Jedes ausgerüstete Equipment updaten
             if (item) {
                 item.update(this, map, inputState);
             }
         });
-        this.draw(this.ctx, this)
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
         for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)
         }
     }
-       getColor() {
+    getColor() {
         return 'blue'
-       }
+    }
 }

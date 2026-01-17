@@ -1,6 +1,9 @@
 import { Equipment } from "./equipment.js";
 
-export class equipmentDash extends Equipment {
+export class EquipmentDash extends Equipment {
+
+    static dashTrails = [];
+
     constructor() {
         super("Dash", "dash_icon.png");
         this.cooldown = 0;
@@ -17,6 +20,23 @@ export class equipmentDash extends Equipment {
         if (inputState.spacePressed && this.cooldown <= 0) {
             this.cooldown = 60; // 1 Sekunde bei 60 FPS
             this.isDashing = true;
+
+            // Startposition merken
+            const startX = player.globalEntityX;
+            const startY = player.globalEntityY;
+
+            this.performDash(player, map, inputState);
+
+            // Endposition nach dem Dash
+            const endX = player.globalEntityX;
+            const endY = player.globalEntityY;
+
+            // Trail-Daten in die STATISCHE Liste pushen
+            if (startX !== endX || startY !== endY) {
+                EquipmentDash.dashTrails.push({
+                    startX, startY, endX, endY, alpha: 0.6
+                });
+            }
         }
 
         if (this.isDashing) {

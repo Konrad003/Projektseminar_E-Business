@@ -4,7 +4,7 @@ import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
 import {Projectile} from "./projectile.js"
-import {equipmentDash} from "./equipmentDash.js";
+import {EquipmentDash} from "./equipmentDash.js";
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
@@ -103,26 +103,6 @@ export class game {
                 this.resumeGame()
             }
         }
-        if (e.key === " ") {
-            const startX = this.PlayerOne.globalEntityX
-            const startY = this.PlayerOne.globalEntityY
-
-            this.dashEquipment.dashAction(this.PlayerOne, this.MapOne, {
-                upPressed: this.upPressed,
-                downPressed: this.downPressed,
-                leftPressed: this.leftPressed,
-                rightPressed: this.rightPressed
-            })
-
-            const endX = this.PlayerOne.globalEntityX
-            const endY = this.PlayerOne.globalEntityY
-
-            if (startX !== endX || startY !== endY) {
-                this.dashTrails.push({
-                    startX, startY, endX, endY, alpha: 0.5
-                })
-            }
-        }
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
@@ -192,8 +172,8 @@ export class game {
 
         this.keyDownBound = this.keyDownHandler.bind(this);
         this.keyUpBound = this.keyUpHandler.bind(this);
-        document.addEventListener("keydown", this.keyDownBound);
-        document.addEventListener("keyup", this.keyUpBound);
+        window.addEventListener('keydown', (e) => this.keyDownHandler(e));
+        window.addEventListener('keyup', (e) => this.keyUpHandler(e));
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
@@ -206,7 +186,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
-            this.PlayerOne.acquireEquipment(new equipmentDash()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
