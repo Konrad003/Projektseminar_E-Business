@@ -40,7 +40,6 @@ export class Map {
             }
             this.loadTileData()
         }
-        console.log(png)
         this.tilesetImage.src = mapData.tilesets[0].image
         this.mapImage.src = png
     }
@@ -64,7 +63,7 @@ export class Map {
     }
 
     checkIfFree(entityX, entityY, moveLengthHoriz, moveLengthVert, mapLengthOrWidth, directionX, directionY, hitboxWidth, hitboxHeight) {
-        let mapLong = mapLengthOrWidth * this.tilelength - this.tilelength
+        let mapLong = mapLengthOrWidth * this.tilelength
         let mainEntityKoordInt                                                                  // Welche Koordinate bewegt werden soll
         let moveLength = this.maxAbs(moveLengthHoriz, moveLengthVert)
         if (moveLengthVert == 0) {     // x bewegung
