@@ -10,6 +10,7 @@ import {EquipmentValor} from "./equipmentValor.js";
 import {EquipmentHaste} from "./equipmentHaste.js";
 import {EquipmentRapidFire} from "./equipmentRapidFire.js";
 import {EquipmentHolyAura} from "./equipmentHolyAura.js";
+import {EquipmentArmor} from "./equipmentArmor.js";
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
@@ -194,7 +195,7 @@ export class game {
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
             this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
             this.PlayerOne.acquireEquipment(new EquipmentVigor()); // Test-Ausrüstung
-            this.PlayerOne.acquireEquipment(new EquipmentHolyAura()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new EquipmentArmor()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp

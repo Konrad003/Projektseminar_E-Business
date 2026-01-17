@@ -4,7 +4,7 @@ export class EquipmentHolyAura extends Equipment {
     constructor() {
         super("Holy Aura", "holy_aura_icon.png");
         this.level = 1;
-        this.baseDuration = 30000; // 8 Sekunden Basiszeit (in Millisekunden)
+        this.baseDuration = 8000; // 8 Sekunden Basiszeit (in Millisekunden)
         this.durationPerLevel = 2000; // +2 Sekunden pro Level
         this.activeTimeout = null;
     }
