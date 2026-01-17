@@ -97,6 +97,42 @@ export class game {
                 this.resumeGame()
             }
         }
+        // Switch weapon
+        if (e.key === '0') {
+            this.PlayerOne.switchWeapon(0);
+        }
+        if (e.key === '1') {
+            this.PlayerOne.switchWeapon(1);
+        }
+        if (e.key === '2') {
+            this.PlayerOne.switchWeapon(2);
+        }
+        if (e.key === '3') {
+            this.PlayerOne.switchWeapon(3);
+        }
+        if (e.key === '4') {
+            this.PlayerOne.switchWeapon(4);
+        }
+        if (e.key === '5') {
+            this.PlayerOne.switchWeapon(5);
+        }
+        if (e.key === '6') {
+            this.PlayerOne.switchWeapon(6);
+        }
+        if (e.key === '7') {
+            this.PlayerOne.switchWeapon(7);
+        }
+        if (e.key === '8') {
+            this.PlayerOne.switchWeapon(8);
+        }
+        if (e.key === '9') {
+            this.PlayerOne.switchWeapon(9);
+        }
+        // Shoot all weapons at once
+        if (e.key === 'p' || e.key === 'P') {
+            this.PlayerOne.shootAllWeapons(performance.now(), this.enemies, this.MapOne);
+        }
+
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
