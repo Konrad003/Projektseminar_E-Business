@@ -1,4 +1,4 @@
-import {Projectile} from "./projectile.js";
+import {Projectile, ArrowProjectile, SpearProjectile, MolotovProjectile} from "./projectile.js";
 import {Item} from "./item.js";
 import {Enemy} from "./enemy.js";
 
@@ -48,10 +48,10 @@ export class Weapon extends Item {
             case "basicEnemy":
                 return new BasicEnemyWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
-            case "shotgun":
-                return new ShotgunWeapon(shooter, mapWidth, mapHeight, gridWidth);
+            case "thunderstrike":
+                return new ThunderstrikeWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
-            case "sniper":
+            case "spear":
                 return new SpeerWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
             case "shuriken":
@@ -69,11 +69,14 @@ export class Weapon extends Item {
             case "axe":
                 return new AxeWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
-            case "default":
+            case "molotov":
                 return new MolotovWeapon(shooter, mapWidth, mapHeight, gridWidth);
 
+            case "default":
+                return new BasicEnemyWeapon(shooter, mapWidth, mapHeight, gridWidth);
+
             default:
-                return new MolotovWeapon(shooter, mapWidth, mapHeight, gridWidth);
+                return new BasicEnemyWeapon(shooter, mapWidth, mapHeight, gridWidth);
         }
     }
 
@@ -279,7 +282,55 @@ export class SwordWeapon extends Weapon {
 
 export class BowWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Bogen", null, 100, 1000, 1, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        super(null, "bow", null, 100, 1000, 0, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.tilelength = mapWidth / gridWidth;
+        this.gridWidth = gridWidth;
+    }
+
+    shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null) {
+        // Check cooldown
+        if (currentTime - this.lastShotTime < this.cooldown) {
+            return;
+        }
+
+        this.lastShotTime = currentTime;
+
+        // Bestimme Zielrichtung (auf nächsten Gegner)
+        let closestEnemy = { enemy: null, distance: 99999 };
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            for (let n = enemies[i].length - 1; n >= 0; n--) {
+                for (let enemy of enemies[i][n].within) {
+                    let distanceX = this.shooter.globalEntityX - enemy.globalEntityX;
+                    let distanceY = this.shooter.globalEntityY - enemy.globalEntityY;
+                    let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                    if (distance < closestEnemy.distance) {
+                        closestEnemy = { enemy: enemy, distance: distance };
+                    }
+                }
+            }
+        }
+
+        let dir = { x: 1, y: 0 };
+        if (closestEnemy.enemy) {
+            let distanceX = closestEnemy.enemy.globalEntityX - this.shooter.globalEntityX;
+            let distanceY = closestEnemy.enemy.globalEntityY - this.shooter.globalEntityY;
+            let angle = Math.atan2(distanceY, distanceX);
+            dir = { x: Math.cos(angle), y: Math.sin(angle) };
+        }
+
+        // Berechne Grid-Position
+        const gridMapTile = {
+            column: Math.floor(this.shooter.globalEntityX / (gridWidth * tilelength)),
+            row: Math.floor(this.shooter.globalEntityY / (gridWidth * tilelength))
+        };
+
+        // Erstelle Arrow-Projektil
+        const p = new ArrowProjectile(this.shooter, dir, gridMapTile, currentTime);
+
+        // Speichere im Grid
+        if (this.projectiles[p.gridMapTile.row] && this.projectiles[p.gridMapTile.row][p.gridMapTile.column]) {
+            this.projectiles[p.gridMapTile.row][p.gridMapTile.column].within.push(p);
+        }
     }
 }
 
@@ -289,15 +340,17 @@ export class BasicEnemyWeapon extends Weapon {
     }
 }
 
-export class ShotgunWeapon extends Weapon {
+export class ThunderstrikeWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
-        super(null, "Shotgun", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight, gridWidth, 16, 1250);
+        super(null, "Thunderstrike", null, 60, 800, 0, 0, 500, 1, 6, shooter, mapWidth, mapHeight, gridWidth, 16, 1250);
     }
 }
 
 export class SpeerWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
         super(null, "Speer", null, 300, 1200, 1, 0, 2000, 1, 1, shooter, mapWidth, mapHeight, gridWidth);
+        this.tilelength = mapWidth / gridWidth;
+        this.gridWidth = gridWidth;
     }
 
     shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null) {
@@ -331,28 +384,8 @@ export class SpeerWeapon extends Weapon {
             dir = { x: Math.cos(angle), y: Math.sin(angle) };
         }
 
-        // Erstelle Speer-Projektil mit Piercing
-        // Speed 7 * 5000ms Dauer ≈ 35000px max (reicht für 500px leicht)
-        const p = new Projectile(
-            this.shooter.globalEntityX,
-            this.shooter.globalEntityY,
-            1,
-            null,
-            7,
-            { width: this.projectileSize, height: this.projectileSize },
-            this.piercing, // Piercing aktiviert
-            this.projectileSize,
-            dir,
-            this.dmg,
-            false,
-            { column: Math.floor(this.shooter.globalEntityX / (gridWidth * tilelength)), row: Math.floor(this.shooter.globalEntityY / (gridWidth * tilelength)) },
-            currentTime,
-            5000, // 5 Sekunden Duration (genug Zeit um 500px zu fliegen)
-            false,
-            null,
-            null, // Kein Boomerang-System!
-            null // Kein Slash-System
-        );
+        // Erstelle Speer-Projektil
+        const p = new SpearProjectile(this.shooter, dir, tilelength, gridWidth, currentTime);
 
         // Speichere im Grid
         if (this.projectiles[p.gridMapTile.row] && this.projectiles[p.gridMapTile.row][p.gridMapTile.column]) {
@@ -744,10 +777,13 @@ export class AxeWeapon extends Weapon {
 }
 
 export class MolotovWeapon extends Weapon {
-    // MOLOTOV-WAFFE: MINIMAL - nur grünes Projektil mit hohem Bogen für 1 Sekunde
     constructor(shooter, mapWidth, mapHeight, gridWidth) {
         super(null, "Molotov", null, 0, 1000, 0, 0, 1000, 1, 1, shooter, mapWidth, mapHeight, gridWidth, 8, 1000, false, null, false, 0, 0);
         this.projectiles = []; // Einfaches Array
+    }
+
+    render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState) {
+        super.render(ctx, PlayerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState);
     }
 
     shoot(player, currentTime, enemies, tilelength, gridWidth) {
@@ -761,28 +797,8 @@ export class MolotovWeapon extends Weapon {
         const randomAngle = Math.random() * Math.PI * 2;
         const dir = { x: Math.cos(randomAngle), y: Math.sin(randomAngle) };
 
-        // Grünes Projektil mit Bogen (1 Sekunde Leben)
-        const p = new Projectile(
-            this.shooter.globalEntityX,
-            this.shooter.globalEntityY,
-            1,
-            null,
-            200, // Geschwindigkeit - höhere Reichweite
-            { width: 8, height: 8 },
-            0, // Kein Piercing
-            8, // Größe
-            dir,
-            0, // KEIN Schaden
-            false,
-            {},
-            currentTime,
-            1000 // 1 Sekunde bis verschwinden
-        );
-
-        // Molotov-Marker für Bogen-Bewegung
-        p.isMolotov = true;
-        p.molotovStart = { x: this.shooter.globalEntityX, y: this.shooter.globalEntityY };
-        p.molotovCreationTime = currentTime;
+        // Erstelle Molotov-Projektil
+        const p = new MolotovProjectile(this.shooter, dir, currentTime);
 
         this.projectiles.push(p);
     }

@@ -1,5 +1,7 @@
 import {MovingEntity} from "./movingEntity.js";
 
+// ============ BASIS PROJEKTIL-KLASSE ============
+
 export class Projectile extends MovingEntity {
     /**
      * Projektil-Klasse mit Unterstützung für drei Typen:
@@ -26,14 +28,16 @@ export class Projectile extends MovingEntity {
         this.exploded = false; // Flag für Explosions-Status
         this.explodedTime = 0; // Timestamp wenn Explosion ausgelöst wurde
         this.explosionDamageDealt = false; // Verhindert mehrfachen AoE-Schaden
+
+        // Molotov-spezifische Eigenschaften
+        this.molotovLandTime = null; // Wird gesetzt wenn gelandet
+        this.molotovDisappeared = false; // Flag wenn Kreis nach 4 Sekunden verschwunden ist
     }
 
     handleProjectiles(ctx, projectiles, projectileIndex, enemies, player, map, gridWidth, enemyItemDrops, currentTime) {
         // Loop through projectiles for movement, drawing, and collision
         let killCount=0
 
-        // FIREBALL SPEZIAL: Timeout-Check für Explosion nach Lebenszeit
-        // Fireballs explodieren entweder bei Gegner-Hit ODER nach Duration
         if (this.isFireball) {
             const elapsedTime = currentTime - this.creationTime;
             const durationExpired = this.duration > 0 && elapsedTime > this.duration;
@@ -43,8 +47,8 @@ export class Projectile extends MovingEntity {
             }
         }
 
-        // Nur wenn nicht explodiert: normale Bewegung und Collision-Detection
-        if (!this.exploded) {
+        // Nur wenn nicht explodiert/verschwunden: normale Bewegung und Collision-Detection
+        if (!this.exploded && !this.molotovDisappeared) {
             // 1. Move projectile
             this.move(map, projectiles, projectileIndex, gridWidth, player, currentTime);
             // 2. Draw projectile relative to the camera/player
@@ -62,15 +66,14 @@ export class Projectile extends MovingEntity {
 
                 // Molotov: KEIN Collision-Handling
                 if (this.isMolotov) {
-                    return; // Molotov trifft keine Gegner während Flug
-                }
+                    // Molotov hat spezielles Timeout-Handling weiter unten
+                } else {
 
                 // SCHWERT-SCHLAG SPEZIAL: Zeiger-Bewegung von 12 bis 4 Uhr (90 Grad)
                 if (this.slashProperties && this.slashProperties.isSwing) {
                     const { shooter, radius, minCutRadius, currentAngle, hitEnemies } = this.slashProperties;
 
                     // currentAngle wird in der move()-Methode bereits berechnet und gespeichert!
-                    console.log("Schwert-Schlag Collision-Check:", { currentAngle: (currentAngle * 180 / Math.PI) });
 
                     for (let i = enemies.length - 1; i >= 0; i--) {
                         for (let n = enemies[i].length - 1; n >= 0; n--) {
@@ -91,11 +94,8 @@ export class Projectile extends MovingEntity {
                                     while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
                                     angleDiff = Math.abs(angleDiff);
 
-                                    console.log("Gegner-Check:", { enemyAngle: (angleToEnemy * 180 / Math.PI), angleDiff: (angleDiff * 180 / Math.PI), threshold: (Math.PI / 6 * 180 / Math.PI) });
-
                                     // Trifft wenn Schwert-Zeiger über Gegner schlägt (~30 Grad Breite)
                                     if (angleDiff < Math.PI / 6 && !hitEnemies.has(j)) {
-                                        console.log("TREFFER!");
                                         enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
                                         hitEnemies.add(j); // Nur 1x Schaden pro Schlag
                                     }
@@ -184,12 +184,8 @@ export class Projectile extends MovingEntity {
                                         enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
                                     }
 
-                                    // DEBUG: Zeige Piercing-Status
-                                    console.log("Treffer! Piercing:", this.piercing, "isFireball:", this.isFireball);
-
                                     // NORMALE PROJEKTILE: Aus Grid löschen (wenn nicht piercing)
                                     if (!this.piercing && !this.isFireball) {
-                                        console.log("SPLICING - Piercing ist FALSE");
                                         projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1);
                                         break; // Nicht-piercing Projektile stoppen nach Treffer
                                     } else if (this.isFireball) {
@@ -199,7 +195,6 @@ export class Projectile extends MovingEntity {
                                         break; // Fireball stoppt nach Treffer
                                         // Schaden wird von FireballWeapon.damageEnemiesInRadius() angewendet
                                     } else {
-                                        console.log("KEIN SPLICE - Piercing ist TRUE, weitermachen!");
                                     }
                                     // Piercing-Projektile: NICHT breaken, weitermachen!
                                 }
@@ -207,24 +202,56 @@ export class Projectile extends MovingEntity {
                         }
                     }
                 }
+                }
             }
         }
 
-        // MOLOTOV SPEZIAL: Nur Bewegung und Zeichnung, dann Timeout löscht es automatisch
+        // MOLOTOV SPEZIAL: Nur Bewegung und Zeichnung, Timeout steuert Sichtbarkeit
         if (this.isMolotov) {
-            // Move projectile
-            this.move(map, projectiles, projectileIndex, gridWidth, player, currentTime);
+            // Prüfe ob 4 Sekunden nach Landung vorbei sind
+            if (this.molotovLanded && this.molotovLandTime && !this.molotovDisappeared) {
+                const circleAge = currentTime - this.molotovLandTime;
+                if (circleAge >= 4000) {
+                    this.molotovDisappeared = true; // Trigger Disappear (kein render mehr)
+                }
 
-            // Draw projectile (green)
-            this.draw(ctx, player);
+                // MOLOTOV DAMAGE: Alle 0.5 Sekunden Schaden in 100px Radius
+                if (currentTime - this.molotovLastDmgTime >= 500) {
+                    this.molotovLastDmgTime = currentTime;
 
-            // Nach 1 Sekunde (duration) wird es im Timeout-Check unten gelöscht
+                    // Treffe alle Gegner im Radius
+                    for (let i = enemies.length - 1; i >= 0; i--) {
+                        for (let n = enemies[i].length - 1; n >= 0; n--) {
+                            for (let j = enemies[i][n].within.length - 1; j >= 0; j--) {
+                                let enemy = enemies[i][n].within[j];
+                                const dx = enemy.globalEntityX - this.globalEntityX;
+                                const dy = enemy.globalEntityY - this.globalEntityY;
+                                const distToEnemy = Math.sqrt(dx * dx + dy * dy);
+
+                                // Wenn in Radius von 100px, nimm Schaden
+                                if (distToEnemy < this.molotovRadius) {
+                                    enemy.takeDmg(this.molotovDmg, enemies, j, enemyItemDrops);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Move projectile nur wenn noch nicht verschwunden
+            if (!this.molotovDisappeared) {
+                this.move(map, projectiles, projectileIndex, gridWidth, player, currentTime);
+                // Draw projectile (green)
+                this.draw(ctx, player);
+            }
+
             return;
         }
 
         // Timeout-Handling für normale Projektile (NICHT für Fireballs und Schwert-Schläge!)
         // Fireballs handhaben Timeout über exploded-Flag
         // Schwert-Schläge handhaben Timeout in move()
+        // Molotov hat spezielles Timeout-Handling oben
         if (this.duration > 0 && currentTime - this.creationTime > this.duration && !(this.slashProperties && this.slashProperties.isSwing)) {
             if (this.isEnemy) projectiles.splice(projectileIndex);
             else if (!this.isFireball && !this.isMolotov) projectiles[this.gridMapTile.row][this.gridMapTile.column].within.splice(projectileIndex, 1);
@@ -238,8 +265,6 @@ export class Projectile extends MovingEntity {
             const elapsedTime = currentTime - this.molotovCreationTime;
             const progress = Math.min(elapsedTime / this.duration, 1); // 0 bis 1 über 1 Sekunde
 
-            console.log("Molotov Move:", { dirX: this.direction.x, dirY: this.direction.y, speed: this.speed, elapsedTime, progress });
-
             if (progress < 1) {
                 // PHASE 1: Bogen-Flug in beliebige Richtung - ECHTE Parabel
                 const arcHeight = 150 * progress * (1 - progress) * 4; // Echte Parabel: peak bei progress=0.5
@@ -250,11 +275,12 @@ export class Projectile extends MovingEntity {
 
                 this.globalEntityX = newX;
                 this.globalEntityY = newY;
-
-                console.log("Flug:", { startX: this.molotovStart.x, startY: this.molotovStart.y, newX, newY, arcHeight });
             } else {
                 // PHASE 2: Liegt auf dem Boden - Position eingefroren
-                console.log("Landed at:", { x: this.globalEntityX, y: this.globalEntityY });
+                if (!this.molotovLanded) {
+                    this.molotovLanded = true; // Flag setzen dass es gelandet ist
+                    this.molotovLandTime = currentTime; // Speichere Landezeitpunkt
+                }
             }
 
             return; // Molotov hat spezielles Handling
@@ -375,10 +401,24 @@ export class Projectile extends MovingEntity {
         // Speichere Canvas-State um ihn später zu restaurieren
         ctx.save();
 
-        // MOLOTOV SPEZIAL: Einfaches grünes Quadrat
+        // MOLOTOV SPEZIAL: Einfaches grünes Quadrat während Flug, grüner Kreis nach Landung
         if (this.isMolotov) {
-            ctx.fillStyle = '#00FF00';
-            ctx.fillRect(screenX - 6, screenY - 6, 12, 12);
+            if (this.molotovLanded && !this.molotovDisappeared) {
+                // Grüner durchsichtiger Kreis am Landepunkt (Größe wie Fireball = radius 100)
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.4)'; // Grün, 40% transparent
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 100, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Optional: Outline
+                ctx.strokeStyle = 'rgba(0, 255, 0, 0.8)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            } else if (!this.molotovLanded && !this.molotovDisappeared) {
+                // Grünes Quadrat während Flug
+                ctx.fillStyle = '#00FF00';
+                ctx.fillRect(screenX - 6, screenY - 6, 12, 12);
+            }
         } else if (this.slashProperties && this.slashProperties.isSwing) {
             const { currentAngle, radius, height } = this.slashProperties;
 
@@ -455,5 +495,85 @@ export class Projectile extends MovingEntity {
             return this.fireballColor || 'rgba(255, 50, 0, 0.9)'; // Fireball ist rot-orange
         }
         return this.isEnemy ? 'orange' :'cyan'
+    }
+}
+
+// ============ SPEZIALISIERTE PROJEKTIL-KLASSEN ============
+
+export class ArrowProjectile extends Projectile {
+    constructor(shooter, direction, gridMapTile, currentTime) {
+        super(
+            shooter.globalEntityX,
+            shooter.globalEntityY,
+            1,
+            null,
+            5, // Speed
+            { width: 8, height: 8 },
+            0, // Kein Piercing
+            8,
+            direction,
+            100, // Damage
+            false,
+            gridMapTile,
+            currentTime,
+            2000 // Duration
+        );
+        this.isArrow = true;
+    }
+}
+
+export class SpearProjectile extends Projectile {
+    constructor(shooter, direction, tilelength, gridWidth, currentTime) {
+        const gridMapTile = {
+            column: Math.floor(shooter.globalEntityX / (gridWidth * tilelength)),
+            row: Math.floor(shooter.globalEntityY / (gridWidth * tilelength))
+        };
+        super(
+            shooter.globalEntityX,
+            shooter.globalEntityY,
+            1,
+            null,
+            7, // Speed
+            { width: 12, height: 12 },
+            1, // Piercing aktiviert
+            12,
+            direction,
+            300, // Damage
+            false,
+            gridMapTile,
+            currentTime,
+            5000 // Duration
+        );
+        this.isSpear = true;
+    }
+}
+
+export class MolotovProjectile extends Projectile {
+    constructor(shooter, direction, currentTime) {
+        super(
+            shooter.globalEntityX,
+            shooter.globalEntityY,
+            1,
+            null,
+            200, // Speed
+            { width: 8, height: 8 },
+            0,
+            8,
+            direction,
+            0, // Kein Damage während Flug
+            false,
+            {},
+            currentTime,
+            1000 // Flight duration
+        );
+        this.isMolotov = true;
+        this.molotovStart = { x: shooter.globalEntityX, y: shooter.globalEntityY };
+        this.molotovCreationTime = currentTime;
+        this.molotovLanded = false;
+        this.molotovLandTime = null; // Wird gesetzt wenn gelandet
+        this.molotovDisappeared = false;
+        this.molotovLastDmgTime = 0; // Für Damage-Interval (0.5 Sekunden)
+        this.molotovRadius = 100; // Radius der Explosion
+        this.molotovDmg = 25; // Damage alle 0.5 Sekunden
     }
 }

@@ -126,6 +126,10 @@ export class game {
         if (e.key === '9') {
             this.PlayerOne.switchWeapon(9);
         }
+        // Shoot all weapons at once
+        if (e.key === 'p' || e.key === 'P') {
+            this.PlayerOne.shootAllWeapons(performance.now(), this.enemies, this.MapOne);
+        }
 
     }
 

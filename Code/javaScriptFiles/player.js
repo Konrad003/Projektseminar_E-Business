@@ -29,6 +29,10 @@ export class Player extends MovingEntity {
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
         this.enemyItemDrops = []
 
+        // All weapons mode
+        this.allWeaponsActive = false;
+        this.allWeapons = [];
+
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.gridWidth = gridWidth;
@@ -75,16 +79,16 @@ export class Player extends MovingEntity {
                 this.weapon = Weapon.create("sword", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 1:
-                this.weapon = Weapon.create("basic", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                this.weapon = Weapon.create("bow", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 2:
-                this.weapon = Weapon.create("shotgun", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                this.weapon = Weapon.create("thunderstrike", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 3:
-                this.weapon = Weapon.create("sniper", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                this.weapon = Weapon.create("spear", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 4:
-                this.weapon = Weapon.create("default", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                this.weapon = Weapon.create("molotov", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 5:
                 this.weapon = Weapon.create("shuriken", this, this.mapWidth, this.mapHeight, this.gridWidth);
@@ -101,6 +105,25 @@ export class Player extends MovingEntity {
             case 9:
                 this.weapon = Weapon.create("axe", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
+        }
+    }
+// New method to shoot all weapons at once for testing
+    shootAllWeapons(currentTime, enemies, map) {
+        // Toggle all weapons mode on/off
+        this.allWeaponsActive = !this.allWeaponsActive;
+
+        if (this.allWeaponsActive) {
+            // Create all weapon instances
+            const weaponTypes = ["sword", "bow", "thunderstrike", "spear", "shuriken", "aura", "fireball", "knife", "axe", "molotov"];
+            this.allWeapons = [];
+
+            for (const weaponType of weaponTypes) {
+                const weapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth);
+                this.allWeapons.push(weapon);
+            }
+        } else {
+            // Clear all weapons
+            this.allWeapons = [];
         }
     }
 
@@ -131,7 +154,17 @@ export class Player extends MovingEntity {
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
         this.draw(this.ctx, this)
+
+        // Render current weapon
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState)
+
+        // Render all active weapons if in all weapons mode
+        if (this.allWeaponsActive) {
+            for (let weapon of this.allWeapons) {
+                weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState);
+            }
+        }
+
         for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)
