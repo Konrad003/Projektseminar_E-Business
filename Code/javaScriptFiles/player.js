@@ -71,6 +71,9 @@ export class Player extends MovingEntity {
         }
 
         switch (weaponNumber) {
+            case 0:
+                this.weapon = Weapon.create("sword", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
             case 1:
                 this.weapon = Weapon.create("basic", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
@@ -91,6 +94,12 @@ export class Player extends MovingEntity {
                 break;
             case 7:
                 this.weapon = Weapon.create("fireball", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
+            case 8:
+                this.weapon = Weapon.create("knife", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                break;
+            case 9:
+                this.weapon = Weapon.create("axe", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
         }
     }
@@ -122,7 +131,7 @@ export class Player extends MovingEntity {
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.handleInput(map, inputState)
         this.draw(this.ctx, this)
-        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
+        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState)
         for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)

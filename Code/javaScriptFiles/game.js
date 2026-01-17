@@ -96,6 +96,9 @@ export class game {
             }
         }
         // Switch weapon
+        if (e.key === '0') {
+            this.PlayerOne.switchWeapon(0);
+        }
         if (e.key === '1') {
             this.PlayerOne.switchWeapon(1);
         }
@@ -116,6 +119,12 @@ export class game {
         }
         if (e.key === '7') {
             this.PlayerOne.switchWeapon(7);
+        }
+        if (e.key === '8') {
+            this.PlayerOne.switchWeapon(8);
+        }
+        if (e.key === '9') {
+            this.PlayerOne.switchWeapon(9);
         }
 
     }
