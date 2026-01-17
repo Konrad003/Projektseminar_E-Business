@@ -16,6 +16,7 @@ export class Player extends MovingEntity {
         this.level = 1;
         this.png = png;
         this.baseSpeed = speed;
+        this.damageMultiplier = 1.0; // für equipment valor. Standardmäßig 100% Schaden
         this.hitbox = hitbox;
         this.equipmentSlots = [null, null, null]; // Drei leere Slots für Equipment
         this.regeneration = regeneration;

@@ -6,6 +6,7 @@ import {Player} from "./player.js"
 import {Projectile} from "./projectile.js"
 import {EquipmentDash} from "./equipmentDash.js";
 import {EquipmentVigor} from "./equipmentVigor.js";
+import {EquipmentValor} from "./equipmentValor.js";
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
@@ -190,6 +191,7 @@ export class game {
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
             this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
             this.PlayerOne.acquireEquipment(new EquipmentVigor()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new EquipmentValor()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
