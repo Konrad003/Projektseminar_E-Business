@@ -2,7 +2,7 @@ import { Equipment } from "./equipment.js";
 
 export class EquipmentHaste extends Equipment {
     constructor() {
-        super("Haste", "haste_icon.png", "speed", 0.5 /* Speed Bonus pro Level */ );
+        super("haste_icon.png", "Increases movement speed", "haste_picture.png", "Haste", "speed", 0.5 /* Speed Bonus pro Level */ );
     }
 
     apply(player, targetValue) {

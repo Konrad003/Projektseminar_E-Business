@@ -5,7 +5,7 @@ export class EquipmentDash extends Equipment {
     static dashTrails = [];
 
     constructor() {
-        super("Dash", "dash_icon.png");
+        super("dash_icon.png", "Allows a quick dodge move", "dash_picture.png", "Dash", null, 0);
         this.cooldown = 0;
         this.dashDuration = 10; // Wie viele Frames der Dash dauert
         this.isDashing = false;

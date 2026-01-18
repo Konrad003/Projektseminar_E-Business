@@ -2,7 +2,7 @@ import { Equipment } from "./equipment.js";
 
 export class EquipmentBarrage extends Equipment {
     constructor() {
-        super("Barrage", "barrage_icon.png", "extraProjectiles", 0);
+        super("barrage_icon.png", "Fires extra projectiles", "barrage_picture.png", "Barrage", "extraProjectiles", 0);
     }
 
     update(player, map, inputState) {

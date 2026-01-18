@@ -2,7 +2,7 @@ import { Equipment } from "./equipment.js";
 
 export class EquipmentHolyAura extends Equipment {
     constructor() {
-        super("Holy Aura", "holy_aura_icon.png");
+        super("holy_aura_icon.png", "Grant temporary invincibility", "holy_aura_picture.png", "Holy Aura", "isInvincible", 0);
         this.level = 1;
         this.baseDuration = 8000; // 8 Sekunden Basiszeit (in Millisekunden)
         this.durationPerLevel = 2000; // +2 Sekunden pro Level

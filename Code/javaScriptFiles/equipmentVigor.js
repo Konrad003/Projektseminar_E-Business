@@ -2,7 +2,7 @@ import { Equipment } from "./equipment.js";
 
 export class EquipmentVigor extends Equipment {
     constructor() {
-        super("Vigor", "vigor_icon.png", "maxHp", 50);
+        super("vigor_icon.png", "Increases maximum health", "vigor_picture.png", "Vigor", "maxHp", 50);
     }
 
     apply(player, targetValue) {
