@@ -18,6 +18,7 @@ export class Player extends MovingEntity {
         this.baseSpeed = speed;
         this.damageMultiplier = 1.0; // für equipment valor. Standardmäßig 100% Schaden
         this.cooldownMultiplier = 1.0; // für equipment rapid fire. Standardmäßig 100% Feuerrate
+        this.isInvincible = false; // für equipment holy aura
         this.hitbox = hitbox;
         this.equipmentSlots = [null, null, null]; // Drei leere Slots für Equipment
         this.regeneration = regeneration;
@@ -31,6 +32,25 @@ export class Player extends MovingEntity {
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
         this.enemyItemDrops = []
 
+    }
+
+    draw(ctx, player) {
+        // Wenn die Aura aktiv ist, wird Zeichnen angepasst
+        if (this.isInvincible) {
+            ctx.save(); // Speichert den aktuellen Zustand (Normalzustand)
+            
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "cyan"; // Ein heiliges, blaues Leuchten
+            ctx.globalAlpha = 0.7 + Math.sin(performance.now() / 150) * 0.3; // Blink-Effekt
+        }
+
+        // draw-Methode der Basisklasse (Entity)
+        super.draw(ctx, player);
+
+        // Wenn wir den Zustand verändert hatten, setzen wir ihn jetzt wieder zurück
+        if (this.isInvincible) {
+            ctx.restore(); // Setzt Schatten und Alpha wieder auf Standard
+        }
     }
 
     handleInput(map, inputState) {
