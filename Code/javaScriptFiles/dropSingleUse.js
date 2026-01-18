@@ -47,6 +47,33 @@ export class SpeedBoostDrop extends DropSingleUse {
   }
 }
 
+export class AttackBoostDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.duration = 10000
+    this.damageMultiplier = 2
+  }
+
+  getColor() { return "red" }
+
+  apply(player) {
+    if (!player || !player.weapon) return
+
+    // Basis-Damage einmal merken (wie baseSpeed beim SpeedBoost)
+    if (player.baseDmg == null) player.baseDmg = player.weapon.dmg
+
+    // Timer-Logik wie beim SpeedBoost:
+    if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
+    else player.weapon.dmg = player.baseDmg * this.damageMultiplier
+
+    player.attackBoostTimeout = setTimeout(() => {
+      player.weapon.dmg = player.baseDmg
+      player.attackBoostTimeout = null
+    }, this.duration)
+  }
+}
+
+
 export class HealDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
