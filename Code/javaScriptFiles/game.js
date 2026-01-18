@@ -217,10 +217,11 @@ export class game {
 
     pauseGame() {
         this.gamePaused = true; //flag boolean for render function
-
         this.stopGameTimer()
 
         document.getElementById("pauseScreen").style.display = "flex";
+
+        Sounds.musikSound.pause()
     }
 
     resumeGame() {
@@ -228,7 +229,12 @@ export class game {
 
         this.startGameTimer()
 
+
         document.getElementById("pauseScreen").style.display = "none";
+
+        if (this.music) {
+            Sounds.musikSound.play()
+        }
     }
 
     lvlUPshow() {
@@ -237,6 +243,7 @@ export class game {
 
         document.getElementById("lvlScreen").style.display = "flex";
 
+        Sounds.musikSound.pause()
         if (this.soundEffects) {
             Sounds.lvlUpSound.play()
         }
@@ -247,6 +254,10 @@ export class game {
         this.startGameTimer()
 
         document.getElementById("lvlScreen").style.display = "none";
+
+        if (this.music) {
+            Sounds.musikSound.play()
+        }
     }
 
     chooseMap() {
@@ -292,6 +303,7 @@ export class game {
         if (this.soundEffects) {
             Sounds.loseSound.play()
         }
+        this.BackgroundMusicStop()
     }
 
     endWin() {
@@ -312,6 +324,7 @@ export class game {
         if (this.soundEffects) {
             Sounds.WinSound.play()
         }
+        this.BackgroundMusicStop()
 
     }
 
@@ -346,6 +359,9 @@ export class game {
         this.freezeSound = new Audio('./Sound/freeze-sound.mp3');
         this.freezeSound.volume = this.soundEffectsVol;
 
+        this.musikSound = new Audio('./Sound/musik-platz.mp3');
+        this.musikSound.volume = this.musicVol;
+
         window.Sounds = {
             buttonSound: this.buttonSound, //backgroundMusic: backgroundMusic,
             WinSound: this.winSound,
@@ -357,6 +373,7 @@ export class game {
             nukeSound: this.nukeSound,
             xpMagnetSound: this.xpMagnetSound,
             freezeSound: this.freezeSound,
+            musikSound: this.musikSound
         };
     }
 
@@ -365,6 +382,22 @@ export class game {
         if (!window.Sounds || !window.Sounds.buttonSound) return;
 
         Sounds.buttonSound.play();
+
+    }
+
+    BackgroundMusicPlay() {
+        if (!this.music) return;
+        if (!window.Sounds || !window.Sounds.musikSound) return;
+
+        Sounds.musikSound.loop = true;
+        Sounds.musikSound.play()
+    }
+
+    BackgroundMusicStop() {
+        if (!window.Sounds || !window.Sounds.musikSound) return;
+            Sounds.musikSound.pause();
+            // Auf 0 zurücksetzen, damit beim nächsten Abspielen von vorn begonnen wird
+            Sounds.musikSound.currentTime = 0;
     }
 
     equipSoundPlay() {

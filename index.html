@@ -57,8 +57,8 @@
 
 <section class="screen" id="mapScreen">
     <div class="menu">
-        <button class="btn" onclick="Game.mapSelect(0)" onmousedown="Game.playButtonSound()">Jungle</button>
-        <button class="btn" onclick="Game.mapSelect(1)" onmousedown="Game.playButtonSound()">Vanilla</button>
+        <button class="btn" onclick="Game.mapSelect(0)" onmousedown="Game.playButtonSound(); Game.BackgroundMusicPlay()">Jungle</button>
+        <button class="btn" onclick="Game.mapSelect(1)" onmousedown="Game.playButtonSound(); Game.BackgroundMusicPlay()">Vanilla</button>
     </div>
 </section>
 
@@ -118,7 +118,7 @@
     <div class="menu">
         <button class="btn" onclick="Game.resumeGame()" onmousedown="Game.playButtonSound()">RESUME</button>
         <button class="btn" onclick="Game.settings()" onmousedown="Game.playButtonSound()">SETTINGS</button>
-        <button class="btn" onclick="Game.home()" onmousedown="Game.playButtonSound()">MAIN MENU</button>
+        <button class="btn" onclick="Game.home()" onmousedown="Game.playButtonSound(); Game.BackgroundMusicStop()">MAIN MENU</button>
 
         <button class="btn" onclick="Game.end()" onmousedown="Game.playButtonSound()">DEFEAT</button>
         <button class="btn" onclick="Game.endWin()" onmousedown="Game.playButtonSound()">WIN</button>
@@ -174,7 +174,7 @@
     </div>
 
     <div class="flex-row-gap" style="margin-top: 20px;">
-        <button class="btn" id="retryButtonDefeat" onclick="Game.restart()" onmousedown="Game.playButtonSound()">Retry
+        <button class="btn" id="retryButtonDefeat" onclick="Game.restart()" onmousedown="Game.playButtonSound(); BackgroundMusicPlay()">Retry
         </button>
         <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()" onmousedown="Game.playButtonSound()">Start
             Menu
@@ -194,7 +194,7 @@
     </div>
 
     <div class="flex-row-gap" style="margin-top: 20px;">
-        <button class="btn" id="retryButtonWin" onclick="Game.restart()" onmousedown="Game.playButtonSound()">Retry
+        <button class="btn" id="retryButtonWin" onclick="Game.restart()" onmousedown="Game.playButtonSound(); BackgroundMusicPlay()">Retry
         </button>
         <button class="btn" id="startMenuButtonWin" onclick="Game.home()" onmousedown="Game.playButtonSound()">Start
             Menu
