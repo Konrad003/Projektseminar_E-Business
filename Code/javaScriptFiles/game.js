@@ -194,9 +194,9 @@ export class game {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
+            this.PlayerOne.acquireEquipment(new EquipmentHolyAura()); // Test-Ausrüstung
             this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
             this.PlayerOne.acquireEquipment(new EquipmentVigor()); // Test-Ausrüstung
-            this.PlayerOne.acquireEquipment(new EquipmentBarrage()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
