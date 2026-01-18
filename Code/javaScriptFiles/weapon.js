@@ -117,7 +117,7 @@ export class Weapon extends Item {
                 false, // piercing
                 8, // size
                 dir, // direction
-                this.dmg, // damage
+                this.dmg * (this.shooter.damageMultiplier || 1), // damage, mulitiplier für equipment valor und 1 zur sicherheit.
                 isEnemyShooter,            // NEU: markiert feindliche Projektile
                 {column : Math.floor(player.globalEntityX/ (gridWidth*tilelength)), row : Math.floor(player.globalEntityY / (gridWidth*tilelength))}  
             );
