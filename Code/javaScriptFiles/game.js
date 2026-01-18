@@ -5,6 +5,7 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Projectile} from "./projectile.js"
 import {EquipmentDash} from "./equipmentDash.js";
+import {EquipmentVigor} from "./equipmentVigor.js";
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
@@ -186,7 +187,9 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
             this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new EquipmentVigor()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
