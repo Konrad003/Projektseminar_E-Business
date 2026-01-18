@@ -116,11 +116,26 @@ export class Player extends MovingEntity {
     }
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
-        // Start neuer Trail-Logik
+        this.drawDashTrails();
+        this.handleInput(map, inputState)
+        this.draw(this.ctx, this)
+        this.equipmentSlots.forEach(item => { // Jedes ausgerüstete Equipment updaten
+            if (item) {
+                item.update(this, map, inputState);
+            }
+        });
+        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
+        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
+            let item = this.enemyItemDrops[i]
+            item.render(this.ctx, this, this.enemyItemDrops, i)
+        }
+    }
+
+    drawDashTrails() {
         if (EquipmentDash.dashTrails && EquipmentDash.dashTrails.length > 0) {
             this.ctx.save();
             
-            // Kamera-Berechnung
+            // Grenzen berechnen für die relative Positionierung (Kamera)
             let leftBorder = this.globalEntityX - (this.ctx.canvas.width / 2);
             let topBorder = this.globalEntityY - (this.ctx.canvas.height / 2);
 
@@ -136,7 +151,7 @@ export class Player extends MovingEntity {
                 this.ctx.lineTo(trail.endX - leftBorder, trail.endY - topBorder);
                 this.ctx.stroke();
 
-                // Ausfaden
+                // Alpha-Wert verringern (Ausfaden)
                 trail.alpha -= 0.03;
                 if (trail.alpha <= 0) {
                     EquipmentDash.dashTrails.splice(i, 1);
@@ -144,21 +159,8 @@ export class Player extends MovingEntity {
             }
             this.ctx.restore();
         }
-        // Ende neuer Trail-Logik
-
-        this.handleInput(map, inputState)
-        this.draw(this.ctx, this)
-        this.equipmentSlots.forEach(item => { // Jedes ausgerüstete Equipment updaten
-            if (item) {
-                item.update(this, map, inputState);
-            }
-        });
-        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
-        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
-            let item = this.enemyItemDrops[i]
-            item.render(this.ctx, this, this.enemyItemDrops, i)
-        }
     }
+
     getColor() {
         return 'blue'
     }

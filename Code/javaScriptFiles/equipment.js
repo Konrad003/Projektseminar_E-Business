@@ -1,12 +1,41 @@
-export class Equipment {
-    constructor(name, icon) {
+import {Item} from "./item.js";
+
+export class Equipment extends Item {
+    constructor(icon, description, picture, name, playerStatKey = null, valuePerLevel = 0) {
+        super(icon, description, picture);
         this.name = name;
         this.icon = icon;
+        this.level = 1;
+        
+        // für die Automatisierung der Update/Apply Methoden:
+        this.playerStatKey = playerStatKey;   // z.B. "speed" oder "armor"
+        this.valuePerLevel = valuePerLevel;   // Bonuswert pro Level
+        this.currentAppliedValue = 0;         // Aktuell angewendeter Bonus
     }
 
-    // Diese Methode wird von JEDEM Equipment überschrieben
-    // Sie wird jeden Frame aufgerufen
     update(player, map, inputState) {
-        // Basis-Klasse macht nichts
+        if (!this.playerStatKey) return; // wrid zb bei dash nicht genutzt
+
+        let targetValue = this.level * this.valuePerLevel;
+
+        // Nur aktualisieren, wenn sich das Level oder der Wert geändert hat (wie vorher auch in den spezifischen Equipment-Klassen)
+        if (this.currentAppliedValue !== targetValue) {
+            this.apply(player, targetValue);
+        }
+    }
+
+    apply(player, targetValue) { //wie vorher, nur jetzt allgemein
+        if (this.playerStatKey && player[this.playerStatKey] !== undefined) {
+            // Alten Bonus entfernen
+            player[this.playerStatKey] -= this.currentAppliedValue;
+            
+            // Neuen Bonus hinzufügen
+            player[this.playerStatKey] += targetValue;
+            
+            // Wert speichern
+            this.currentAppliedValue = targetValue;
+            
+            console.log(`[${this.name}] ${this.playerStatKey} aktualisiert: ${player[this.playerStatKey]}`);
+        }
     }
 }
