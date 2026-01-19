@@ -410,6 +410,10 @@ export class game {
     restart() {
         this.resetGame()
         this.start()
+
+        if (this.music) {
+            Sounds.musikSound.play()
+        }
     }
 
     resetGame() {
