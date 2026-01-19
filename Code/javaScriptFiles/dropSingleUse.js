@@ -273,3 +273,31 @@ export class FreezeDrop extends DropSingleUse {
   }
 }
 
+export class InstantLevelDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+  }
+
+  getColor() { return "gold" }
+
+  apply(player) {
+    if (!player) return
+
+    // Fortschritt vorm LevelUp merken (z.B. 0.5 = 50%)
+    const ratio = (player.xpForNextLevel > 0) ? (player.xp / player.xpForNextLevel) : 0
+
+    // genau 1 Level geben
+    player.lvlUp()
+
+    // Fortschritt im neuen Level wiederherstellen (wieder z.B. 50%)
+    player.xp = ratio * player.xpForNextLevel
+
+    // HUD aktualisieren (wie in collectXp)
+    if (Game?.hudXpProgress) {
+      Game.hudXpProgress.value = player.xp
+    } else {
+      const hud = document.getElementById("hudXpProgress")
+      if (hud) hud.value = player.xp
+    }
+  }
+}
