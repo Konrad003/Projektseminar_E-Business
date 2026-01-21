@@ -15,7 +15,6 @@ export class Player extends MovingEntity {
         this.maxHp = maxHp;
         this.xp = xp;
         this.level = 1;
-        this.png = png;
         this.baseSpeed = speed;
         this.damageMultiplier = 1.0; // für equipment valor. Standardmäßig 100% Schaden
         this.cooldownMultiplier = 1.0; // für equipment rapid fire. Standardmäßig 100% Feuerrate
@@ -132,6 +131,10 @@ export class Player extends MovingEntity {
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)
         }
+    }
+
+    getColor() {
+        return 'blue'
     }
 
     drawDashTrails() {
