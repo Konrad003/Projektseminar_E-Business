@@ -1,4 +1,4 @@
-import {Enemy} from "./enemy.js"
+import {Enemy} from "../enemy.js"
 
 export class EnemySchatzgoblin extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
@@ -10,13 +10,13 @@ export class EnemySchatzgoblin extends Enemy {
         this.level = 1
         this.xpDrop = 30
         this.baseDamage = 0
-        this.oldMoveX=oldMoveX
-        this.oldMoveY=oldMoveY
+        this.oldMoveX = oldMoveX
+        this.oldMoveY = oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
         this.ranged = false
         this.weapon = null  // wenn Waffen implementiert sind, durch weapon ersetzen
-        this.elite = true 
+        this.elite = true
         this.radius = 64;
         this.centerX = globalEntityX;
         this.centerY = globalEntityY;
@@ -25,18 +25,18 @@ export class EnemySchatzgoblin extends Enemy {
         this.angularSpeed = 1.0 / 60.0; // Eine Umdrehung alle 6 Sekunden
         this.scared = false
         this.ticker = 0
-        }
+    }
 
     move(PlayerOne, MapOne, enemies) {
         if (!this.scared) {
-        this.angle += this.angularSpeed;
-        this.attemptMoveAxis(this, "x", Math.cos(this.angle) * 1, enemies, MapOne);
-        this.attemptMoveAxis(this, "y", Math.sin(this.angle) * 1, enemies, MapOne);
+            this.angle += this.angularSpeed;
+            this.attemptMoveAxis(this, "x", Math.cos(this.angle) * 1, enemies, MapOne);
+            this.attemptMoveAxis(this, "y", Math.sin(this.angle) * 1, enemies, MapOne);
 
         } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen        
             this.chasePlayer(MapOne, this.globalEntityX * 2 - PlayerOne.globalEntityX, this.globalEntityY * 2 - PlayerOne.globalEntityY, enemies)
             this.ticker++
-            if (this.ticker > 300){          // Nach 5 Sekunden ist der Schatzgoblin nicht mehr verängstigt
+            if (this.ticker > 300) {          // Nach 5 Sekunden ist der Schatzgoblin nicht mehr verängstigt
                 this.scared = false
                 this.ticker = 0
                 this.currentHP = this.hp
@@ -46,11 +46,11 @@ export class EnemySchatzgoblin extends Enemy {
         }
     }
 
-    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){  
-        let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)        
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth) {
+        let position = this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.draw(ctx, PlayerOne)
         this.move(PlayerOne, MapOne, enemies)
-        if (this.hp != this.currentHP){
+        if (this.hp != this.currentHP) {
             this.scared = true
         }
     }

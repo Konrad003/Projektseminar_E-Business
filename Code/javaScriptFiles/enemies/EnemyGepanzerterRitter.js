@@ -1,17 +1,17 @@
-import {Enemy} from "./enemy.js"
+import {Enemy} from "../enemy.js"
 
-export class EnemySlime extends Enemy {
+export class EnemyGepanzerterRitter extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 20
-        this.speed = 1
-        this.png = "EnemySlime"
-        this.hitbox = {width: 8, height: 8}
+        this.hp = 500
+        this.speed = 0.5
+        this.png = "EnemyGepanzerterRitter"
+        this.hitbox = {width: 26, height: 26}
         this.level = 1
-        this.xpDrop = 1
-        this.baseDamage = 5
-        this.oldMoveX=oldMoveX
-        this.oldMoveY=oldMoveY
+        this.xpDrop = 25
+        this.baseDamage = 40
+        this.oldMoveX = oldMoveX
+        this.oldMoveY = oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
         this.ranged = false
@@ -19,6 +19,6 @@ export class EnemySlime extends Enemy {
     }
 
     getColor() {
-        return "green"
+        return "black"
     }
 }

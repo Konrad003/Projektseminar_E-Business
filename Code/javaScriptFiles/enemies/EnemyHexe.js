@@ -1,4 +1,4 @@
-import {Enemy} from "./enemy.js"
+import {Enemy} from "../enemy.js"
 
 export class EnemyHexe extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY) {
@@ -10,8 +10,8 @@ export class EnemyHexe extends Enemy {
         this.level = 1
         this.xpDrop = 4
         this.baseDamage = 20
-        this.oldMoveX=oldMoveX
-        this.oldMoveY=oldMoveY
+        this.oldMoveX = oldMoveX
+        this.oldMoveY = oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
         this.ranged = true

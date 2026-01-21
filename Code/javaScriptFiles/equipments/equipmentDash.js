@@ -1,11 +1,11 @@
-import { Equipment } from "./equipment.js";
+import {Equipment} from "../equipment.js";
 
 export class EquipmentDash extends Equipment {
 
     static dashTrails = [];
 
-    constructor() {
-        super("dash_icon.png", "Allows a quick dodge move", "dash_picture.png", "Dash", null, 0);
+    constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
+        super(icon, description, level, name, playerStatKey, valuePerLevel);
         this.cooldown = 0;
         this.dashDuration = 10; // Wie viele Frames der Dash dauert
         this.isDashing = false;
@@ -46,7 +46,7 @@ export class EquipmentDash extends Equipment {
 
     performDash(player, map, inputState) {
         let dashDistance = 160; // Geschwindigkeit während des Dashes
-        
+
         // Dash in die Richtung, die gedrückt wird
         if (inputState.rightPressed) {
             player.globalEntityX = map.rightFree(player.globalEntityX, player.globalEntityY, dashDistance, player.hitbox);
@@ -64,6 +64,6 @@ export class EquipmentDash extends Equipment {
         // Nach einer kurzen Zeit den Dash-Status beenden
         // (Einfachheitshalber hier sofort nach der Bewegung, 
         // für längere Dashes müsste man einen Counter einbauen)
-        this.isDashing = false; 
+        this.isDashing = false;
     }
 }

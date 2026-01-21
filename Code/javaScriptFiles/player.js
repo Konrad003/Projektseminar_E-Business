@@ -1,6 +1,7 @@
 import {MovingEntity} from "./movingEntity.js"
 import {Weapon} from "./weapon.js";
-import { EquipmentDash } from "./equipmentDash.js";
+import {EquipmentDash} from "./equipments/equipmentDash.js";
+import {LvlUpFactory} from "./lvlUpFactory.js"
 
 export class Player extends MovingEntity {
     ctx
@@ -34,13 +35,15 @@ export class Player extends MovingEntity {
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
         this.enemyItemDrops = []
 
+        this.LvlUpFactory = new LvlUpFactory();
+
     }
 
     draw(ctx, player) {
         // Wenn die Aura aktiv ist, wird Zeichnen angepasst
         if (this.isInvincible) {
             ctx.save(); // Speichert den aktuellen Zustand (Normalzustand)
-            
+
             ctx.shadowBlur = 20;
             ctx.shadowColor = "cyan"; // Ein heiliges, blaues Leuchten
             ctx.globalAlpha = 0.7 + Math.sin(performance.now() / 150) * 0.3; // Blink-Effekt
@@ -76,8 +79,8 @@ export class Player extends MovingEntity {
     }
 
     lvlUp() {
+        this.LvlUpFactory.lvlUpRoll()
         Game.lvlUPshow()
-        this.lvlUpChoose()
         this.level++;
         this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
         document.getElementById("hudXpProgress").style.max = this.xpForNextLevel;
@@ -104,15 +107,15 @@ export class Player extends MovingEntity {
     }
 
     acquireEquipment(newEquipment) {
-    for (let i = 0; i < this.equipmentSlots.length; i++) {
-        if (this.equipmentSlots[i] === null) {
-            this.equipmentSlots[i] = newEquipment;
-            console.log(newEquipment.name + " ausgerüstet in Slot " + i);
-            return true; 
+        for (let i = 0; i < this.equipmentSlots.length; i++) {
+            if (this.equipmentSlots[i] === null) {
+                this.equipmentSlots[i] = newEquipment;
+                console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+                return true;
+            }
         }
-    }
-    console.log("Inventar voll!");
-    return false;
+        console.log("Inventar voll!");
+        return false;
     }
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
@@ -125,7 +128,7 @@ export class Player extends MovingEntity {
             }
         });
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
-        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--){
+        for (let i = this.enemyItemDrops.length - 1; i >= 0; i--) {
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)
         }
@@ -134,7 +137,7 @@ export class Player extends MovingEntity {
     drawDashTrails() {
         if (EquipmentDash.dashTrails && EquipmentDash.dashTrails.length > 0) {
             this.ctx.save();
-            
+
             // Grenzen berechnen für die relative Positionierung (Kamera)
             let leftBorder = this.globalEntityX - (this.ctx.canvas.width / 2);
             let topBorder = this.globalEntityY - (this.ctx.canvas.height / 2);
