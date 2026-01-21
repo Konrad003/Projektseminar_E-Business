@@ -243,18 +243,6 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
-    acquireEquipment(newEquipment) {
-        for (let i = 0; i < this.equipmentSlots.length; i++) {
-            if (this.equipmentSlots[i] === null) {
-                this.equipmentSlots[i] = newEquipment;
-                console.log(newEquipment.name + " ausgerüstet in Slot " + i);
-                return true;
-            }
-        }
-        console.log("Inventar voll!");
-        return false;
-    }
-
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.drawDashTrails();
         this.handleInput(map, inputState)
@@ -295,20 +283,20 @@ export class Player extends MovingEntity {
     acquireEquipment(equipment) {
         // Finde ersten freien Slot
         const freeSlotIndex = this.equipmentSlots.findIndex(slot => slot === null);
-        
+
         if (freeSlotIndex === -1) {
             console.log("Alle Equipment-Slots belegt!");
             return false;
         }
-        
+
         // Equipment in Slot speichern
         this.equipmentSlots[freeSlotIndex] = equipment;
-        
+
         // Equipment-Effekt anwenden (falls vorhanden)
         if (equipment && typeof equipment.effect === 'function') {
             equipment.effect(this);
         }
-        
+
         console.log(`Equipment "${equipment?.name || 'Unbekannt'}" in Slot ${freeSlotIndex + 1} ausgerüstet`);
         return true;
     }

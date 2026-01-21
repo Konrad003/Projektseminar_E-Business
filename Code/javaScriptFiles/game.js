@@ -5,19 +5,19 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Projectile} from "./projectiles/index.js"
 // Equipment-Imports
-import {EquipmentDash} from "./equipmentDash.js";
-import {EquipmentVigor} from "./equipmentVigor.js";
-import {EquipmentValor} from "./equipmentValor.js";
-import {EquipmentHaste} from "./equipmentHaste.js";
-import {EquipmentRapidFire} from "./equipmentRapidFire.js";
-import {EquipmentHolyAura} from "./equipmentHolyAura.js";
-import {EquipmentArmor} from "./equipmentArmor.js";
-import {EquipmentBarrage} from "./equipmentBarrage.js";
+import {EquipmentDash} from "./equipments/equipmentDash.js";
+import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
+import {EquipmentDamage} from "./equipments/equipmentDamage.js";
+import {EquipmentHaste} from "./equipments/equipmentHaste.js";
+import {EquipmentRapidFire} from "./equipments/equipmentRapidFire.js";
+import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js";
+import {EquipmentArmor} from "./equipments/equipmentArmor.js";
+import {EquipmentExtraProjectile} from "./equipments/equipmentExtraProjectile.js";
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
-ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
 let BasicHeight = 1440;
@@ -32,7 +32,7 @@ function resizeCanvas() {              // Canvas Skalierung je nach Fenstergrö�
     let windowRatio = windowWidth / windowHeight;// Verhältnis von internem Canvas
     let newWidth, newHeight;
 
-    if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen   
+    if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen
         newHeight = windowHeight;// Bildschirm breiter --> volle Höhe nutzen, Breite anpassen
         newWidth = newHeight * targetRatio;
     } else {
@@ -359,7 +359,12 @@ export class game {
         document.getElementById("lvlScreen").style.display = "flex";
     }
 
-    lvlUPhide() {
+    lvlUPhide(choice) {
+        // Verarbeite die Auswahl des Spielers
+        if (choice >= 1 && choice <= 3) {
+            this.PlayerOne.LvlUpFactory.selectOption(choice, this.PlayerOne);
+        }
+
         this.gamePaused = false;
         this.startGameTimer()
 

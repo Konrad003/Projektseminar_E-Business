@@ -1,8 +1,8 @@
 import { Projectile } from "./Projectile.js";
 
-/**
- * BoomerangProjectile: Axt fliegt hin und zurück
- */
+
+
+//BoomerangProjectile: Axt fliegt hin und zurück
 export class BoomerangProjectile extends Projectile {
     constructor(globalEntityX, globalEntityY, direction, dmg, config = {}, gridMapTile = {}, creationTime, isEnemy = false) {
         super(globalEntityX, globalEntityY, direction, dmg, config, gridMapTile, creationTime, isEnemy);
@@ -11,7 +11,7 @@ export class BoomerangProjectile extends Projectile {
         this.maxRange = config.maxRange || 400;
         this.returning = false;
         this.distanceTraveled = 0;
-        // Kein Grid für Boomerangs
+        // Kein Grid für Boomerang -- Boomerang wird nicht angeezeigt auf der GridMap
         this.gridMapTile = {};
     }
 
