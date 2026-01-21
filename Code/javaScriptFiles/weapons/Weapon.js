@@ -30,6 +30,11 @@ export class Weapon extends Item {
         this.projectiles = [];
         this.lastShotTime = 0;
 
+        // Burst-System (für Equipment Barrage)
+        this.burstRemaining = 0;
+        this.burstTimer = 0;
+        this.burstDelay = 50;
+
         // Initialisiere Grid falls Player-Waffe
         this._initializeStorage(shooter);
     }
@@ -55,12 +60,42 @@ export class Weapon extends Item {
      * Template-Method: Subklassen können überschreiben
      */
     shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null, enemyItemDrops = []) {
+        // Berechne effektiven Cooldown mit Equipment-Multiplier
+        const isPlayer = !(this.shooter instanceof Enemy);
+        const effectiveCooldown = isPlayer && player.cooldownMultiplier
+            ? this.cooldown * player.cooldownMultiplier
+            : this.cooldown;
+
+        // Burst-System (Equipment Barrage)
+        if (this.burstRemaining > 0) {
+            if (currentTime - this.burstTimer >= this.burstDelay) {
+                this.burstTimer = currentTime;
+                this.burstRemaining--;
+                this._fireProjectile(player, currentTime, enemies, tilelength, gridWidth);
+            }
+            return;
+        }
+
         // Cooldown-Check
-        if (currentTime - this.lastShotTime < this.cooldown) {
+        if (currentTime - this.lastShotTime < effectiveCooldown) {
             return;
         }
         this.lastShotTime = currentTime;
 
+        // Starte Burst wenn extraProjectiles > 0
+        if (isPlayer && player.extraProjectiles && player.extraProjectiles > 0) {
+            this.burstRemaining = player.extraProjectiles;
+            this.burstTimer = currentTime;
+        }
+
+        // Feuere erstes Projektil
+        this._fireProjectile(player, currentTime, enemies, tilelength, gridWidth);
+    }
+
+    /**
+     * Interner Helper zum Feuern eines Projektils
+     */
+    _fireProjectile(player, currentTime, enemies, tilelength, gridWidth) {
         // Ziel-Bestimmung
         const target = this.determineTarget(player, enemies);
         if (!target) return;
@@ -178,11 +213,16 @@ export class Weapon extends Item {
             shooter: this.shooter
         };
 
+        // Berechne effektiven Schaden mit Equipment-Multiplier
+        const effectiveDamage = isPlayer && this.shooter.damageMultiplier
+            ? this.dmg * this.shooter.damageMultiplier
+            : this.dmg;
+
         const projectile = new ProjectileClass(
             this.shooter.globalEntityX,
             this.shooter.globalEntityY,
             direction,
-            this.dmg,
+            effectiveDamage,
             extendedConfig,
             gridMapTile,
             currentTime,

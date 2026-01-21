@@ -35,6 +35,14 @@ export class Player extends MovingEntity {
         this.ctx = ctx;
         this.onDeath = onDeath;
 
+        // Equipment-Multiplier (für Equipment-System)
+        this.damageMultiplier = 1.0;      // Equipment Valor
+        this.cooldownMultiplier = 1.0;    // Equipment Rapid Fire
+        this.isInvincible = false;        // Equipment Holy Aura
+        this.armor = 0;                   // Equipment Armor
+        this.extraProjectiles = 0;        // Equipment Barrage
+        this.equipmentSlots = [null, null, null]; // Drei Equipment-Slots
+
         this.canvasWidthMiddle = canvasWidthMiddle
         this.canvasWidthHeight = canvasHeightMiddle
 
@@ -227,7 +235,44 @@ export class Player extends MovingEntity {
             item.render(this.ctx, this, this.enemyItemDrops, i)
         }
     }
-       getColor() {
+    /**
+     * Equipment-System: Rüstet ein Equipment aus
+     * @param {object} equipment - Equipment-Objekt mit effect() Methode
+     * @returns {boolean} - true wenn erfolgreich
+     */
+    acquireEquipment(equipment) {
+        // Finde ersten freien Slot
+        const freeSlotIndex = this.equipmentSlots.findIndex(slot => slot === null);
+        
+        if (freeSlotIndex === -1) {
+            console.log("Alle Equipment-Slots belegt!");
+            return false;
+        }
+        
+        // Equipment in Slot speichern
+        this.equipmentSlots[freeSlotIndex] = equipment;
+        
+        // Equipment-Effekt anwenden (falls vorhanden)
+        if (equipment && typeof equipment.effect === 'function') {
+            equipment.effect(this);
+        }
+        
+        console.log(`Equipment "${equipment?.name || 'Unbekannt'}" in Slot ${freeSlotIndex + 1} ausgerüstet`);
+        return true;
+    }
+
+    /**
+     * Entfernt alle Equipment-Effekte (für Reset)
+     */
+    resetEquipmentEffects() {
+        this.damageMultiplier = 1.0;
+        this.cooldownMultiplier = 1.0;
+        this.isInvincible = false;
+        this.armor = 0;
+        this.extraProjectiles = 0;
+    }
+
+    getColor() {
         return 'blue'
-       }
+    }
 }
