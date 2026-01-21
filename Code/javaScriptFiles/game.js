@@ -4,7 +4,7 @@ import {Entity} from "./entity.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {Projectile} from "./projectile-refactored-v2.js"
+import {Projectile} from "./projectiles/index.js"
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')

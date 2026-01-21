@@ -1,5 +1,5 @@
 import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop} from "./dropSingleUse.js"
-import {Weapon} from "./weapon-refactored-v2.js"
+import {Weapon} from "./weapons/index.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
@@ -166,7 +166,7 @@ export class Enemy extends MovingEntity {
             // Shoot Logik
             this.weapon.shoot(this, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
             // Render Projektile
-            this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
+            this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops);
         }
     }
         // Zeichnen passiert IMMER, auch wenn gefreezt (damit Enemies nicht "verschwinden").

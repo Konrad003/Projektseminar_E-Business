@@ -1,9 +1,22 @@
 import {MovingEntity} from "./movingEntity.js"
-import {Weapon} from "./weapon-refactored-v2.js";
+import {Weapon} from "./weapons/index.js";
 
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
+
+    // Waffen-Level-Tracking: 0 = nicht freigeschaltet, 1-20 = aktives Level
+    weaponLevels = {
+        bow: 1,           // Alle auf Level 1 für Testing
+        knife: 1,
+        fireball: 1,
+        molotov: 1,
+        shuriken: 1,
+        thunderstrike: 1,
+        aura: 1,
+        axe: 1,
+        basic: 1          // Für Enemy-Waffen
+    };
 
     constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
@@ -26,7 +39,7 @@ export class Player extends MovingEntity {
         this.canvasWidthHeight = canvasHeightMiddle
 
         this.xpForNextLevel = this.level * 10;
-        this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
+        this.weapon = Weapon.create("bow", this, mapWidth, mapHeight, gridWidth, this.weaponLevels.bow);
         this.enemyItemDrops = []
 
         // All weapons mode
@@ -36,6 +49,9 @@ export class Player extends MovingEntity {
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.gridWidth = gridWidth;
+
+        // Blickrichtung (wird durch Bewegung aktualisiert)
+        this.facingDirection = { x: 1, y: 0 }; // Standard: rechts
     }
 
     handleInput(map, inputState) {
@@ -44,17 +60,30 @@ export class Player extends MovingEntity {
             && (inputState.upPressed || inputState.downPressed)) {
             speed /= 1.8
         }
+
+        // Blickrichtung aktualisieren basierend auf Bewegung
+        let dirX = 0, dirY = 0;
         if (inputState.rightPressed) {
             this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirX = 1;
         }
         if (inputState.upPressed) {
             this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirY = -1;
         }
         if (inputState.leftPressed) {
             this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirX = -1;
         }
         if (inputState.downPressed) {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirY = 1;
+        }
+
+        // Nur aktualisieren wenn tatsächlich Bewegung stattfindet
+        if (dirX !== 0 || dirY !== 0) {
+            const length = Math.sqrt(dirX * dirX + dirY * dirY);
+            this.facingDirection = { x: dirX / length, y: dirY / length };
         }
     }
 
@@ -74,38 +103,59 @@ export class Player extends MovingEntity {
             }
         }
 
-        switch (weaponNumber) {
-            case 0:
-                this.weapon = Weapon.create("sword", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 1:
-                this.weapon = Weapon.create("bow", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 2:
-                this.weapon = Weapon.create("thunderstrike", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 3:
-                this.weapon = Weapon.create("knife", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 4:
-                this.weapon = Weapon.create("molotov", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 5:
-                this.weapon = Weapon.create("shuriken", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 6:
-                this.weapon = Weapon.create("aura", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 7:
-                this.weapon = Weapon.create("fireball", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 8:
-                this.weapon = Weapon.create("knife", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
-            case 9:
-                this.weapon = Weapon.create("axe", this, this.mapWidth, this.mapHeight, this.gridWidth);
-                break;
+        // Waffen-Type basierend auf Nummer
+        const weaponMap = {
+            0: "knife",
+            1: "bow",
+            2: "thunderstrike",
+            3: "knife",
+            4: "molotov",
+            5: "shuriken",
+            6: "aura",
+            7: "fireball",
+            8: "knife",
+            9: "axe"
+        };
+
+        const weaponType = weaponMap[weaponNumber];
+        if (weaponType && this.weaponLevels[weaponType] > 0) {
+            this.weapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth, this.weaponLevels[weaponType]);
+        } else {
+            console.log(`Waffe "${weaponType}" ist noch nicht freigeschaltet (Level 0)`);
         }
+    }
+
+    /**
+     * Erhöht das Level einer Waffe um 1
+     * @param {string} weaponType - z.B. "bow", "fireball", etc.
+     * @returns {boolean} - true wenn erfolgreich, false wenn max Level erreicht
+     */
+    upgradeWeapon(weaponType) {
+        const maxLevel = 20;
+        if (this.weaponLevels[weaponType] < maxLevel) {
+            this.weaponLevels[weaponType]++;
+            console.log(`${weaponType} upgraded to Level ${this.weaponLevels[weaponType]}`);
+
+            // Wenn aktuelle Waffe, neu erstellen mit neuem Level
+            if (this.weapon && this.weapon.config && this.weapon.config.type === weaponType) {
+                this.weapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth, this.weaponLevels[weaponType]);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Schaltet eine neue Waffe frei (setzt auf Level 1)
+     * @param {string} weaponType - z.B. "knife", "fireball", etc.
+     */
+    unlockWeapon(weaponType) {
+        if (this.weaponLevels[weaponType] === 0) {
+            this.weaponLevels[weaponType] = 1;
+            console.log(`${weaponType} freigeschaltet!`);
+            return true;
+        }
+        return false; // Bereits freigeschaltet
     }
 // New method to shoot all weapons at once for testing
     shootAllWeapons(currentTime, enemies, map) {
@@ -113,13 +163,16 @@ export class Player extends MovingEntity {
         this.allWeaponsActive = !this.allWeaponsActive;
 
         if (this.allWeaponsActive) {
-            // Create all weapon instances
-            const weaponTypes = ["sword", "bow", "thunderstrike", "knife", "shuriken", "aura", "fireball", "axe", "molotov"];
+            // Create all weapon instances (mit Level 1 für Testing)
+            const weaponTypes = ["bow", "thunderstrike", "knife", "shuriken", "aura", "fireball", "axe", "molotov"];
             this.allWeapons = [];
 
             for (const weaponType of weaponTypes) {
-                const weapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth);
-                this.allWeapons.push(weapon);
+                const level = this.weaponLevels[weaponType] || 1; // Mindestens Level 1 für Test
+                const weapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth, level);
+                if (weapon) {
+                    this.allWeapons.push(weapon);
+                }
             }
         } else {
             // Clear all weapons
