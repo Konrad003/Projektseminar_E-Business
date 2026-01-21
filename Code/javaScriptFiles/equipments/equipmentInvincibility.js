@@ -1,8 +1,8 @@
-import { Equipment } from "./equipment.js";
+import {Equipment} from "../equipment.js";
 
-export class EquipmentHolyAura extends Equipment {
-    constructor() {
-        super("holy_aura_icon.png", "Grant temporary invincibility", "holy_aura_picture.png", "Holy Aura", "isInvincible", 0);
+export class EquipmentInvincibility extends Equipment { //Invinsibille
+    constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
+        super(icon, description, level, name, playerStatKey, valuePerLevel);
         this.level = 1;
         this.baseDuration = 8000; // 8 Sekunden Basiszeit (in Millisekunden)
         this.durationPerLevel = 2000; // +2 Sekunden pro Level
@@ -26,7 +26,7 @@ export class EquipmentHolyAura extends Equipment {
 
         // Unbesiegbarkeit aktivieren
         player.isInvincible = true;
-        
+
         // Level 1 = 8s, Level 2 = 10s, Level 3 = 12s...
         const currentDuration = this.baseDuration + (newLevel - 1) * this.durationPerLevel;
 

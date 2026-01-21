@@ -1,11 +1,11 @@
 import {Item} from "./item.js";
 
 export class Equipment extends Item {
-    constructor(icon, description, picture, name, playerStatKey = null, valuePerLevel = 0) {
-        super(icon, description, picture);
+    constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
+        super(icon, description, level, playerStatKey);
         this.name = name;
         this.icon = icon;
-        this.level = 1;
+        this.level = level;
         
         // für die Automatisierung der Update/Apply Methoden:
         this.playerStatKey = playerStatKey;   // z.B. "speed" oder "armor"

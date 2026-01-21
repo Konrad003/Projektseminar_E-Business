@@ -4,7 +4,7 @@ import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
 import {Projectile} from "./projectiles/index.js"
-// Equipment-Imports aus main
+// Equipment-Imports
 import {EquipmentDash} from "./equipmentDash.js";
 import {EquipmentVigor} from "./equipmentVigor.js";
 import {EquipmentValor} from "./equipmentValor.js";
@@ -20,13 +20,13 @@ const ctx = canvas.getContext('2d')
 ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
-let BasicHeight = 1440;  
-canvas.width  = BasicWidth * zoomFactor;
+let BasicHeight = 1440;
+canvas.width = BasicWidth * zoomFactor;
 canvas.height = BasicHeight * zoomFactor;
 
-function resizeCanvas(){              // Canvas Skalierung je nach Fenstergröße --> soll flackern der Grafik verhindern
+function resizeCanvas() {              // Canvas Skalierung je nach Fenstergröße --> soll flackern der Grafik verhindern
 
-    let windowWidth  = window.innerWidth;   // von dem Browserfenster
+    let windowWidth = window.innerWidth;   // von dem Browserfenster
     let windowHeight = window.innerHeight;// von dem Browserfenster
     let targetRatio = BasicWidth / BasicHeight; // Verhältnis von internem Canvas
     let windowRatio = windowWidth / windowHeight;// Verhältnis von internem Canvas
@@ -34,28 +34,28 @@ function resizeCanvas(){              // Canvas Skalierung je nach Fenstergröß
 
     if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen   
         newHeight = windowHeight;// Bildschirm breiter --> volle Höhe nutzen, Breite anpassen
-        newWidth  = newHeight * targetRatio;
+        newWidth = newHeight * targetRatio;
     } else {
-        newWidth  = windowWidth;// Bildschirm schmaler --> volle Breite nutzen, Höhe anpassen
+        newWidth = windowWidth;// Bildschirm schmaler --> volle Breite nutzen, Höhe anpassen
         newHeight = newWidth / targetRatio;
     }
-    canvas.style.width  = newWidth + "px";  // Not sure ob das besser geht mit CSS Skalierung
+    canvas.style.width = newWidth + "px";  // Not sure ob das besser geht mit CSS Skalierung
     canvas.style.height = newHeight + "px";
 }
 
 resizeCanvas()
 window.addEventListener('resize', resizeCanvas);
-window.addEventListener("keydown", function(e) {
-    
+window.addEventListener("keydown", function (e) {
+
     if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {// Blockiere Strg  +, Strg  -, Strg 0  und Stgr = (Zoom / Zoomreset)
         e.preventDefault(); // wenn man unbedingt zoomen will, dann über das Stgr Shift und dann auf die Taste mit (~+*) / (_-)
     }
 });
-window.addEventListener("wheel", function(e) {// Mausrad-Zoom blockieren
+window.addEventListener("wheel", function (e) {// Mausrad-Zoom blockieren
     if (e.ctrlKey) {
         e.preventDefault();
     }
-}, { passive: false });
+}, {passive: false});
 
 
 export class game {
@@ -271,9 +271,7 @@ export class game {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
-            this.PlayerOne.acquireEquipment(new EquipmentHolyAura()); // Test-Ausrüstung
-            this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
-            this.PlayerOne.acquireEquipment(new EquipmentValor()); // Test-Ausrüstung
+
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
@@ -306,16 +304,17 @@ export class game {
         const spawn = () => {
             if (!this.gamePaused) {
 
-            EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8 /*Anzahl der Gegner pro Spawn*/)
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8 /*Anzahl der Gegner pro Spawn*/)
             }
             this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
 
-    spawn();
+        spawn();
     }
+
     getCurrentSpawnInterval() {
         return 500 / this.getSpawnIntensity(this.gameTimer); // 5000  is das Startintervall
-}
+    }
 
     getSpawnIntensity(t) {
         console.log("Timer: " + t)

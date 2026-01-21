@@ -1,8 +1,8 @@
-import { Equipment } from "./equipment.js";
+import {Equipment} from "../equipment.js";
 
-export class EquipmentBarrage extends Equipment {
-    constructor() {
-        super("barrage_icon.png", "Fires extra projectiles", "barrage_picture.png", "Barrage", "extraProjectiles", 0);
+export class EquipmentExtraProjectile extends Equipment {
+    constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
+        super(icon, description, level, name, playerStatKey, valuePerLevel);
     }
 
     update(player, map, inputState) {
