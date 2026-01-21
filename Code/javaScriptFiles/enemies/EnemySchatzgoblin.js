@@ -5,8 +5,15 @@ export class EnemySchatzgoblin extends Enemy {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.currentHPHP = this.hp = 1500
         this.speed = 10
-        this.png = "EnemySchatzgoblin"
+        this.png = "./Graphics/enemiesPNG/Goblin/1.png"
         this.hitbox = {width: 22, height: 22}
+
+        const img = new Image();
+        img.onload = () => {
+            this.hitbox = {width: (img.naturalWidth / 8), height: (img.naturalHeight / 8)};
+        };
+        img.src = this.png;
+
         this.level = 1
         this.xpDrop = 30
         this.baseDamage = 0

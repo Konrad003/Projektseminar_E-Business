@@ -5,8 +5,15 @@ export class EnemyHexe extends Enemy {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.hp = 75
         this.speed = 0.8
-        this.png = "EnemyHexe"
+        this.png = "./Graphics/enemiesPNG/Hexe/1.png"
         this.hitbox = {width: 10, height: 10}
+
+        const img = new Image();
+        img.onload = () => {
+            this.hitbox = {width: (img.naturalWidth / 8), height: (img.naturalHeight / 8)};
+        };
+        img.src = this.png;
+
         this.level = 1
         this.xpDrop = 4
         this.baseDamage = 20

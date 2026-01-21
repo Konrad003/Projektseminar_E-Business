@@ -1,5 +1,13 @@
-import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop, AttackBoostDrop, InstantLevelDrop} from "./dropSingleUse.js"
-import {Weapon} from "./weapon.js"
+import {
+    AttackBoostDrop,
+    FreezeDrop,
+    HealDrop,
+    InstantLevelDrop,
+    NukeDrop,
+    SpeedBoostDrop,
+    XpDrop,
+    XpMagnetDrop
+} from "./dropSingleUse.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {   
@@ -11,7 +19,16 @@ export class Enemy extends MovingEntity {
             this.oldMoveY=0
             this.blockedX = false
             this.blockedY = false
-        }    
+        }
+
+    draw(ctx, player) {
+        if (typeof this.png === 'string') {
+            const src = this.png
+            this.png = new Image()
+            this.png.src = src
+        }
+        super.draw(ctx, player)
+    }
 
     // Gegner bewegt sich in Richtung Player
     chasePlayer(map, playerX, playerY, enemyArray) {

@@ -354,25 +354,25 @@ export class game {
     }
 
     nextPlayer() {
-        document.getElementById("player" + this.playerSelect).style.display = "none";
-        this.playerSelect++;
-        if (this.playerSelect > 6) {
-            this.playerSelect = 1;
+        document.getElementById("player" + this.playerSelect).style.display = "none"
+        this.playerSelect++
+        if (this.playerSelect > 5) {
+            this.playerSelect = 1
         } else if (this.playerSelect < 1) {
-            this.playerSelect = 6;
+            this.playerSelect = 5
         }
-        document.getElementById("player" + this.playerSelect).style.display = "flex";
+        document.getElementById("player" + this.playerSelect).style.display = "flex"
     }
 
     prevPlayer() {
-        document.getElementById("player" + this.playerSelect).style.display = "none";
-        this.playerSelect--;
-        if (this.playerSelect > 6) {
-            this.playerSelect = 1;
+        document.getElementById("player" + this.playerSelect).style.display = "none"
+        this.playerSelect--
+        if (this.playerSelect > 5) {
+            this.playerSelect = 1
         } else if (this.playerSelect < 1) {
-            this.playerSelect = 6;
+            this.playerSelect = 5
         }
-        document.getElementById("player" + this.playerSelect).style.display = "flex";
+        document.getElementById("player" + this.playerSelect).style.display = "flex"
     }
 
     home() {

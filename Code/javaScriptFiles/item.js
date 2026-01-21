@@ -1,4 +1,4 @@
-export class Item {
+import {StaticEntity} from "./staticEntity.js"
 
 export class Item extends StaticEntity {
 
@@ -10,7 +10,7 @@ export class Item extends StaticEntity {
         this.icon = icon
         this.description = description
         this.level = 1
-        this.playerStatKey = playerStatKey
+        //this.playerStatKey = playerStatKey
     }
 
     lvlUp() {

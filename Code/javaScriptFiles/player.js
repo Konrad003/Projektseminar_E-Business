@@ -21,7 +21,8 @@ export class Player extends MovingEntity {
         this.isInvincible = false; // für equipment holy aura
         this.armor = 0; // für equipment armor
         this.extraProjectiles = 0; // für equipment barrage
-        this.hitbox = hitbox;
+        this.hitbox = hitbox || {width: 32, height: 32}
+
         this.equipmentSlots = [null, null, null]; // Drei leere Slots für Equipment
         this.regeneration = regeneration;
         this.ctx = ctx;
@@ -36,13 +37,20 @@ export class Player extends MovingEntity {
 
         this.LvlUpFactory = new LvlUpFactory();
 
+        const img = new Image()
+        img.onload = () => {
+            this.hitbox = {
+                width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+            }
+        }
+        img.src = png
     }
 
     draw(ctx, player) {
+        ctx.save();
+
         // Wenn die Aura aktiv ist, wird Zeichnen angepasst
         if (this.isInvincible) {
-            ctx.save(); // Speichert den aktuellen Zustand (Normalzustand)
-
             ctx.shadowBlur = 20;
             ctx.shadowColor = "cyan"; // Ein heiliges, blaues Leuchten
             ctx.globalAlpha = 0.7 + Math.sin(performance.now() / 150) * 0.3; // Blink-Effekt
@@ -51,10 +59,7 @@ export class Player extends MovingEntity {
         // draw-Methode der Basisklasse (Entity)
         super.draw(ctx, player);
 
-        // Wenn wir den Zustand verändert hatten, setzen wir ihn jetzt wieder zurück
-        if (this.isInvincible) {
-            ctx.restore(); // Setzt Schatten und Alpha wieder auf Standard
-        }
+        ctx.restore();
     }
 
     handleInput(map, inputState) {
