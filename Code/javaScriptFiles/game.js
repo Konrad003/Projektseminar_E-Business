@@ -4,7 +4,7 @@ import {Entity} from "./entity.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {Projectile} from "./projectile.js"
+import {Projectile} from "./projectile-refactored-v2.js"
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
@@ -28,7 +28,7 @@ export class game {
 
     enemySpawnInterval = null // Intervall für Gegner-Spawns
     renderInterval = null // Intervall für das Rendern
-    
+
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
     hudHealthProgress = document.getElementById("hudHealthProgress")
@@ -248,7 +248,7 @@ export class game {
             }
             this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
-    
+
     spawn();
     }
     getCurrentSpawnInterval() {
@@ -271,7 +271,7 @@ export class game {
             return 0.4 + 0.6 * ((t - 330) / 180);
         } else {
             return 1.0;
-        }    
+        }
     }
 
     // Beginn der Screen-Wechsel-Funktionen
@@ -445,7 +445,7 @@ export class game {
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
                 for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
-                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth)
+                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
             }
         }

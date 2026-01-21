@@ -1,5 +1,5 @@
 import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop} from "./dropSingleUse.js"
-import {Weapon} from "./weapon.js"
+import {Weapon} from "./weapon-refactored-v2.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
@@ -157,12 +157,15 @@ export class Enemy extends MovingEntity {
         this.frozenUntil = Math.max(current, now + duration) // wenn er schon gefreezt ist, wird die Dauer verlängert
     }
 
-    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops = []){
         const frozen = this.frozenUntil && performanceNow < this.frozenUntil
         if (!frozen) {
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
         if (this.weapon)  {
+            // Shoot Logik
+            this.weapon.shoot(this, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
+            // Render Projektile
             this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
         }
     }
@@ -178,7 +181,7 @@ export class Enemy extends MovingEntity {
         this.draw(ctx, PlayerOne) // Gegner im Sichtbereich zeichnen
     }
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
-            PlayerOne.takeDmg(15, enemies, positionWithin)
+            PlayerOne.takeDmg(15, enemies, positionWithin, [])
             this.killCount++
         }
     }

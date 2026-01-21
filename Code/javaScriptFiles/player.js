@@ -1,5 +1,5 @@
 import {MovingEntity} from "./movingEntity.js"
-import {Weapon} from "./weapon.js";
+import {Weapon} from "./weapon-refactored-v2.js";
 
 export class Player extends MovingEntity {
     ctx
@@ -85,7 +85,7 @@ export class Player extends MovingEntity {
                 this.weapon = Weapon.create("thunderstrike", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 3:
-                this.weapon = Weapon.create("spear", this, this.mapWidth, this.mapHeight, this.gridWidth);
+                this.weapon = Weapon.create("knife", this, this.mapWidth, this.mapHeight, this.gridWidth);
                 break;
             case 4:
                 this.weapon = Weapon.create("molotov", this, this.mapWidth, this.mapHeight, this.gridWidth);
@@ -114,7 +114,7 @@ export class Player extends MovingEntity {
 
         if (this.allWeaponsActive) {
             // Create all weapon instances
-            const weaponTypes = ["sword", "bow", "thunderstrike", "spear", "shuriken", "aura", "fireball", "knife", "axe", "molotov"];
+            const weaponTypes = ["sword", "bow", "thunderstrike", "knife", "shuriken", "aura", "fireball", "axe", "molotov"];
             this.allWeapons = [];
 
             for (const weaponType of weaponTypes) {
@@ -155,12 +155,16 @@ export class Player extends MovingEntity {
         this.handleInput(map, inputState)
         this.draw(this.ctx, this)
 
+        // Shoot current weapon
+        this.weapon.shoot(this, performanceNow, enemies, map.tilelength, gridWidth, inputState, this.enemyItemDrops);
+
         // Render current weapon
         this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState)
 
         // Render all active weapons if in all weapons mode
         if (this.allWeaponsActive) {
             for (let weapon of this.allWeapons) {
+                weapon.shoot(this, performanceNow, enemies, map.tilelength, gridWidth, inputState, this.enemyItemDrops);
                 weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState);
             }
         }

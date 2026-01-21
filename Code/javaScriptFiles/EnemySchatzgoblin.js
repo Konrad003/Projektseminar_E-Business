@@ -46,7 +46,7 @@ export class EnemySchatzgoblin extends Enemy {
         }
     }
 
-    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){  
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops = []){  
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)        
         this.draw(ctx, PlayerOne)
         this.move(PlayerOne, MapOne, enemies)
