@@ -1,5 +1,5 @@
 import { Weapon } from "./Weapon.js";
-import { getWeaponConfig } from "../weapon-config.js";
+import { getWeaponConfig } from "./weapon-config.js";
 
 /**
  * AxeWeapon: Boomerang-Axt

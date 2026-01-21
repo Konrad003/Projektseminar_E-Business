@@ -66,13 +66,13 @@ export class EnemyFactory{
     }
     static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
         const enemyTypes = [
-            {cls: EnemySlime, weight: 70 , weapon: "knife"},
-            {cls: EnemyReiter, weight: 5, weapon: "knife"},
-            {cls: EnemySensenmann, weight: 5, weapon: "knife"},
+            {cls: EnemySlime, weight: 70 , weapon: "basicEnemy"},
+            {cls: EnemyReiter, weight: 5, weapon: "basicEnemy"},
+            {cls: EnemySensenmann, weight: 5, weapon: "basicEnemy"},
             {cls: EnemyHexe, weight: 3, weapon: "fireball"},
-            {cls: EnemySchatzgoblin, weight: 1, weapon: "knife"},
-            {cls: EnemyGepanzerterRitter, weight: 1, weapon: "knife"},
-            {cls: EnemySkellet, weight: 15, weapon: "bow"}
+            {cls: EnemySchatzgoblin, weight: 1, weapon: "basicEnemy"},
+            {cls: EnemyGepanzerterRitter, weight: 1, weapon: "basicEnemy"},
+            {cls: EnemySkellet, weight: 15, weapon: "basicEnemy"}
         ];
 
         let totalWeight = enemyTypes.reduce((sum, enemy) => sum + enemy.weight, 0)

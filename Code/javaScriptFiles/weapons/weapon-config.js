@@ -1,7 +1,7 @@
 import {
     BasicProjectile, FireballProjectile, MolotovProjectile,
     OrbitingProjectile, BoomerangProjectile
-} from './projectiles/index.js';
+} from '../projectiles/index.js';
 
 /**
  * WAFFEN-LEVEL-SYSTEM
@@ -266,20 +266,20 @@ export const WEAPONS = {
         }
     },
 
-    // ENEMY WEAPON (nicht upgradebar)
+    // ENEMY WEAPON (nicht upgradebar) - Schwächer als Player-Bogen
     basicEnemy: {
         type: "basicEnemy",
-        name: "Basic Gun",
-        dmg: 10,
-        cooldown: 300,
-        range: 1000,
-        piercing: 1,
+        name: "Enemy Arrow",
+        dmg: 15,
+        cooldown: 1500,      // Langsamer als Player
+        range: 600,          // Kürzere Reichweite
+        piercing: 0,
         maxLevel: 1,
         projectile: BasicProjectile,
         projectileConfig: {
-            speed: 3,
-            size: 6,
-            duration: 3000,
+            speed: 4,        // Langsamer als Player-Projektile
+            size: 5,
+            duration: 2000,
             isEnemy: true
         }
     },

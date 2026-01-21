@@ -1,4 +1,4 @@
-/**
+/*
  * WeaponFactory: Erstellt Waffen basierend auf Typ
  * Zentrale Factory-Methode für alle Waffen
  */
@@ -8,11 +8,11 @@ import { ShurikenWeapon } from "./ShurikenWeapon.js";
 import { ThunderstrikeWeapon } from "./ThunderstrikeWeapon.js";
 import { AxeWeapon } from "./AxeWeapon.js";
 import { AuraWeapon } from "./AuraWeapon.js";
-import { getWeaponConfig } from "../weapon-config.js";
+import { getWeaponConfig } from "./weapon-config.js";
 
-/**
- * Factory-Methode: Erstelle Waffe aus Config
- */
+
+ //Factory-Methode: Erstelle Waffe aus Config
+
 export function createWeapon(type, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
     const config = getWeaponConfig(type);
 
@@ -41,5 +41,4 @@ export function createWeapon(type, shooter, mapWidth, mapHeight, gridWidth, leve
     return new Weapon(config, shooter, mapWidth, mapHeight, gridWidth, level);
 }
 
-// Auch als statische Methode auf Weapon für Rückwärtskompatibilität
 Weapon.create = createWeapon;

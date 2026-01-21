@@ -109,15 +109,15 @@ export class Enemy extends MovingEntity {
                     width: 16,
                     height: 16
                 }, null))
-            } else if (roll < 0.65) { 
-                enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16, 
-                    height: 16 
+            } else if (roll < 0.65) {
+                enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
                 }, null))
             } else if (roll < 0.7) {
-                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16, 
-                    height: 16 
+                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
                 }, null))
             } else if (roll < 0.72) { // z.B. 5%
                 enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
@@ -125,9 +125,9 @@ export class Enemy extends MovingEntity {
                     height: 16
                 }, null))
             } else if (roll < 0.75) {
-                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16, 
-                    height: 16 
+                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
                 }, null))
             }  else if (roll < 0.80) {
                 enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
@@ -148,18 +148,15 @@ export class Enemy extends MovingEntity {
     }
 
     shouldShoot(player) {
-        // Nur Ranged-Gegner mit Waffe können schießen
-
-
-        // Distanzberechnung mit deinen Bezeichnern
+        // Distanzberechnung
         let distanceX = player.globalEntityX - this.globalEntityX;
         let distanceY = player.globalEntityY - this.globalEntityY;
         let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        // Nutze die Eigenschaft oder fallback auf den bisherigen Wert
-        let stopDistance = 200;
+        // Schieß-Reichweite - passend zur Waffen-Range
+        let shootDistance = this.weapon?.range || 500;
 
-        return distance <= stopDistance;
+        return distance <= shootDistance;
     }
 
     freeze(now, duration) {
@@ -173,8 +170,8 @@ export class Enemy extends MovingEntity {
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
         if (this.weapon)  {
-            // Shoot Logik
-            this.weapon.shoot(this, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
+            // Shoot Logik - PlayerOne wird übergeben damit die Richtung korrekt berechnet wird
+            this.weapon.shoot(PlayerOne, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
             // Render Projektile
             this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops);
         }

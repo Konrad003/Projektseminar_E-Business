@@ -1,6 +1,6 @@
 import { Item } from "../item.js";
 import { Enemy } from "../enemy.js";
-import { getWeaponConfig, createProjectileConfig, getWeaponStatsForLevel } from "../weapon-config.js";
+import { getWeaponConfig, createProjectileConfig, getWeaponStatsForLevel } from "./weapon-config.js";
 
 /**
  * Basis-Klasse für alle Waffen

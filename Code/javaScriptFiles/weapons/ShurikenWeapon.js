@@ -1,10 +1,7 @@
 import { Weapon } from "./Weapon.js";
-import { getWeaponConfig } from "../weapon-config.js";
+import { getWeaponConfig } from "./weapon-config.js";
 
-/**
- * ShurikenWeapon: Orbiting Sterne
- * WARUM SPECIAL: Mehrere Projektile, konstantes Orbiting (passiv, dauerhaft aktiv)
- */
+//ShurikenWeapon: Orbiting Sterne
 export class ShurikenWeapon extends Weapon {
     constructor(shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         const config = getWeaponConfig("shuriken");
