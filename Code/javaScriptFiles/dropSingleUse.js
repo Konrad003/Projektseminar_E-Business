@@ -30,7 +30,6 @@ export class SpeedBoostDrop extends DropSingleUse {
     this.duration = 10000
     this.speedMultiplier = 3
   }
-  getColor() { return "orange" }
   apply(player) {
     if (!player) return
     if (player.baseSpeed == null) player.baseSpeed = player.speed
@@ -43,7 +42,37 @@ export class SpeedBoostDrop extends DropSingleUse {
       player.speedBoostTimeout = null
     }, this.duration)
   }
+  getColor() {
+        return "orange"
+  }
 }
+
+export class AttackBoostDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.duration = 10000
+    this.damageMultiplier = 2
+  }
+
+  getColor() { return "red" }
+
+  apply(player) {
+    if (!player || !player.weapon) return
+
+    // Basis-Damage einmal merken (wie baseSpeed beim SpeedBoost)
+    if (player.baseDmg == null) player.baseDmg = player.weapon.dmg
+
+    // Timer-Logik wie beim SpeedBoost:
+    if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
+    else player.weapon.dmg = player.baseDmg * this.damageMultiplier
+
+    player.attackBoostTimeout = setTimeout(() => {
+      player.weapon.dmg = player.baseDmg
+      player.attackBoostTimeout = null
+    }, this.duration)
+  }
+}
+
 
 export class HealDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
@@ -94,6 +123,7 @@ export class XpDrop extends DropSingleUse {
   }
 
   getColor() { return "brown" }
+  
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
@@ -173,7 +203,7 @@ class ShockwaveNukeEffect extends StaticEntity {
           const dist = Math.sqrt(dx * dx + dy * dy)
 
           // Wenn die Shockwave den Gegner erreicht -> tot
-          if (dist <= this.radius) {
+          if (dist <= this.radius && !enemy.elite) {
           enemy.takeDmg(999999, enemies, i, player.enemyItemDrops)
           }
         }
@@ -200,5 +230,74 @@ export class NukeDrop extends DropSingleUse {
         player.globalEntityY
       )
     )
+  }
+}
+
+export class FreezeDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.duration = 3000 // 3 Sekunden
+    this.radius = 1500   // Radius um den Spieler 
+  }
+
+  getColor() { return "lightcyan" }
+
+  apply(player) {
+    if (!player) return
+    if (typeof Game === "undefined" || !Game.enemies) return
+
+    const now = performance.now()
+    const enemies = Game.enemies
+
+    // alle enemies im Grid prüfen, aber nur die im Radius einfrieren
+    for (let row = 0; row < enemies.length; row++) {
+      for (let col = 0; col < enemies[row].length; col++) {
+        const list = enemies[row][col].within // alle Enemies in diesem Grid-Feld
+
+        for (let i = 0; i < list.length; i++) {
+          const enemy = list[i]
+
+          // Distanz Player <-> Enemy
+          const dx = enemy.globalEntityX - player.globalEntityX
+          const dy = enemy.globalEntityY - player.globalEntityY
+          const dist = Math.sqrt(dx * dx + dy * dy)
+
+          // nur im Radius einfrieren
+          if (dist <= this.radius) {
+            // friert den Enemy bis (now + duration) ein;
+            enemy.freeze(now, this.duration)
+          }
+        }
+      }
+    }
+  }
+}
+
+export class InstantLevelDrop extends DropSingleUse {
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+  }
+
+  getColor() { return "gold" }
+
+  apply(player) {
+    if (!player) return
+
+    // Fortschritt vorm LevelUp merken (z.B. 0.5 = 50%)
+    const ratio = (player.xpForNextLevel > 0) ? (player.xp / player.xpForNextLevel) : 0
+
+    // genau 1 Level geben
+    player.lvlUp()
+
+    // Fortschritt im neuen Level wiederherstellen (wieder z.B. 50%)
+    player.xp = ratio * player.xpForNextLevel
+
+    // HUD aktualisieren (wie in collectXp)
+    if (Game?.hudXpProgress) {
+      Game.hudXpProgress.value = player.xp
+    } else {
+      const hud = document.getElementById("hudXpProgress")
+      if (hud) hud.value = player.xp
+    }
   }
 }

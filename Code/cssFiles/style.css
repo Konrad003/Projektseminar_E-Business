@@ -296,6 +296,19 @@ progress {
 	object-fit: contain;
 	width: auto;
 }
+/* Ende HUD Styles */
+
+.lvlUpImg {
+    display: grid;
+    /* Beide Elemente in die erste Zeile und erste Spalte zwingen */
+    grid-template-areas: "stack";
+    place-items: center; /* Zentriert horizontal und vertikal */
+    width: fit-content; /* Passt sich der Größe des SVGs an */
+}
+
+.lvlUpImg > * {
+    grid-area: stack; /* Beide Elemente belegen denselben Platz */
+}
 
 .playerName {
 	color: var(--yellow);
@@ -334,4 +347,9 @@ progress {
 	box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.6);
 	color: var(--red);
 	transform: translate(-2px, -2px);
+}
+.lvlUpImg img {
+    height: 60%;
+    width: 60%;
+    z-index: 10;
 }
