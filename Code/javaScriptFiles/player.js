@@ -35,8 +35,7 @@ export class Player extends MovingEntity {
         this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
         this.enemyItemDrops = []
 
-        this.LvlUpFactory = new LvlUpFactory();
-
+        this.LvlUpFactory = new LvlUpFactory(this);
     }
 
     draw(ctx, player) {
@@ -79,7 +78,7 @@ export class Player extends MovingEntity {
     }
 
     lvlUp() {
-        this.LvlUpFactory.lvlUpRoll()
+        this.LvlUpFactory.lvlUpRoll(this)
         Game.lvlUPshow()
         this.level++;
         this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
@@ -109,6 +108,10 @@ export class Player extends MovingEntity {
     acquireEquipment(newEquipment) {
         for (let i = 0; i < this.equipmentSlots.length; i++) {
             if (this.equipmentSlots[i] === null) {
+                if (newEquipment === this.equipmentSlots[i]) {
+                    newEquipment.lvlUp();
+                    return true
+                }
                 this.equipmentSlots[i] = newEquipment;
                 console.log(newEquipment.name + " ausgerüstet in Slot " + i);
                 return true;

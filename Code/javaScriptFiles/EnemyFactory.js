@@ -10,8 +10,8 @@ import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 export class EnemyFactory{
     static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight, MapOne, CountOfEnemies) {
-        
-        const offset = 80
+
+        const offset = 160
         
 
         const left = player.globalEntityX - canvas.width / 2

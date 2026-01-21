@@ -5,6 +5,7 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Projectile} from "./projectile.js"
 import {EnemyFactory} from "./EnemyFactory.js"
+import {LvlUpFactory} from "./LvlUpFactory.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -86,6 +87,7 @@ export class game {
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
+        this.LevelUpFactory = null
 
         this.dashTrails = [] // Array für Dash-Effekte
     }
@@ -225,6 +227,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
 
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
