@@ -77,10 +77,10 @@ export class game {
 
     //Tests
     testShoot = true
-    testDie = true
+    testDie = false
     Health = 100
     maxHealth = 100
-    XP = 0
+    XP = 20
 
     constructor() {
         this.MapOne = null
@@ -213,8 +213,9 @@ export class game {
 
         this.keyDownBound = this.keyDownHandler.bind(this);
         this.keyUpBound = this.keyUpHandler.bind(this);
-        window.addEventListener('keydown', (e) => this.keyDownHandler(e));
-        window.addEventListener('keyup', (e) => this.keyUpHandler(e));
+
+        window.addEventListener('keydown', this.keyDownBound)
+        window.addEventListener('keyup', this.keyUpBound);
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
@@ -275,7 +276,6 @@ export class game {
     }
 
     getSpawnIntensity(t) {
-        console.log("Timer: " + t)
         if (t < 60) {
             return 0.2 + 0.4 * (t / 60);
         } else if (t < 150) {
@@ -405,11 +405,11 @@ export class game {
         }
 
         if (this.keyDownBound) {
-            document.removeEventListener("keydown", this.keyDownBound);
+            window.removeEventListener("keydown", this.keyDownBound);
             this.keyDownBound = null;
         }
         if (this.keyUpBound) {
-            document.removeEventListener("keyup", this.keyUpBound);
+            window.removeEventListener("keyup", this.keyUpBound);
             this.keyUpBound = null;
         }
 
