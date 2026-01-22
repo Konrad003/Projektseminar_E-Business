@@ -6,9 +6,9 @@ import { getWeaponConfig } from "./weapon-config.js";
  * WARUM SPECIAL: Keine Projektile, nur Damage-Loop
  */
 export class AuraWeapon extends Weapon {
-    constructor(shooter, mapWidth, mapHeight, gridWidth, level = 1) {
+    constructor(icon, description, level, name, context) {
         const config = getWeaponConfig("aura");
-        super(config, shooter, mapWidth, mapHeight, gridWidth, level);
+        super(icon, description, level, name, { ...context, config });
         this.lastAuraDmgTime = 0;
         this.projectiles = [];
     }
@@ -23,17 +23,25 @@ export class AuraWeapon extends Weapon {
     }
 
     damageEnemies(enemies, currentTime, enemyItemDrops) {
-        const auraDmgInterval = this.config.projectileConfig.auraDmgInterval;
+        // Fix: Cooldown Multiplier auf Intervall anwenden (schnellerer Tick)
+        let auraDmgInterval = this.config.projectileConfig.auraDmgInterval;
+        if (this.shooter.cooldownMultiplier) {
+            auraDmgInterval *= this.shooter.cooldownMultiplier;
+        }
+
         if (currentTime - this.lastAuraDmgTime < auraDmgInterval) return;
         this.lastAuraDmgTime = currentTime;
 
         const auraRadius = this.config.projectileConfig.auraRadius;
 
+        // Fix: Damage Multiplier anwenden
+        const effectiveDamage = this.dmg * (this.shooter.damageMultiplier || 1);
+
         this.forEachEnemy(enemies, (enemy, enemies, j) => {
             const dx = enemy.globalEntityX - this.shooter.globalEntityX;
             const dy = enemy.globalEntityY - this.shooter.globalEntityY;
             if (Math.hypot(dx, dy) < auraRadius) {
-                enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
+                enemy.takeDmg(effectiveDamage, enemies, j, enemyItemDrops);
             }
         });
     }

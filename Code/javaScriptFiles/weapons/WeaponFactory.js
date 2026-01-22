@@ -49,23 +49,27 @@ export function createWeapon(type, shooter, mapWidth, mapHeight, gridWidth, leve
         return null;
     }
 
+    // Context Objekt erstellen
+    const context = { shooter, mapWidth, mapHeight, gridWidth, config };
+
     // Erstelle Waffe basierend auf Typ
+    // Wir übergeben null für icon/desc/name, damit die Klasse sie aus der Config holt
     switch (type) {
         // Simple Weapons (keine spezielle Logik, aber eigene Klasse für Übersichtlichkeit)
-        case "bow":          return new BowWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
-        case "knife":        return new KnifeWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
-        case "fireball":     return new FireballWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
-        case "molotov":      return new MolotovWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
+        case "bow":          return new BowWeapon(null, null, level, null, context);
+        case "knife":        return new KnifeWeapon(null, null, level, null, context);
+        case "fireball":     return new FireballWeapon(null, null, level, null, context);
+        case "molotov":      return new MolotovWeapon(null, null, level, null, context);
 
         // Special Weapons (mit spezieller Logik)
-        case "shuriken":     return new ShurikenWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
-        case "thunderstrike": return new ThunderstrikeWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
-        case "aura":         return new AuraWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
-        case "axe":          return new AxeWeapon(shooter, mapWidth, mapHeight, gridWidth, level);
+        case "shuriken":     return new ShurikenWeapon(null, null, level, null, context);
+        case "thunderstrike": return new ThunderstrikeWeapon(null, null, level, null, context);
+        case "aura":         return new AuraWeapon(null, null, level, null, context);
+        case "axe":          return new AxeWeapon(null, null, level, null, context);
 
         // Fallback: Generische Weapon-Klasse (für basic, basicEnemy, etc.)
         default:
-            return new Weapon(config, shooter, mapWidth, mapHeight, gridWidth, level);
+            return new Weapon(null, null, level, null, context);
     }
 }
 

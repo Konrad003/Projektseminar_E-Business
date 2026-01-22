@@ -7,19 +7,28 @@ import { Projectile } from "../projectiles/index.js";
  * WARUM SPECIAL: Keine Projektile, nur Damage-Effekt + Custom shoot()
  */
 export class ThunderstrikeWeapon extends Weapon {
-    constructor(shooter, mapWidth, mapHeight, gridWidth, level = 1) {
+    constructor(icon, description, level, name, context) {
         const config = getWeaponConfig("thunderstrike");
-        super(config, shooter, mapWidth, mapHeight, gridWidth, level);
+        super(icon, description, level, name, { ...context, config });
         this.lastLightningTime = 0;
         this.lastLightningDirections = [];
     }
 
     shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null, enemyItemDrops = []) {
-        if (currentTime - this.lastShotTime < this.cooldown) return;
+        // Fix: Cooldown Multiplier anwenden
+        const effectiveCooldown = this.cooldown * (player.cooldownMultiplier || 1);
+
+        if (currentTime - this.lastShotTime < effectiveCooldown) return;
         this.lastShotTime = currentTime;
 
         this.lastLightningDirections = [];
-        const lightningCount = 2; // Nur 2 Blitze
+
+        // Fix: Extra Projectiles anwenden (Mehr Blitze)
+        const extra = player.extraProjectiles || 0;
+        const lightningCount = (this.config.projectileConfig.lightningCount || 2) + extra;
+
+        // Fix: Damage Multiplier anwenden
+        const effectiveDamage = this.dmg * (player.damageMultiplier || 1);
 
         // Erzeugen Blitze in ZUFÄLLIGE Richtungen (nutzt Projectile-Methode)
         for (let i = 0; i < lightningCount; i++) {
@@ -27,13 +36,13 @@ export class ThunderstrikeWeapon extends Weapon {
             const lightningAngle = Math.atan2(lightningDir.y, lightningDir.x);
 
             this.lastLightningDirections.push(lightningDir);
-            this.damageEnemiesInLine(enemies, lightningAngle, enemyItemDrops);
+            this.damageEnemiesInLine(enemies, lightningAngle, enemyItemDrops, effectiveDamage);
         }
 
         this.lastLightningTime = currentTime;
     }
 
-    damageEnemiesInLine(enemies, lightningAngle, enemyItemDrops) {
+    damageEnemiesInLine(enemies, lightningAngle, enemyItemDrops, damage) {
         const lightningLength = this.config.projectileConfig.lightningLength;
 
         this.forEachEnemy(enemies, (enemy, enemies, j) => {
@@ -45,7 +54,7 @@ export class ThunderstrikeWeapon extends Weapon {
                 const angleToEnemy = Math.atan2(dy, dx);
                 const angleDiff = Math.abs(angleToEnemy - lightningAngle);
                 if (angleDiff < Math.PI / 12 || Math.abs(angleDiff - Math.PI * 2) < Math.PI / 12) {
-                    enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
+                    enemy.takeDmg(damage, enemies, j, enemyItemDrops);
                 }
             }
         });

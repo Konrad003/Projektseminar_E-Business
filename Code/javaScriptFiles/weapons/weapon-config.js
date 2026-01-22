@@ -122,6 +122,8 @@ export const WEAPONS = {
     bow: {
         type: "bow",
         name: "Bow",
+        icon: "./Graphics/equipmentIcons/PNG/2.png",
+        description: "Fast piercing arrows",
         dmg: 100,
         cooldown: 1000,
         range: 1000,
@@ -140,6 +142,8 @@ export const WEAPONS = {
     knife: {
         type: "knife",
         name: "Knife",
+        icon: "./Graphics/equipmentIcons/PNG/10.png",
+        description: "Quick throwing knives",
         dmg: 40,
         cooldown: 400,
         range: 600,
@@ -158,6 +162,8 @@ export const WEAPONS = {
     fireball: {
         type: "fireball",
         name: "Fireball",
+        icon: "./Graphics/equipmentIcons/PNG/8.png",
+        description: "Explosive fire attack",
         dmg: 100,
         cooldown: 1500,
         range: 1500,
@@ -177,6 +183,8 @@ export const WEAPONS = {
     molotov: {
         type: "molotov",
         name: "Molotov",
+        icon: "./Graphics/equipmentIcons/PNG/5.png",
+        description: "Burning area damage",
         dmg: 25,
         cooldown: 1200,
         range: 1500,
@@ -197,6 +205,8 @@ export const WEAPONS = {
     axe: {
         type: "axe",
         name: "Axe",
+        icon: "./Graphics/equipmentIcons/PNG/11.png",
+        description: "Returning boomerang axe",
         dmg: 150,
         cooldown: 1500,
         range: 600,
@@ -218,6 +228,8 @@ export const WEAPONS = {
     shuriken: {
         type: "shuriken",
         name: "Shuriken",
+        icon: "./Graphics/equipmentIcons/PNG/3.png",
+        description: "Orbiting blade stars",
         dmg: 25,
         cooldown: 150,
         range: 700,
@@ -237,6 +249,8 @@ export const WEAPONS = {
     thunderstrike: {
         type: "thunderstrike",
         name: "Thunderstrike",
+        icon: "./Graphics/equipmentIcons/PNG/9.png",
+        description: "Lightning bolt strike",
         dmg: 5,
         cooldown: 400,
         range: 300,
@@ -253,6 +267,8 @@ export const WEAPONS = {
     aura: {
         type: "aura",
         name: "Aura",
+        icon: "./Graphics/equipmentIcons/PNG/7.png",
+        description: "Damaging aura field",
         dmg: 15,
         cooldown: 0.5,
         range: 150,
@@ -380,4 +396,3 @@ export function createProjectileConfig(weaponConfig, shooter, target, direction,
     config.gridWidth = gridWidth;
     return config;
 }
-

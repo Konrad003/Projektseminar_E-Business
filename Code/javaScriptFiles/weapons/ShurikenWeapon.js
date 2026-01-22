@@ -3,20 +3,45 @@ import { getWeaponConfig } from "./weapon-config.js";
 
 //ShurikenWeapon: Orbiting Sterne
 export class ShurikenWeapon extends Weapon {
-    constructor(shooter, mapWidth, mapHeight, gridWidth, level = 1) {
+    constructor(icon, description, level, name, context) {
         const config = getWeaponConfig("shuriken");
-        super(config, shooter, mapWidth, mapHeight, gridWidth, level);
+        super(icon, description, level, name, { ...context, config });
 
         // Eigenes Array für Shuriken (nicht Grid!)
         this.shurikenProjectiles = [];
 
         // Erstelle Shuriken einmalig beim Spawnen
-        this.initializeShuriken();
+        if (this.shooter) {
+            this.initializeShuriken();
+        }
+    }
+
+    // Fix: Update-Loop nutzen, um Änderungen an Equipment (Extra Projectiles / Damage) zu erkennen
+    render(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState = null) {
+        // 1. Prüfen ob sich die Anzahl ändern muss (Extra Projectiles)
+        const extra = this.shooter.extraProjectiles || 0;
+        const baseAmount = this.projectileAmount || this.config.projectileConfig.amount || 3;
+        const totalAmount = baseAmount + extra;
+
+        if (this.shurikenProjectiles.length !== totalAmount) {
+            this.initializeShuriken();
+        }
+
+        // 2. Damage dynamisch updaten (falls Damage-Item aufgenommen wurde)
+        const effectiveDamage = this.dmg * (this.shooter.damageMultiplier || 1);
+        for (let p of this.shurikenProjectiles) {
+            p.dmg = effectiveDamage;
+        }
+
+        super.render(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState);
     }
 
     initializeShuriken() {
-        // Nutze projectileAmount vom Level-System
-        const amount = this.projectileAmount || this.config.projectileConfig.amount || 3;
+        this.shurikenProjectiles = []; // Reset array
+
+        // Fix: Extra Projectiles einrechnen
+        const extra = this.shooter.extraProjectiles || 0;
+        const amount = (this.projectileAmount || this.config.projectileConfig.amount || 3) + extra;
 
         console.log(`ShurikenWeapon: Erstelle ${amount} Shuriken (Level ${this.level})`);
 

@@ -6,25 +6,34 @@ import { getWeaponConfig, createProjectileConfig, getWeaponStatsForLevel } from 
  * Basis-Klasse für alle Waffen
  */
 export class Weapon extends Item {
-    constructor(config, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
-        super(config?.icon || null, config?.name || "Weapon", config?.picture || null);
+    constructor(icon, description, level, name, context = {}) {
+        super(icon, description, level, null);
 
-        this.config = config;
+        const { shooter, mapWidth, mapHeight, gridWidth, config } = context;
+
+        this.config = config || {};
         this.shooter = shooter;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.gridWidth = gridWidth;
         this.level = level;
 
-        // Hole Level-basierte Stats
-        const levelStats = getWeaponStatsForLevel(config.type, level);
+        // Fallback: Wenn Name/Icon nicht übergeben wurden (Game-Mode), aus Config nehmen
+        if (!this.name) this.name = name || this.config.name || "Weapon";
+        if (!this.icon) this.icon = icon || this.config.icon;
+        if (!this.description && this.config.description) this.description = this.config.description;
 
-        // Kopiere häufig genutzte Felder aus Level-Stats
-        this.dmg = levelStats.dmg;
-        this.cooldown = levelStats.cooldown;
-        this.range = levelStats.range;
-        this.piercing = levelStats.piercing;
-        this.projectileAmount = levelStats.projectileAmount;
+        // Hole Level-basierte Stats
+        if (this.config.type) {
+            const levelStats = getWeaponStatsForLevel(this.config.type, level);
+            if (levelStats) {
+                this.dmg = levelStats.dmg;
+                this.cooldown = levelStats.cooldown;
+                this.range = levelStats.range;
+                this.piercing = levelStats.piercing;
+                this.projectileAmount = levelStats.projectileAmount;
+            }
+        }
 
         // Speichern für Projektile
         this.projectiles = [];
@@ -36,7 +45,9 @@ export class Weapon extends Item {
         this.burstDelay = 50;
 
         // Initialisiere Grid falls Player-Waffe
-        this._initializeStorage(shooter);
+        if (this.shooter) {
+            this._initializeStorage(this.shooter);
+        }
     }
 
     /**
@@ -304,6 +315,21 @@ export class Weapon extends Item {
      */
     renderEffects(ctx, playerOne, performanceNow) {
         // Wird von Special-Waffen überschrieben
+    }
+        /**
+     * Erhöht das Waffenlevel und aktualisiert die Stats
+     */
+    lvlUp() {
+        if (this.level < (this.config.maxLevel || 20)) {
+            this.level++;
+            // Hole neue Level-Stats
+            const levelStats = getWeaponStatsForLevel(this.config.type, this.level);
+            this.dmg = levelStats.dmg;
+            this.cooldown = levelStats.cooldown;
+            this.range = levelStats.range;
+            this.piercing = levelStats.piercing;
+            this.projectileAmount = levelStats.projectileAmount;
+        }
     }
 
     /**

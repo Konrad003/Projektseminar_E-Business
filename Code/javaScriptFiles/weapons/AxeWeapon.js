@@ -6,9 +6,9 @@ import { getWeaponConfig } from "./weapon-config.js";
  * WARUM SPECIAL: Boomerangs brauchen Array-Speicherung (nicht Grid) wegen Rückkehr-Logik
  */
 export class AxeWeapon extends Weapon {
-    constructor(shooter, mapWidth, mapHeight, gridWidth, level = 1) {
+    constructor(icon, description, level, name, context) {
         const config = getWeaponConfig("axe");
-        super(config, shooter, mapWidth, mapHeight, gridWidth, level);
+        super(icon, description, level, name, { ...context, config });
 
         // Eigenes Array für Boomerangs (nicht Grid!)
         this.boomerangProjectiles = [];
@@ -23,11 +23,14 @@ export class AxeWeapon extends Weapon {
             shooter: this.shooter
         };
 
+        // Fix: Damage Multiplier anwenden
+        const effectiveDamage = this.dmg * (this.shooter.damageMultiplier || 1);
+
         const projectile = new BoomerangProjectile(
             this.shooter.globalEntityX,
             this.shooter.globalEntityY,
             direction,
-            this.dmg,
+            effectiveDamage,
             extendedConfig,
             {},  // Kein Grid
             currentTime,

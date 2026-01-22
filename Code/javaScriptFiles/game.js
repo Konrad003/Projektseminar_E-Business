@@ -14,7 +14,7 @@ import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js";
 import {EquipmentArmor} from "./equipments/equipmentArmor.js";
 import {EquipmentExtraProjectile} from "./equipments/equipmentExtraProjectile.js";
 import {EnemyFactory} from "./EnemyFactory.js"
-import {LvlUpFactory} from "./LvlUpFactory.js";
+import {LvlUpFactory} from "./lvlUpFactory.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
