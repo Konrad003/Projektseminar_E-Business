@@ -5,13 +5,8 @@ import {Map} from "./map.js"
 import {Player} from "./player.js"
 import {Projectile} from "./projectile.js"
 import {EquipmentDash} from "./equipmentDash.js";
-import {EquipmentVigor} from "./equipmentVigor.js";
 import {EquipmentValor} from "./equipmentValor.js";
-import {EquipmentHaste} from "./equipmentHaste.js";
-import {EquipmentRapidFire} from "./equipmentRapidFire.js";
 import {EquipmentHolyAura} from "./equipmentHolyAura.js";
-import {EquipmentArmor} from "./equipmentArmor.js";
-import {EquipmentBarrage} from "./equipmentBarrage.js";
 import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
@@ -99,7 +94,7 @@ export class game {
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
-        this.Sounds;
+        this.Sounds();
 
         this.dashTrails = [] // Array für Dash-Effekte
     }
