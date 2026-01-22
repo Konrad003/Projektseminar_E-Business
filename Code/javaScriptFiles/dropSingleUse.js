@@ -1,4 +1,4 @@
-  import { StaticEntity } from "./staticEntity.js"
+import {StaticEntity} from "./staticEntity.js"
 
 export class DropSingleUse extends StaticEntity {
   constructor(x, y, hitbox, png) {
@@ -50,6 +50,7 @@ export class SpeedBoostDrop extends DropSingleUse {
 export class AttackBoostDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/2.png"
     this.duration = 10000
     this.damageMultiplier = 2
   }
@@ -77,9 +78,13 @@ export class AttackBoostDrop extends DropSingleUse {
 export class HealDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/3.png"
     this.healAmount = 200
   }
-  getColor() { return "green" }
+
+  getColor() {
+    return this.png
+  }
   apply(player) {
     if (!player || this.used) return
     this.used = true
@@ -91,6 +96,7 @@ export class HealDrop extends DropSingleUse {
 export class XpMagnetDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/1.png"
     this.radius = 5000
     this.pullSpeed = 10
   }
@@ -117,6 +123,7 @@ export class XpMagnetDrop extends DropSingleUse {
 export class XpDrop extends DropSingleUse {
   constructor(x, y, hitbox, png, amount = 2) {
     super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/6.png"
     this.amount = amount
     this.pullTarget = null
     this.pullSpeed = 0
@@ -218,7 +225,14 @@ class ShockwaveNukeEffect extends StaticEntity {
 }
 
 export class NukeDrop extends DropSingleUse {
-  getColor() { return "cyan" }
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/4.png"
+  }
+
+  getColor() {
+    return "black"
+  }
 
   apply(player) {
     if (!player || !player.enemyItemDrops) return
@@ -236,6 +250,7 @@ export class NukeDrop extends DropSingleUse {
 export class FreezeDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/5.png"
     this.duration = 3000 // 3 Sekunden
     this.radius = 1500   // Radius um den Spieler 
   }
@@ -276,6 +291,7 @@ export class FreezeDrop extends DropSingleUse {
 export class InstantLevelDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    this.png = "./Graphics/singleUsePng/6.png"
   }
 
   getColor() { return "gold" }
