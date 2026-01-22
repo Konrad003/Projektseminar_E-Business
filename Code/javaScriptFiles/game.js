@@ -14,6 +14,7 @@ import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js";
 import {EquipmentArmor} from "./equipments/equipmentArmor.js";
 import {EquipmentExtraProjectile} from "./equipments/equipmentExtraProjectile.js";
 import {EnemyFactory} from "./EnemyFactory.js"
+import {LvlUpFactory} from "./LvlUpFactory.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -85,16 +86,17 @@ export class game {
 
     //Tests
     testShoot = true
-    testDie = true
+    testDie = false
     Health = 100
     maxHealth = 100
-    XP = 0
+    XP = 20
 
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
+        this.LevelUpFactory = null
 
         this.dashTrails = [] // Array für Dash-Effekte
     }
@@ -256,8 +258,9 @@ export class game {
 
         this.keyDownBound = this.keyDownHandler.bind(this);
         this.keyUpBound = this.keyUpHandler.bind(this);
-        window.addEventListener('keydown', (e) => this.keyDownHandler(e));
-        window.addEventListener('keyup', (e) => this.keyUpHandler(e));
+
+        window.addEventListener('keydown', this.keyDownBound)
+        window.addEventListener('keyup', this.keyUpBound);
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
@@ -270,6 +273,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
 
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -317,7 +321,6 @@ export class game {
     }
 
     getSpawnIntensity(t) {
-        console.log("Timer: " + t)
         if (t < 60) {
             return 0.2 + 0.4 * (t / 60);
         } else if (t < 150) {
@@ -452,11 +455,11 @@ export class game {
         }
 
         if (this.keyDownBound) {
-            document.removeEventListener("keydown", this.keyDownBound);
+            window.removeEventListener("keydown", this.keyDownBound);
             this.keyDownBound = null;
         }
         if (this.keyUpBound) {
-            document.removeEventListener("keyup", this.keyUpBound);
+            window.removeEventListener("keyup", this.keyUpBound);
             this.keyUpBound = null;
         }
 

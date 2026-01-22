@@ -2,6 +2,7 @@ import {MovingEntity} from "./movingEntity.js"
 import {Weapon} from "./weapons/index.js";
 import {EquipmentDash} from "./equipments/equipmentDash.js";
 import {LvlUpFactory} from "./lvlUpFactory.js"
+import {Equipment} from "./equipment.js";
 
 export class Player extends MovingEntity {
     ctx
@@ -20,7 +21,7 @@ export class Player extends MovingEntity {
         basic: 1          // Für Enemy-Waffen
     };
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, ausrüstung = [], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, equipmentSlots = [null, null, null, null, null, null], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -36,7 +37,8 @@ export class Player extends MovingEntity {
         this.armor = 0; // für equipment armor
         this.extraProjectiles = 0; // für equipment barrage
         this.hitbox = hitbox;
-        this.equipmentSlots = [null, null, null]; // Drei leere Slots für Equipment
+        this.equipmentSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
+        this.weaponSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
         this.regeneration = regeneration;
         this.ctx = ctx;
         this.onDeath = onDeath;
@@ -67,7 +69,7 @@ export class Player extends MovingEntity {
         // Blickrichtung (wird durch Bewegung aktualisiert)
         this.facingDirection = { x: 1, y: 0 }; // Standard: rechts
 
-        this.LvlUpFactory = new LvlUpFactory();
+        this.LvlUpFactory = new LvlUpFactory(this);
     }
 
     draw(ctx, player) {
@@ -216,7 +218,7 @@ export class Player extends MovingEntity {
     }
 
     lvlUp() {
-        this.LvlUpFactory.lvlUpRoll()
+        this.LvlUpFactory.lvlUpRoll(this.equipmentSlots, this.weaponSlots)
         Game.lvlUPshow()
         this.level++;
         this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
@@ -236,11 +238,47 @@ export class Player extends MovingEntity {
     collectXp(xpAmount) {
         this.xp += xpAmount;
 
+        this.xp = Math.floor(this.xp)
+
         if (this.xp >= this.xpForNextLevel) {
             this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
         }
         Game.hudXpProgress.value = this.xp;
+    }
+
+    acquireEquipment(newEquipment) {
+        if (newEquipment instanceof Equipment) {        // ist ein Equipment
+            for (let i = 0; i < this.equipmentSlots.length; i++) {
+                if (this.equipmentSlots[i] === null) {
+
+                    this.equipmentSlots[i] = newEquipment;
+                    console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+                    return true;
+                } else if (newEquipment.constructor === this.equipmentSlots[i].constructor) {
+                    newEquipment.lvlUp();
+                    return true
+                }
+            }
+            console.log("EquipmentInventar voll!");
+            return false;
+        } else { // ist eine Waffe
+            for (let i = 0; i < this.weaponSlots.length; i++) {
+                if (this.weaponSlots[i] === null) {
+
+                    this.weaponSlots[i] = newEquipment;
+                    console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+                    return true;
+                } else if (newEquipment.constructor === this.weaponSlots[i].constructor) {
+                    newEquipment.lvlUp();
+                    return true
+                }
+            }
+            console.log("WaffenInventar voll!");
+            return false;
+
+        }
+
     }
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
