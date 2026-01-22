@@ -276,7 +276,6 @@ export class game {
     }
 
     getSpawnIntensity(t) {
-        console.log("Timer: " + t)
         if (t < 60) {
             return 0.2 + 0.4 * (t / 60);
         } else if (t < 150) {

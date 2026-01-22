@@ -24,7 +24,7 @@ export class LvlUpFactory {
 
         while (lvlRolled.size < 3) {
             const lvlZufall = Math.floor(Math.random() * 8)
-            console.log(lvlZufall);
+            //console.log(lvlZufall);
             lvlRolled.add(this.alleObjekte[lvlZufall]);
         }
         let i = 1
