@@ -108,6 +108,25 @@ h1 {
     width: 350px;
 }
 
+.credits {
+    align-items: center;
+    bottom: 40px;
+    display: flex;
+    flex-direction: row;
+
+    gap: 30px;
+    position: fixed;
+    right: 100px;
+    z-index: 1000;
+
+}
+
+.credits img {
+    display: block;
+    height: auto;
+    width: 50px;
+}
+
 .panel {
     align-items: stretch;
     display: flex;
