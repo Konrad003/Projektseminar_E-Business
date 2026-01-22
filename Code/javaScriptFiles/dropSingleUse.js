@@ -1,4 +1,6 @@
-  import { StaticEntity } from "./staticEntity.js"
+//rerun for code check
+
+import { StaticEntity } from "./staticEntity.js"
 
 export class DropSingleUse extends StaticEntity {
   constructor(x, y, hitbox, png) {
