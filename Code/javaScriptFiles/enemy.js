@@ -10,7 +10,29 @@ import {
 } from "./dropSingleUse.js"
 import {MovingEntity} from "./movingEntity.js"
 
-export class Enemy extends MovingEntity {   
+const speedBoostImg = new Image();
+speedBoostImg.src = "Graphics/singleUsePng/4.png";
+
+const healImg = new Image();
+healImg.src = "Graphics/singleUsePng/1.png";
+
+const attackBoostImg = new Image();
+attackBoostImg.src = "Graphics/singleUsePng/6.png";
+
+const magnetImg = new Image();
+magnetImg.src = "Graphics/singleUsePng/2.png";
+
+const nukeImg = new Image();
+nukeImg.src = "Graphics/singleUsePng/3.png";
+
+const freezeImg = new Image();
+freezeImg.src = "Graphics/singleUsePng/5.png";
+
+const levelUpImg = new Image(); // Verwende vorerst magnetImg oder definiere ein neues wenn vorhanden
+levelUpImg.src = "Graphics/singleUsePng/2.png";
+
+
+export class Enemy extends MovingEntity {
 
    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile) {
             super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
@@ -120,48 +142,42 @@ export class Enemy extends MovingEntity {
                 enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
-                }, null))
+                }, speedBoostImg))
             } else if (roll < 0.2) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
-                }, null))
-            } else if (roll < 0.65) { 
+                }, healImg))
+            } else if (roll < 0.65) {
                 enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, { 
                     width: 16, 
-                    height: 16 
-                }, null))
+                    height: 16
+                }, attackBoostImg))
             } else if (roll < 0.7) {
                 enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
                     width: 16, 
-                    height: 16 
-                }, null))
-            } else if (roll < 0.72) { // z.B. 5%
+                    height: 16
+                }, magnetImg))
+            } else if (roll < 0.75) {
+                enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, nukeImg))
+            } else if (roll < 0.8) {
+                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, freezeImg))
+            } else if (roll < 0.81) {
+                console.log("Instant Level Drop!!!");
                 enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
-                }, null))
-            } else if (roll < 0.75) {
-                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16, 
-                    height: 16 
-                }, null))
-            }  else if (roll < 0.80) {
-                enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16,
-                    height: 16
-                    }, null))
-                }
-        
+                }, levelUpImg))
+            }
 
-            //Game.killCount++
         }
-            enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
-            width: 8,
-            height: 8
-            }, null))
-    
-        
+
     }
 
     shouldShoot(player) {
