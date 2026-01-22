@@ -6,7 +6,7 @@ import {
 /**
  * WAFFEN-LEVEL-SYSTEM
  * Level 0 = Waffe noch nicht freigeschaltet
- * Level 1-8 = Aktive Waffe mit steigenden Stats
+ * Level 1-20 = Aktive Waffe mit steigenden Stats
  *
  * Jede Waffe hat:
  * - baseStats: Grundwerte bei Level 1

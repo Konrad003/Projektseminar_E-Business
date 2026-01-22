@@ -362,12 +362,7 @@ export class game {
         document.getElementById("lvlScreen").style.display = "flex";
     }
 
-    lvlUPhide(choice) {
-        // Verarbeite die Auswahl des Spielers
-        if (choice >= 1 && choice <= 3) {
-            this.PlayerOne.LvlUpFactory.selectOption(choice, this.PlayerOne);
-        }
-
+    lvlUPhide() {
         this.gamePaused = false;
         this.startGameTimer()
 

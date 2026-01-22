@@ -248,6 +248,7 @@ export class Player extends MovingEntity {
     }
 
     acquireEquipment(newEquipment) {
+<<<<<<< Updated upstream
         if (newEquipment instanceof Equipment) {        // ist ein Equipment
             for (let i = 0; i < this.equipmentSlots.length; i++) {
                 if (this.equipmentSlots[i] === null) {

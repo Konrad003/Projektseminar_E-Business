@@ -6,6 +6,11 @@ import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js"
 import {EquipmentRapidFire} from "./equipments/equipmentRapidFire.js"
 import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
 import {EquipmentDash} from "./equipments/equipmentDash.js";
+import { BowWeapon } from "./weapons/BowWeapon.js"
+import { KnifeWeapon } from "./weapons/KnifeWeapon.js"
+import { MolotovWeapon } from "./weapons/MolotovWeapon.js"
+import { AuraWeapon, AxeWeapon, ShurikenWeapon, ThunderstrikeWeapon } from "./weapon-refactored-v2.js"
+import { FireballWeapon } from "./weapons/FireballWeapon.js"
 
 export class LvlUpFactory {
     constructor(PlayerOne) {
