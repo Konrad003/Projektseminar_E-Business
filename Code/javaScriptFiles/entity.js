@@ -1,33 +1,42 @@
 export class Entity {
 
+    static FOVwidthMiddle
+    static FOVheightMiddle
     globalEntityX
     globalEntityY
     hitbox
     png
-    static FOVwidthMiddle
-    static FOVheightMiddle
-    
+
     constructor(globalEntityX, globalEntityY, hitbox, png) {
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
         this.hitbox = hitbox
-        this.png = png
+
+        if (typeof png === 'string') {
+            this.png = new Image()
+            this.png.src = png
+        } else {
+            this.png = png
+        }
     }
 
-    draw(ctx, player) {
-        if (this.png) {
-            let leftBorder = player.globalEntityX - Entity.FOVwidthMiddle
-            let topBorder = player.globalEntityY - Entity.FOVheightMiddle
+    getColor() {
+        return "magenta"
+    }
+
+    draw(ctx, player, overrideColor = null) {
+        let color = overrideColor || this.getColor()
+        let leftBorder = player.globalEntityX - Entity.FOVwidthMiddle
+        let topBorder = player.globalEntityY - Entity.FOVheightMiddle
+
+        if (this.png && this.png.complete && this.png.naturalWidth !== 0) {
             ctx.drawImage(this.png, this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
         } else {
-            let color = this.getColor()
-            let leftBorder = player.globalEntityX - Entity.FOVwidthMiddle
-            let topBorder = player.globalEntityY - Entity.FOVheightMiddle
             ctx.beginPath();
             ctx.rect(this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
-            ctx.fillStyle = color
+            ctx.fillStyle = color;
             ctx.fill();
-            ctx.strokeStyle = "black"
+            ctx.strokeStyle = color;
             ctx.stroke();
         }
     }
