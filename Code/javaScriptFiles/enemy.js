@@ -61,7 +61,7 @@ export class Enemy extends MovingEntity {
         let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY) //Hypotenuse von Enemy zu Player berechnet distance
         if (distance <= 0) return //bleibt stehen bei distance = 0
 
-        const stopDistance = 200 // Ranged-Enemy bleibt ab bestimmter Distanz stehen (z.B. 200px)
+        const stopDistance = 500 // Ranged-Enemy bleibt ab bestimmter Distanz stehen (z.B. 200px)
         if (this.ranged && distance <= stopDistance) {
             return
         } 
@@ -190,7 +190,7 @@ export class Enemy extends MovingEntity {
         let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
         // Nutze die Eigenschaft oder fallback auf den bisherigen Wert
-        let stopDistance = 200;
+        let stopDistance = 600;
 
         return distance <= stopDistance;
     }
