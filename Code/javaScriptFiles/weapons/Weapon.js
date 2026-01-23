@@ -250,7 +250,7 @@ export class Weapon extends Item {
     render(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState = null) {
         // Update Waffe (Cooldown, etc.)
         this.update(performanceNow);
-
+        this.shoot(playerOne, performanceNow, enemies, map.tilelength, gridWidth, inputState, enemyItemDrops);
         // Render Projektile
         this.renderProjectiles(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops);
 

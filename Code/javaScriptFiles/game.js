@@ -184,10 +184,7 @@ export class game {
         if (e.key === '9') {
             this.PlayerOne.switchWeapon(9);
         }
-        // Shoot all weapons at once
-        if (e.key === 'p' || e.key === 'P') {
-            this.PlayerOne.shootAllWeapons(performance.now(), this.enemies, this.MapOne);
-        }
+
 
     }
 
@@ -273,7 +270,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
-            this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
+            //this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
 
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -471,7 +468,9 @@ export class game {
         this.ProjectileSystem = null
         this.weapon = null
         this.Game = null
-
+        //console.log(this.LevelUpFactory)
+        //this.LevelUpFactory = null
+        //console.log(this.LevelUpFactory)
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
@@ -513,7 +512,10 @@ export class game {
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
-                for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
+                for (let i = 0 ; i < this.enemies[row][column].within.length; i++) {
+                    if (this.enemies[row][column].within[i] === undefined) {
+                    console.log(this.enemies[row][column].within.length)
+                    console.log(i)}
                     this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
             }

@@ -161,7 +161,7 @@ export class Player extends MovingEntity {
     upgradeWeapon(weaponType) {
         const maxLevel = 20;
         if (this.weaponLevels[weaponType] < maxLevel) {
-            this.weaponLevels[weaponType]++;
+            //this.weaponLevels[weaponType]++;
             console.log(`${weaponType} upgraded to Level ${this.weaponLevels[weaponType]}`);
 
             // Finde Waffe in Slots und upgrade sie
@@ -192,28 +192,6 @@ export class Player extends MovingEntity {
             return true;
         }
         return false; // Bereits freigeschaltet
-    }
-// New method to shoot all weapons at once for testing
-    shootAllWeapons(currentTime, enemies, map) {
-        // Toggle all weapons mode on/off
-        this.allWeaponsActive = !this.allWeaponsActive;
-
-        if (this.allWeaponsActive) {
-            // Create all weapon instances (mit Level 1 für Testing)
-            const weaponTypes = ["bow", "thunderstrike", "knife", "shuriken", "aura", "fireball", "axe", "molotov"];
-            this.allWeapons = [];
-
-            for (const weaponType of weaponTypes) {
-                const level = this.weaponLevels[weaponType] || 1; // Mindestens Level 1 für Test
-                const weapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth, level);
-                if (weapon) {
-                    this.allWeapons.push(weapon);
-                }
-            }
-        } else {
-            // Clear all weapons
-            this.allWeapons = [];
-        }
     }
 
     lvlUp() {
@@ -264,15 +242,26 @@ export class Player extends MovingEntity {
             return false;
         } else if (newEquipment instanceof Weapon) {
             // Waffen Logik (via LvlUpFactory Card)
-            const type = newEquipment.config.type;
-            if (this.weaponLevels[type] > 0) {
-                this.upgradeWeapon(type);
-            } else {
-                this.unlockWeapon(type);
-            }
-            return true;
-        }
+            for (let i = 0; i < this.weaponSlots.length; i++) {
+                if (this.weaponSlots[i] === null) {
 
+                    this.weaponSlots[i] = newEquipment;
+                    console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+                    return true;
+                } else if (newEquipment.constructor === this.weaponSlots[i].constructor) {
+                    if (this.weaponLevels[newEquipment.config.type] < 20){
+                        newEquipment.lvlUp();
+                        return true
+                    }
+                    else {
+                        console.log("WeaponInventar voll!");
+                        return false;
+                    }
+                }
+            }
+            
+            return false;
+        }
     }
 
 
@@ -291,18 +280,10 @@ export class Player extends MovingEntity {
         // Shoot & Render active weapons
         this.weaponSlots.forEach(weapon => {
             if (weapon) {
-                weapon.shoot(this, performanceNow, enemies, map.tilelength, gridWidth, inputState, this.enemyItemDrops);
+                
                 weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState);
             }
         });
-
-        // Render all active weapons if in all weapons mode
-        if (this.allWeaponsActive) {
-            for (let weapon of this.allWeapons) {
-                weapon.shoot(this, performanceNow, enemies, map.tilelength, gridWidth, inputState, this.enemyItemDrops);
-                weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState);
-            }
-        }
 
         for (let i = this.enemyItemDrops.length - 1; i >= 0; i--) {
             let item = this.enemyItemDrops[i]
