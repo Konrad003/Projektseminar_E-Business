@@ -171,8 +171,8 @@ export class Weapon extends Item {
             return { x: 1, y: 0 }; // Fallback: rechts
         }
 
-        const dx = target.globalEntityX - this.shooter.globalEntityX;
-        const dy = target.globalEntityY - this.shooter.globalEntityY;
+        const dx = target.globalEntityX - this.shooter.globalEntityX + (target.hitbox.width / 2);
+        const dy = target.globalEntityY - this.shooter.globalEntityY + (target.hitbox.height / 2);
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist === 0) return { x: 1, y: 0 };

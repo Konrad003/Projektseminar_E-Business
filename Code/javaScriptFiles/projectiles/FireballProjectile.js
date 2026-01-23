@@ -47,7 +47,7 @@ export class FireballProjectile extends Projectile {
         } else {
             // Vor Explosion: Check ob Gegner getroffen
             this.forEachEnemy(enemies, (enemy) => {
-                if (this.checkCollisionWith(enemy)) {
+                if (this.checkCollisionWithEntity(enemy)) {
                     this.triggerExplosion(currentTime);
                     return false; // break
                 }

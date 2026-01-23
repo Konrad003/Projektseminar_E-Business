@@ -10,7 +10,7 @@ export class DropSingleUse extends StaticEntity {
   getColor() { return "white" }
 
   tryPickup(player) {
-    if (player.checkCollision(this, 0, 0)) {
+    if (this.checkCollisionWithEntity(player)) {
       this.apply(player)
       return true
     }

@@ -202,7 +202,7 @@ export class Enemy extends MovingEntity {
     } else {
         this.draw(ctx, PlayerOne) // Gegner im Sichtbereich zeichnen
     }
-        if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
+        if (this.checkCollisionWithEntity(PlayerOne)) {        // Treffer?
             PlayerOne.takeDmg(15, enemies, positionWithin, [])
             this.killCount++
         }

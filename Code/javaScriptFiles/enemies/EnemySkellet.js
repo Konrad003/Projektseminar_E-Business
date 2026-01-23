@@ -1,5 +1,5 @@
 import {Enemy} from "../enemy.js"
-import {Weapon} from "../weapon.js"
+import {Weapon} from "../weapons/Weapon.js"
 
 export class EnemySkellet extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
