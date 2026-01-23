@@ -1,13 +1,27 @@
 import {MovingEntity} from "./movingEntity.js"
-import {Weapon} from "./weapon.js";
+import {Weapon} from "./weapons/index.js";
 import {EquipmentDash} from "./equipments/equipmentDash.js";
 import {LvlUpFactory} from "./lvlUpFactory.js"
+import {Equipment} from "./equipment.js";
 
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, equipmentSlots = [null, null, null], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
+ // Waffen-Level-Tracking: 0 = nicht freigeschaltet, 1-20 = aktives Level
+    weaponLevels = {
+        bow: 1,           // Alle auf Level 1 für Testing
+        knife: 0,
+        fireball: 0,
+        molotov: 0,
+        shuriken: 0,
+        thunderstrike: 0,
+        aura: 0,
+        axe: 0,
+        basic: 1          // Für Enemy-Waffen
+    };
+
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, equipmentSlots = [null, null, null, null, null, null], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -21,21 +35,40 @@ export class Player extends MovingEntity {
         this.isInvincible = false; // für equipment holy aura
         this.armor = 0; // für equipment armor
         this.extraProjectiles = 0; // für equipment barrage
-        this.hitbox = hitbox || {width: 32, height: 32}
-
-        this.equipmentSlots = [null, null, null]; // Drei leere Slots für Equipment
+        this.hitbox = hitbox;
+        this.equipmentSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
+        this.weaponSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
         this.regeneration = regeneration;
         this.ctx = ctx;
         this.onDeath = onDeath;
+
+        // Equipment-Multiplier (für Equipment-System)
+        this.damageMultiplier = 1.0;      // Equipment Valor
+        this.cooldownMultiplier = 1.0;    // Equipment Rapid Fire
+        this.isInvincible = false;        // Equipment Holy Aura
+        this.armor = 0;                   // Equipment Armor
+        this.extraProjectiles = 0;        // Equipment Barrage
+        this.equipmentSlots = [null, null, null]; // Drei Equipment-Slots
 
         this.canvasWidthMiddle = canvasWidthMiddle
         this.canvasWidthHeight = canvasHeightMiddle
 
         this.xpForNextLevel = this.level * 10;
-        this.weapon = Weapon.create("basic", this, mapWidth, mapHeight, gridWidth)
+
+        // Initialisiere Waffen-Slots mit Bogen (da Level 1)
+        if (this.weaponLevels.bow > 0) {
+            this.weaponSlots[0] = Weapon.create("bow", this, mapWidth, mapHeight, gridWidth, this.weaponLevels.bow);
+        }
+
         this.enemyItemDrops = []
 
-        this.LvlUpFactory = new LvlUpFactory();
+        // All weapons mode
+        this.allWeaponsActive = false;
+        this.allWeapons = [];
+
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
+        this.gridWidth = gridWidth;
 
         const img = new Image()
         img.onload = () => {
@@ -44,6 +77,10 @@ export class Player extends MovingEntity {
             }
         }
         img.src = png
+        // Blickrichtung (wird durch Bewegung aktualisiert)
+        this.facingDirection = { x: 1, y: 0 }; // Standard: rechts
+
+        this.LvlUpFactory = new LvlUpFactory(this);
     }
 
     draw(ctx, player) {
@@ -68,22 +105,100 @@ export class Player extends MovingEntity {
             && (inputState.upPressed || inputState.downPressed)) {
             speed /= 1.8
         }
+
+        // Blickrichtung aktualisieren basierend auf Bewegung
+        let dirX = 0, dirY = 0;
         if (inputState.rightPressed) {
             this.globalEntityX = map.rightFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirX = 1;
         }
         if (inputState.upPressed) {
             this.globalEntityY = map.topFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirY = -1;
         }
         if (inputState.leftPressed) {
             this.globalEntityX = map.leftFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirX = -1;
         }
         if (inputState.downPressed) {
             this.globalEntityY = map.downFree(this.globalEntityX, this.globalEntityY, speed, this.hitbox);
+            dirY = 1;
+        }
+
+        // Nur aktualisieren wenn tatsächlich Bewegung stattfindet
+        if (dirX !== 0 || dirY !== 0) {
+            const length = Math.sqrt(dirX * dirX + dirY * dirY);
+            this.facingDirection = { x: dirX / length, y: dirY / length };
         }
     }
 
+    switchWeapon(weaponNumber) {
+
+        // Waffen-Type basierend auf Nummer
+        const weaponMap = {
+            0: "knife",
+            1: "bow",
+            2: "thunderstrike",
+            3: "knife",
+            4: "molotov",
+            5: "shuriken",
+            6: "aura",
+            7: "fireball",
+            8: "knife",
+            9: "axe"
+        };
+
+        const weaponType = weaponMap[weaponNumber];
+        if (weaponType && this.weaponLevels[weaponType] > 0) {
+            console.log("Switch Weapon deaktiviert für Multi-Weapon System");
+        } else {
+            console.log(`Waffe "${weaponType}" ist noch nicht freigeschaltet (Level 0)`);
+        }
+    }
+
+    /**
+     * Erhöht das Level einer Waffe um 1
+     * @param {string} weaponType - z.B. "bow", "fireball", etc.
+     * @returns {boolean} - true wenn erfolgreich, false wenn max Level erreicht
+     */
+    upgradeWeapon(weaponType) {
+        const maxLevel = 20;
+        if (this.weaponLevels[weaponType] < maxLevel) {
+            //this.weaponLevels[weaponType]++;
+            console.log(`${weaponType} upgraded to Level ${this.weaponLevels[weaponType]}`);
+
+            // Finde Waffe in Slots und upgrade sie
+            const weapon = this.weaponSlots.find(w => w && w.config.type === weaponType);
+            if (weapon) {
+                weapon.lvlUp();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Schaltet eine neue Waffe frei (setzt auf Level 1)
+     * @param {string} weaponType - z.B. "knife", "fireball", etc.
+     */
+    unlockWeapon(weaponType) {
+        if (this.weaponLevels[weaponType] === 0) {
+            this.weaponLevels[weaponType] = 1;
+            console.log(`${weaponType} freigeschaltet!`);
+
+            // Neue Waffe erstellen und in freien Slot legen
+            const newWeapon = Weapon.create(weaponType, this, this.mapWidth, this.mapHeight, this.gridWidth, 1);
+            const freeSlot = this.weaponSlots.findIndex(s => s === null);
+            if (freeSlot !== -1) {
+                this.weaponSlots[freeSlot] = newWeapon;
+            }
+            return true;
+        }
+        return false; // Bereits freigeschaltet
+    }
+
     lvlUp() {
-        this.LvlUpFactory.lvlUpRoll()
+        this.LvlUpFactory.lvlUpRoll(this.equipmentSlots, this.weaponSlots)
         Game.lvlUPshow()
         this.level++;
         this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
@@ -103,6 +218,8 @@ export class Player extends MovingEntity {
     collectXp(xpAmount) {
         this.xp += xpAmount;
 
+        this.xp = Math.floor(this.xp)
+
         if (this.xp >= this.xpForNextLevel) {
             this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
@@ -110,28 +227,67 @@ export class Player extends MovingEntity {
         Game.hudXpProgress.value = this.xp;
     }
 
+
     acquireEquipment(newEquipment) {
-        for (let i = 0; i < this.equipmentSlots.length; i++) {
-            if (this.equipmentSlots[i] === null) {
-                this.equipmentSlots[i] = newEquipment;
-                console.log(newEquipment.name + " ausgerüstet in Slot " + i);
-                return true;
+        if (newEquipment instanceof Equipment) {        // ist ein Equipment
+            for (let i = 0; i < this.equipmentSlots.length; i++) {
+                if (this.equipmentSlots[i] === null) {
+
+                    this.equipmentSlots[i] = newEquipment;
+                    console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+                    return true;
+                } else if (newEquipment.constructor === this.equipmentSlots[i].constructor) {
+                    newEquipment.lvlUp();
+                    return true
+                }
             }
+            console.log("EquipmentInventar voll!");
+            return false;
+        } else if (newEquipment instanceof Weapon) {
+            // Waffen Logik (via LvlUpFactory Card)
+            for (let i = 0; i < this.weaponSlots.length; i++) {
+                if (this.weaponSlots[i] === null) {
+
+                    this.weaponSlots[i] = newEquipment;
+                    console.log(newEquipment.name + " ausgerüstet in Slot " + i);
+                    return true;
+                } else if (newEquipment.constructor === this.weaponSlots[i].constructor) {
+                    if (this.weaponLevels[newEquipment.config.type] < 20){
+                        newEquipment.lvlUp();
+                        return true
+                    }
+                    else {
+                        console.log("WeaponInventar voll!");
+                        return false;
+                    }
+                }
+            }
+            
+            return false;
         }
-        console.log("Inventar voll!");
-        return false;
     }
+
 
     render(map, inputState, performanceNow, enemies, gridWidth) {
         this.drawDashTrails();
         this.handleInput(map, inputState)
         this.draw(this.ctx, this)
+
+        // Equipment-Updates
         this.equipmentSlots.forEach(item => { // Jedes ausgerüstete Equipment updaten
             if (item) {
                 item.update(this, map, inputState);
             }
         });
-        this.weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops)
+
+        // Shoot & Render active weapons
+        this.weaponSlots.forEach(weapon => {
+            if (weapon) {
+                
+                weapon.render(this.ctx, this, performanceNow, enemies, map, gridWidth, this.enemyItemDrops, inputState);
+            }
+        });
+
         for (let i = this.enemyItemDrops.length - 1; i >= 0; i--) {
             let item = this.enemyItemDrops[i]
             item.render(this.ctx, this, this.enemyItemDrops, i)
@@ -140,6 +296,16 @@ export class Player extends MovingEntity {
 
     getColor() {
         return 'blue'
+    }
+    /**
+     * Entfernt alle Equipment-Effekte (für Reset)
+     */
+    resetEquipmentEffects() {
+        this.damageMultiplier = 1.0;
+        this.cooldownMultiplier = 1.0;
+        this.isInvincible = false;
+        this.armor = 0;
+        this.extraProjectiles = 0;
     }
 
     drawDashTrails() {

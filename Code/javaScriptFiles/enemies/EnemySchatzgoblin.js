@@ -40,7 +40,7 @@ export class EnemySchatzgoblin extends Enemy {
             this.attemptMoveAxis(this, "x", Math.cos(this.angle) * 1, enemies, MapOne);
             this.attemptMoveAxis(this, "y", Math.sin(this.angle) * 1, enemies, MapOne);
 
-        } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen        
+        } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen
             this.chasePlayer(MapOne, this.globalEntityX * 2 - PlayerOne.globalEntityX, this.globalEntityY * 2 - PlayerOne.globalEntityY, enemies)
             this.ticker++
             if (this.ticker > 300) {          // Nach 5 Sekunden ist der Schatzgoblin nicht mehr verängstigt
@@ -53,7 +53,7 @@ export class EnemySchatzgoblin extends Enemy {
         }
     }
 
-    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth) {
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops = []) {
         let position = this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.draw(ctx, PlayerOne)
         this.move(PlayerOne, MapOne, enemies)

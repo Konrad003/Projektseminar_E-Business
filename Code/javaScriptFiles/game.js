@@ -3,12 +3,22 @@ import {Entity} from "./entity.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {Projectile} from "./projectile.js"
+import {Projectile} from "./projectiles/index.js"
+// Equipment-Imports
+import {EquipmentDash} from "./equipments/equipmentDash.js";
+import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
+import {EquipmentDamage} from "./equipments/equipmentDamage.js";
+import {EquipmentHaste} from "./equipments/equipmentHaste.js";
+import {EquipmentRapidFire} from "./equipments/equipmentRapidFire.js";
+import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js";
+import {EquipmentArmor} from "./equipments/equipmentArmor.js";
+import {EquipmentExtraProjectile} from "./equipments/equipmentExtraProjectile.js";
 import {EnemyFactory} from "./EnemyFactory.js"
+import {LvlUpFactory} from "./lvlUpFactory.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
-ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
 let BasicHeight = 1440;
@@ -23,7 +33,7 @@ function resizeCanvas() {              // Canvas Skalierung je nach Fenstergrö�
     let windowRatio = windowWidth / windowHeight;// Verhältnis von internem Canvas
     let newWidth, newHeight;
 
-    if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen   
+    if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen
         newHeight = windowHeight;// Bildschirm breiter --> volle Höhe nutzen, Breite anpassen
         newWidth = newHeight * targetRatio;
     } else {
@@ -79,16 +89,17 @@ export class game {
 
     //Tests
     testShoot = true
-    testDie = true
+    testDie = false
     Health = 100
     maxHealth = 100
-    XP = 0
+    XP = 20
 
     constructor() {
         this.MapOne = null
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
+        this.LevelUpFactory = null
 
         this.dashTrails = [] // Array für Dash-Effekte
     }
@@ -145,6 +156,39 @@ export class game {
                 this.resumeGame()
             }
         }
+        // Switch weapon
+        if (e.key === '0') {
+            this.PlayerOne.switchWeapon(0);
+        }
+        if (e.key === '1') {
+            this.PlayerOne.switchWeapon(1);
+        }
+        if (e.key === '2') {
+            this.PlayerOne.switchWeapon(2);
+        }
+        if (e.key === '3') {
+            this.PlayerOne.switchWeapon(3);
+        }
+        if (e.key === '4') {
+            this.PlayerOne.switchWeapon(4);
+        }
+        if (e.key === '5') {
+            this.PlayerOne.switchWeapon(5);
+        }
+        if (e.key === '6') {
+            this.PlayerOne.switchWeapon(6);
+        }
+        if (e.key === '7') {
+            this.PlayerOne.switchWeapon(7);
+        }
+        if (e.key === '8') {
+            this.PlayerOne.switchWeapon(8);
+        }
+        if (e.key === '9') {
+            this.PlayerOne.switchWeapon(9);
+        }
+
+
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
@@ -214,8 +258,9 @@ export class game {
 
         this.keyDownBound = this.keyDownHandler.bind(this);
         this.keyUpBound = this.keyUpHandler.bind(this);
-        window.addEventListener('keydown', (e) => this.keyDownHandler(e));
-        window.addEventListener('keyup', (e) => this.keyUpHandler(e));
+
+        window.addEventListener('keydown', this.keyDownBound)
+        window.addEventListener('keyup', this.keyUpBound);
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
@@ -229,6 +274,7 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, this.playerPngPath, 5, {
                 width: 48, height: 48
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            //this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
 
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -276,7 +322,6 @@ export class game {
     }
 
     getSpawnIntensity(t) {
-        console.log("Timer: " + t)
         if (t < 60) {
             return 0.2 + 0.4 * (t / 60);
         } else if (t < 150) {
@@ -443,11 +488,11 @@ export class game {
         }
 
         if (this.keyDownBound) {
-            document.removeEventListener("keydown", this.keyDownBound);
+            window.removeEventListener("keydown", this.keyDownBound);
             this.keyDownBound = null;
         }
         if (this.keyUpBound) {
-            document.removeEventListener("keyup", this.keyUpBound);
+            window.removeEventListener("keyup", this.keyUpBound);
             this.keyUpBound = null;
         }
 
@@ -464,7 +509,9 @@ export class game {
         this.ProjectileSystem = null
         this.weapon = null
         this.Game = null
-
+        //console.log(this.LevelUpFactory)
+        //this.LevelUpFactory = null
+        //console.log(this.LevelUpFactory)
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
@@ -506,8 +553,11 @@ export class game {
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
-                for (let i = this.enemies[row][column].within.length - 1; i >= 0; i--) {
-                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth)
+                for (let i = 0 ; i < this.enemies[row][column].within.length; i++) {
+                    if (this.enemies[row][column].within[i] === undefined) {
+                    console.log(this.enemies[row][column].within.length)
+                    console.log(i)}
+                    this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
             }
         }

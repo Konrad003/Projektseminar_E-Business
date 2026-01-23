@@ -56,7 +56,7 @@ export class Map {
             walkable: false, height: 0
         };
 
-        if (!this.tileData[row]) {
+        if (!this.tileData[row] || !this.tileData[row][column]) {
             return {walkable: false, height: 0};
         }
 
@@ -231,7 +231,7 @@ export class Map {
     }
 
     drawTile(tileRowWalker, tileColumnWalker, leftBorder, topBorder, i, j) {
-        
+
         i = Math.floor(i);      //subPixelRendering, ohne das gibt es weiße Linien auf dem Canvas
         j = Math.floor(j);
         if (!(this.isTileOutOfBorder(tileRowWalker, tileColumnWalker))) {
@@ -288,14 +288,14 @@ export class Map {
                     this.drawTile(tileRowWalker, tileColumnWalker, 0, 0, i, j)                          //Zeichnen der inneren Tiles
                 }
             }
-            
+
         }
     }
 
     drawMiniMap(player) {
-        if (!this.miniMapLoaded) return 
+        if (!this.miniMapLoaded) return
 
-   
+
         this.ctx.fillStyle = 'black'     // rahmen hintergrund
         this.ctx.fillRect(this.miniMapX-4, this.miniMapY-4, this.miniMapWidth+8, this.miniMapHeight+8)
         this.ctx.strokeStyle = 'white'       //Rahmen

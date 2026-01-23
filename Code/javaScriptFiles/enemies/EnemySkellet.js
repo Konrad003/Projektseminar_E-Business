@@ -22,7 +22,7 @@ export class EnemySkellet extends Enemy {
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
-        this.weapon = Weapon.create("sniper", this, 420, 420, 8)    // wenn Waffen implemtiert sind, durch weapon ersetzen
+        this.weapon = Weapon.create("basicEnemy", this, 420, 420, 8)    // wenn Waffen implemtiert sind, durch weapon ersetzen
         this.ranged = true
     }
 
