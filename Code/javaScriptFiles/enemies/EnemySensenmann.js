@@ -5,8 +5,15 @@ export class EnemySensenmann extends Enemy {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.hp = 75
         this.speed = 1
-        this.png = "EnemySensenmann"
+        this.png = "./Graphics/enemiesPNG/Sense/1.png"
         this.hitbox = {width: 13, height: 13}
+
+        const img = new Image();
+        img.onload = () => {
+            this.hitbox = {width: (img.naturalWidth / 7), height: (img.naturalHeight / 7)};
+        };
+        img.src = this.png;
+
         this.level = 1
         this.xpDrop = 4
         this.baseDamage = 20

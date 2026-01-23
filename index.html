@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <canvas id="game" ></canvas> <!-- brauch keine Breite und Höhe mehr, da es über game gesteuert wird -->
+    <canvas id="game"></canvas> <!-- brauch keine Breite und Höhe mehr, da es über game gesteuert wird -->
 </section>
 
 <section class="screen" id="startScreen">
@@ -48,6 +48,7 @@
     <div class="menu">
         <button class="btn" id="startButton" onclick="Game.chooseMap()">Start Game</button>
         <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
+        <button class="btn" id="playerSelectButton" onclick="Game.selectPlayerScreen()">Select Player</button>
     </div>
 </section>
 
@@ -97,6 +98,44 @@
             <input class="btn" type="submit" value="Save"/>
         </div>
     </form>
+</section>
+
+<section class="screen" id="playerSelectScreen">
+    <h2 class="screenTitle">Choose a Player</h2>
+    <div class="slideSelect">
+        <button class="btn" onclick="Game.prevPlayer()" style="width: auto;">&lt;</button>
+        <div class="slideSelect-item fade" id="player1">
+            <img alt="Player 1" class="slideImage" src="./players/Peters/8.png">
+            <h3 class="playerName">Player 1</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Peters/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player2">
+            <img alt="Player 2" class="slideImage" src="./players/Rene/8.png">
+            <h3 class="playerName">Player 2</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Rene/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player3">
+            <img alt="Player 3" class="slideImage" src="./players/Lars/8.png">
+            <h3 class="playerName">Player 3</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Lars/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player4">
+            <img alt="Player 4" class="slideImage" src="./players/Rupert/8.png">
+            <h3 class="playerName">Player 4</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Rupert/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player5">
+            <img alt="Player 5" class="slideImage" src="./players/Rene/8.png">
+            <h3 class="playerName">Player 5</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Dana/1.png')">Select</button>
+        </div>
+
+        <button class="btn" onclick="Game.nextPlayer()" style="width: auto;">&gt;</button>
+    </div>
 </section>
 
 <section class="screen overlay-dark" id="pauseScreen">

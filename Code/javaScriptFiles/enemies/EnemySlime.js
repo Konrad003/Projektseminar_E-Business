@@ -5,8 +5,15 @@ export class EnemySlime extends Enemy {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.hp = 20
         this.speed = 1
-        this.png = "EnemySlime"
-        this.hitbox = {width: 8, height: 8}
+        this.png = "./Graphics/enemiesPNG/Schleim/1.png"
+        this.hitbox = {width: 16, height: 16}
+
+        const img = new Image();
+        img.onload = () => {
+            this.hitbox = {width: (img.naturalWidth / 12), height: (img.naturalHeight / 12)};
+        };
+        img.src = this.png;
+
         this.level = 1
         this.xpDrop = 1
         this.baseDamage = 5

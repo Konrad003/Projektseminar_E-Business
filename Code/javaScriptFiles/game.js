@@ -81,6 +81,9 @@ export class game {
 
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
+    playerSelect = 1
+    playerPngPath = './players/Peters/1.png'
+
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
 
@@ -267,8 +270,9 @@ export class game {
         this.loadMap(this.mapChoice).then(() => {  //andere Map: ./Code/Tiled/Map1.json      ./Code/Tiled/map2Jungle.json
             this.mapData = this.mapData[0];
             this.MapOne = new Map(this.mapData, this.mapChoicePng, canvas.width, canvas.height, ctx)
-            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
-                width: 16, height: 16
+
+            this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, this.playerPngPath, 5, {
+                width: 48, height: 48
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
             //this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
@@ -381,6 +385,41 @@ export class game {
         document.getElementById("settingsScreen").style.display = "flex";
     }
 
+    selectPlayerScreen() {
+        document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("gameScreen").style.display = "none";
+        document.getElementById("playerSelectScreen").style.display = "flex";
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("player" + this.playerSelect).style.display = "flex";
+    }
+
+    selectPlayer(src) {
+        this.playerPngPath = src
+        this.home()
+    }
+
+    nextPlayer() {
+        document.getElementById("player" + this.playerSelect).style.display = "none"
+        this.playerSelect++
+        if (this.playerSelect > 5) {
+            this.playerSelect = 1
+        } else if (this.playerSelect < 1) {
+            this.playerSelect = 5
+        }
+        document.getElementById("player" + this.playerSelect).style.display = "flex"
+    }
+
+    prevPlayer() {
+        document.getElementById("player" + this.playerSelect).style.display = "none"
+        this.playerSelect--
+        if (this.playerSelect > 5) {
+            this.playerSelect = 1
+        } else if (this.playerSelect < 1) {
+            this.playerSelect = 5
+        }
+        document.getElementById("player" + this.playerSelect).style.display = "flex"
+    }
+
     home() {
         this.resetGame()
 
@@ -389,6 +428,8 @@ export class game {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("defeatScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
+        document.getElementById("lvlScreen").style.display = "none";
+        document.getElementById("playerSelectScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "flex";
     }
 

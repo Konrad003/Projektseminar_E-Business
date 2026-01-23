@@ -1,4 +1,4 @@
-  import { StaticEntity } from "./staticEntity.js"
+import {StaticEntity} from "./staticEntity.js"
 
 export class DropSingleUse extends StaticEntity {
   constructor(x, y, hitbox, png) {
@@ -52,6 +52,14 @@ export class AttackBoostDrop extends DropSingleUse {
     super(x, y, hitbox, png)
     this.duration = 10000
     this.damageMultiplier = 2
+
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "red" }
@@ -79,7 +87,10 @@ export class HealDrop extends DropSingleUse {
     super(x, y, hitbox, png)
     this.healAmount = 200
   }
-  getColor() { return "green" }
+
+  getColor() {
+    return "green"
+  }
   apply(player) {
     if (!player || this.used) return
     this.used = true
@@ -93,6 +104,13 @@ export class XpMagnetDrop extends DropSingleUse {
     super(x, y, hitbox, png)
     this.radius = 5000
     this.pullSpeed = 10
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "pink" }
@@ -120,6 +138,14 @@ export class XpDrop extends DropSingleUse {
     this.amount = amount
     this.pullTarget = null
     this.pullSpeed = 0
+
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 6), height: (img.naturalHeight / 6),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "brown" }
@@ -218,7 +244,20 @@ class ShockwaveNukeEffect extends StaticEntity {
 }
 
 export class NukeDrop extends DropSingleUse {
-  getColor() { return "cyan" }
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
+  }
+
+  getColor() {
+    return "black"
+  }
 
   apply(player) {
     if (!player || !player.enemyItemDrops) return
@@ -237,7 +276,14 @@ export class FreezeDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
     this.duration = 3000 // 3 Sekunden
-    this.radius = 1500   // Radius um den Spieler 
+    this.radius = 1500   // Radius um den Spieler
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "lightcyan" }
@@ -276,6 +322,13 @@ export class FreezeDrop extends DropSingleUse {
 export class InstantLevelDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "gold" }

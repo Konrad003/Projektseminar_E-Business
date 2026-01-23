@@ -1,4 +1,14 @@
-import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop, AttackBoostDrop, InstantLevelDrop} from "./dropSingleUse.js"
+import {
+    AttackBoostDrop,
+    FreezeDrop,
+    HealDrop,
+    InstantLevelDrop,
+    NukeDrop,
+    SpeedBoostDrop,
+    XpDrop,
+    XpMagnetDrop
+} from "./dropSingleUse.js"
+
 import {Weapon} from "./weapons/index.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -12,6 +22,15 @@ export class Enemy extends MovingEntity {
             this.blockedX = false
             this.blockedY = false
         }
+
+    draw(ctx, player) {
+        if (typeof this.png === 'string') {
+            const src = this.png
+            this.png = new Image()
+            this.png.src = src
+        }
+        super.draw(ctx, player)
+    }
 
     // Gegner bewegt sich in Richtung Player
     chasePlayer(map, playerX, playerY, enemyArray) {
@@ -101,50 +120,46 @@ export class Enemy extends MovingEntity {
             let roll = Math.random()
             if (roll < 0.1) {
                 enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
+                    width: 32,
+                    height: 32
                 }, null))
             } else if (roll < 0.2) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/3.png"))
             } else if (roll < 0.65) {
                 enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/2.png"))
             } else if (roll < 0.7) {
                 enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
-            } else if (roll < 0.72) { // z.B. 5%
-                enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/1.png"))
             } else if (roll < 0.75) {
-                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
-            }  else if (roll < 0.80) {
                 enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                    }, null))
-                }
-
-
-            //Game.killCount++
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/4.png"))
+            } else if (roll < 0.8) {
+                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/5.png"))
+            } else if (roll < 0.81) {
+                console.log("Instant Level Drop!!!");
+                enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/6.png"))
+            }
         }
-            enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
-            width: 8,
-            height: 8
-            }, null))
-
-
+        enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
+            width: 32,
+            height: 32
+        }, "./Graphics/singleUsePng/xp.png"))
     }
 
     shouldShoot(player) {

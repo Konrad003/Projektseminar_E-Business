@@ -29,7 +29,6 @@ export class Player extends MovingEntity {
         this.maxHp = maxHp;
         this.xp = xp;
         this.level = 1;
-        this.png = png;
         this.baseSpeed = speed;
         this.damageMultiplier = 1.0; // für equipment valor. Standardmäßig 100% Schaden
         this.cooldownMultiplier = 1.0; // für equipment rapid fire. Standardmäßig 100% Feuerrate
@@ -71,6 +70,13 @@ export class Player extends MovingEntity {
         this.mapHeight = mapHeight;
         this.gridWidth = gridWidth;
 
+        const img = new Image()
+        img.onload = () => {
+            this.hitbox = {
+                width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+            }
+        }
+        img.src = png
         // Blickrichtung (wird durch Bewegung aktualisiert)
         this.facingDirection = { x: 1, y: 0 }; // Standard: rechts
 
@@ -78,10 +84,10 @@ export class Player extends MovingEntity {
     }
 
     draw(ctx, player) {
+        ctx.save();
+
         // Wenn die Aura aktiv ist, wird Zeichnen angepasst
         if (this.isInvincible) {
-            ctx.save(); // Speichert den aktuellen Zustand (Normalzustand)
-
             ctx.shadowBlur = 20;
             ctx.shadowColor = "cyan"; // Ein heiliges, blaues Leuchten
             ctx.globalAlpha = 0.7 + Math.sin(performance.now() / 150) * 0.3; // Blink-Effekt
@@ -90,10 +96,7 @@ export class Player extends MovingEntity {
         // draw-Methode der Basisklasse (Entity)
         super.draw(ctx, player);
 
-        // Wenn wir den Zustand verändert hatten, setzen wir ihn jetzt wieder zurück
-        if (this.isInvincible) {
-            ctx.restore(); // Setzt Schatten und Alpha wieder auf Standard
-        }
+        ctx.restore();
     }
 
     handleInput(map, inputState) {
@@ -291,6 +294,9 @@ export class Player extends MovingEntity {
         }
     }
 
+    getColor() {
+        return 'blue'
+    }
     /**
      * Entfernt alle Equipment-Effekte (für Reset)
      */
