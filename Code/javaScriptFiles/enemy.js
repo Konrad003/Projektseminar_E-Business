@@ -8,29 +8,9 @@ import {
     XpDrop,
     XpMagnetDrop
 } from "./dropSingleUse.js"
+
+import {Weapon} from "./weapons/index.js"
 import {MovingEntity} from "./movingEntity.js"
-
-const speedBoostImg = new Image();
-speedBoostImg.src = "Graphics/singleUsePng/4.png";
-
-const healImg = new Image();
-healImg.src = "Graphics/singleUsePng/1.png";
-
-const attackBoostImg = new Image();
-attackBoostImg.src = "Graphics/singleUsePng/6.png";
-
-const magnetImg = new Image();
-magnetImg.src = "Graphics/singleUsePng/2.png";
-
-const nukeImg = new Image();
-nukeImg.src = "Graphics/singleUsePng/3.png";
-
-const freezeImg = new Image();
-freezeImg.src = "Graphics/singleUsePng/5.png";
-
-const levelUpImg = new Image(); // Verwende vorerst magnetImg oder definiere ein neues wenn vorhanden
-levelUpImg.src = "Graphics/singleUsePng/2.png";
-
 
 export class Enemy extends MovingEntity {
 
@@ -54,7 +34,7 @@ export class Enemy extends MovingEntity {
 
     // Gegner bewegt sich in Richtung Player
     chasePlayer(map, playerX, playerY, enemyArray) {
-        
+
         let distanceX = playerX - this.globalEntityX
         let distanceY = playerY - this.globalEntityY
 
@@ -64,12 +44,12 @@ export class Enemy extends MovingEntity {
         const stopDistance = 500 // Ranged-Enemy bleibt ab bestimmter Distanz stehen (z.B. 200px)
         if (this.ranged && distance <= stopDistance) {
             return
-        } 
+        }
 
         const visitedForX = new Set()
         const visitedForY = new Set()
 
-        
+
 
         let oldX = this.globalEntityX
         let oldY = this.globalEntityY
@@ -78,7 +58,7 @@ export class Enemy extends MovingEntity {
         distanceY /= distance;
 
         let moveStepX = distanceX * this.speed
-        let moveStepY = distanceY * this.speed 
+        let moveStepY = distanceY * this.speed
 
         let resultX
         let resultY
@@ -86,7 +66,7 @@ export class Enemy extends MovingEntity {
             resultX = this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX).success
             resultY = this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY).success
             if (!resultX){
-                this.blockedX = true 
+                this.blockedX = true
                 this.oldMoveY = Math.sign(moveStepY) * this.speed
             }
             if (!resultY){
@@ -98,12 +78,12 @@ export class Enemy extends MovingEntity {
         }else{                                                                         //Bewegung wenn mind eine Achse blockiert ist
             if (this.blockedX && this.blockedY){
                 if(Math.random()<0.5) moveStepX*= -1
-                else moveStepY*=-1 
+                else moveStepY*=-1
             }
             if (this.blockedX){                                                         //Bewegung wenn X Achse Blockiert ist
                 resultX = this.attemptMoveAxis(this, 'x', moveStepX, enemyArray, map, visitedForX).success        //Versuchen zu Bewegen auf der X-Achse
                 resultY = this.attemptMoveAxis(this, 'y', this.oldMoveY, enemyArray, map, visitedForY).success   // gesamte Bewegung auf der Y-Achse
-                
+
                 if (resultX){        //Falls auch X-Achse nun nicht mehr Blockiert ist
                     this.blockedX = false
                 }
@@ -112,25 +92,25 @@ export class Enemy extends MovingEntity {
                     this.oldMoveX = Math.sign(moveStepX) * this.speed
                 }
             }
-            
+
             visitedForX.clear()
             visitedForY.clear()
 
             if (this.blockedY){
                 resultX = this.attemptMoveAxis(this, 'x', this.oldMoveX, enemyArray, map, visitedForX).success
                 resultY = this.attemptMoveAxis(this, 'y', moveStepY, enemyArray, map, visitedForY).success
-                if (resultY){    
+                if (resultY){
                     this.blockedY = false
                 }
                 if (!resultX){
-                    this.blockedX = true 
-                    this.oldMoveY = Math.sign(moveStepY) * this.speed                   
+                    this.blockedX = true
+                    this.oldMoveY = Math.sign(moveStepY) * this.speed
                 }
             }
         }
     }
 
-    
+
     die(enemies, positionWithin, enemyItemDrops) {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
@@ -140,74 +120,77 @@ export class Enemy extends MovingEntity {
             let roll = Math.random()
             if (roll < 0.1) {
                 enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, speedBoostImg))
+                    width: 32,
+                    height: 32
+                }, null))
             } else if (roll < 0.2) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, healImg))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/3.png"))
             } else if (roll < 0.65) {
-                enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16, 
-                    height: 16
-                }, attackBoostImg))
+                enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/2.png"))
             } else if (roll < 0.7) {
-                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
-                    width: 16, 
-                    height: 16
-                }, magnetImg))
+                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/1.png"))
             } else if (roll < 0.75) {
                 enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, nukeImg))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/4.png"))
             } else if (roll < 0.8) {
                 enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, freezeImg))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/5.png"))
             } else if (roll < 0.81) {
                 console.log("Instant Level Drop!!!");
                 enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, levelUpImg))
+                    width: 32,
+                    height: 32
+                }, "./Graphics/singleUsePng/6.png"))
             }
-
         }
-
+        enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
+            width: 32,
+            height: 32
+        }, "./Graphics/singleUsePng/xp.png"))
     }
 
     shouldShoot(player) {
-        // Nur Ranged-Gegner mit Waffe können schießen
-        
-
-        // Distanzberechnung mit deinen Bezeichnern
+        // Distanzberechnung
         let distanceX = player.globalEntityX - this.globalEntityX;
         let distanceY = player.globalEntityY - this.globalEntityY;
         let distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
         // Nutze die Eigenschaft oder fallback auf den bisherigen Wert
-        let stopDistance = 600;
+        let stopDistance = 400;
+        // Schieß-Reichweite - passend zur Waffen-Range
+        let shootDistance = this.weapon?.range || 500;
 
-        return distance <= stopDistance;
+        return distance <= shootDistance;
     }
 
     freeze(now, duration) {
         const current = this.frozenUntil || 0 // Speichert, bis wann dieser Enemy eingefroren ist
-        this.frozenUntil = Math.max(current, now + duration) // wenn er schon gefreezt ist, wird die Dauer verlängert 
+        this.frozenUntil = Math.max(current, now + duration) // wenn er schon gefreezt ist, wird die Dauer verlängert
     }
 
-     
-    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops = []){
         const frozen = this.frozenUntil && performanceNow < this.frozenUntil
         if (!frozen) {
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
         if (this.weapon)  {
-            this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
+            // Shoot Logik - PlayerOne wird übergeben damit die Richtung korrekt berechnet wird
+            this.weapon.shoot(PlayerOne, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
+            // Render Projektile
+            this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops);
         }
     }
         // Zeichnen passiert IMMER, auch wenn gefreezt (damit Enemies nicht "verschwinden").
@@ -220,10 +203,10 @@ export class Enemy extends MovingEntity {
         ctx.restore()
     } else {
         this.draw(ctx, PlayerOne) // Gegner im Sichtbereich zeichnen
-    } 
-        if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
-            PlayerOne.takeDmg(15, enemies, positionWithin)
+    }
+        if (this.checkCollisionWithEntity(PlayerOne)) {        // Treffer?
+            PlayerOne.takeDmg(15, enemies, positionWithin, [])
             this.killCount++
-        } 
+        }
     }
 }
