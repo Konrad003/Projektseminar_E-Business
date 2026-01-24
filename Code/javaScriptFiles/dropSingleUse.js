@@ -149,7 +149,7 @@ export class XpDrop extends DropSingleUse {
   }
 
   getColor() { return "brown" }
-  
+
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
@@ -187,17 +187,17 @@ class ShockwaveNukeEffect extends StaticEntity {
   constructor(x, y) {
     super(x, y, { width: 0, height: 0 }, null)
 
-    this.radius = 0               
-    this.speed = 20               
-    this.maxRadius = 2500         
+    this.radius = 0
+    this.speed = 20
+    this.maxRadius = 2500
   }
 
   render(ctx, player, enemyItemDrops, position) {
     // Shockwave wächst pro Frame
     this.radius += this.speed
 
-    const leftBorder = player.globalEntityX - StaticEntity.FOVwidthMiddle
-    const topBorder = player.globalEntityY - StaticEntity.FOVheightMiddle
+    const leftBorder = player.globalEntityX + (player.hitbox.width / 2) - StaticEntity.FOVwidthMiddle
+    const topBorder = player.globalEntityY + (player.hitbox.height / 2) - StaticEntity.FOVheightMiddle
 
     // Shockwave zeichnen (einfacher Kreis)
     ctx.beginPath()
@@ -212,9 +212,9 @@ class ShockwaveNukeEffect extends StaticEntity {
     ctx.lineWidth = 2
     ctx.stroke()
 
-    
+
      // Alle Gegner durchgehen und prüfen: Ist ein Gegner innerhalb des aktuellen Radius, wird er sofort getötet.
-    
+
     const enemies = Game.enemies
     for (let row = 0; row < enemies.length; row++) { //Reihe Y-Richtung
       for (let col = 0; col < enemies[row].length; col++) { //Spalte X-Richtung

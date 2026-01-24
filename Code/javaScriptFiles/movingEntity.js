@@ -157,7 +157,7 @@ export class MovingEntity extends Entity {
         const testDieEnabled = (typeof Game !== 'undefined') && Game.testDie;
         if (this.hp <= 0) {
             this.hp = 0;
-            if (!isPlayer || testDieEnabled) {
+            if (!isPlayer || !testDieEnabled) {
                 this.die(enemies, positionWithin, enemyItemDrops);
             }
         }

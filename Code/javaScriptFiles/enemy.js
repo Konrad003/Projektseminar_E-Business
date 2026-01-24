@@ -8,8 +8,7 @@ import {
     XpDrop,
     XpMagnetDrop
 } from "./dropSingleUse.js"
-
-import {Weapon} from "./weapons/index.js"
+import {Weapon} from "./weapons/Weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
