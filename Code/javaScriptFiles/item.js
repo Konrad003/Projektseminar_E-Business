@@ -9,6 +9,8 @@ export class Item {
 
     lvlUp() {
         this.level++;
-        console.log("levelUp222222222222222")
+        if (typeof this.updateStats === 'function') {
+            this.updateStats()
+        }
     }
 }

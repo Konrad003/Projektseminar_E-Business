@@ -6,7 +6,7 @@ export class Entity {
     png
     static FOVwidthMiddle
     static FOVheightMiddle
-    
+
     constructor(globalEntityX, globalEntityY, hitbox, png) {
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY

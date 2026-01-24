@@ -3,7 +3,6 @@ import {Entity} from "./entity.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {Projectile} from "./projectiles/index.js"
 // Equipment-Imports
 import {EquipmentDash} from "./equipments/equipmentDash.js";
 import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
@@ -153,38 +152,6 @@ export class game {
                 this.resumeGame()
             }
         }
-        // Switch weapon
-        if (e.key === '0') {
-            this.PlayerOne.switchWeapon(0);
-        }
-        if (e.key === '1') {
-            this.PlayerOne.switchWeapon(1);
-        }
-        if (e.key === '2') {
-            this.PlayerOne.switchWeapon(2);
-        }
-        if (e.key === '3') {
-            this.PlayerOne.switchWeapon(3);
-        }
-        if (e.key === '4') {
-            this.PlayerOne.switchWeapon(4);
-        }
-        if (e.key === '5') {
-            this.PlayerOne.switchWeapon(5);
-        }
-        if (e.key === '6') {
-            this.PlayerOne.switchWeapon(6);
-        }
-        if (e.key === '7') {
-            this.PlayerOne.switchWeapon(7);
-        }
-        if (e.key === '8') {
-            this.PlayerOne.switchWeapon(8);
-        }
-        if (e.key === '9') {
-            this.PlayerOne.switchWeapon(9);
-        }
-
 
     }
 
@@ -273,7 +240,6 @@ export class game {
             //this.LevelUpFactory = new LvlUpFactory(this.PlayerOne)
             // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
 
-            this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
             this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
@@ -465,7 +431,6 @@ export class game {
         this.mapData = null
 
         this.DropSystem = null
-        this.ProjectileSystem = null
         this.weapon = null
         this.Game = null
         //console.log(this.LevelUpFactory)

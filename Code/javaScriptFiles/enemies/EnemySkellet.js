@@ -1,5 +1,5 @@
 import {Enemy} from "../enemy.js"
-import { Weapon } from "../weapons/index.js"
+import { WeaponConfig } from "../weapons/weaponConfig.js"
 
 export class EnemySkellet extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
@@ -15,7 +15,7 @@ export class EnemySkellet extends Enemy {
         this.oldMoveY=oldMoveY
         this.blockedX = blockedX
         this.blockedY = blockedY
-        this.weapon = Weapon.create("basicEnemy", this, 420, 420, 8)    // wenn Waffen implemtiert sind, durch weapon ersetzen
+        this.weapon = WeaponConfig.createWeapon("BasicEnemy", this, 420, 420, 8)    // wenn Waffen implemtiert sind, durch weapon ersetzen
         this.ranged = true
     }
 
