@@ -21,6 +21,9 @@ export class Enemy extends MovingEntity {
             this.blockedX = false
             this.blockedY = false
             this.level = level
+            this.contactDamageCooldownMs = 400   
+            this.nextAllowedContactDamageAt = 0
+
         }
 
     draw(ctx, player) {
@@ -135,12 +138,12 @@ export class Enemy extends MovingEntity {
                 enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
                     width: 16, 
                     height: 16 
-                }, null))
+                }, "./Graphics/singleUsePng/1.png"))
             } else if (roll < 0.72) { 
                 enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
-                }, null))
+                }, "./Graphics/singleUsePng/6.png"))
             } else if (roll < 0.75) {
                 enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
@@ -215,9 +218,14 @@ export class Enemy extends MovingEntity {
     } else {
         this.draw(ctx, PlayerOne) // Gegner im Sichtbereich zeichnen
     }
-        if (this.checkCollisionWithEntity(PlayerOne)) {        // Treffer?
-            PlayerOne.takeDmg(15, enemies, positionWithin, [])
-            this.killCount++
-        }
+        if (this.checkCollisionWithEntity(PlayerOne)) { // Treffer?
+        const now = performanceNow ?? performance.now()
+
+        if (now >= this.nextAllowedContactDamageAt) {
+        PlayerOne.takeDmg(15, enemies, positionWithin, [])
+        this.nextAllowedContactDamageAt = now + this.contactDamageCooldownMs
+    }
+    }
+
     }
 }
