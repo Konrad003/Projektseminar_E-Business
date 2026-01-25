@@ -304,6 +304,17 @@ export class game {
             return 1.0;
         }
     }
+    /*
+    updateEnemyStats(t)  {
+         if (!this.gamePaused) {
+            if (t % 60 === 0) { // alle 60 Sekunden
+                this.enemies.forEach(enemy){
+                    enemy.updateStats();
+                }
+            }
+        }
+                }
+*/
 
     // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {

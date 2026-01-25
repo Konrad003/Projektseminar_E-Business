@@ -26,4 +26,10 @@ export class EnemySlime extends Enemy {
     getColor() {
         return "green"
     }
+           updateStats() {
+        if (this.level === this._currentStatsLevel) return;
+        this.dmg += 8
+        this.hp += 15
+        this.speed += 0.05
+    }
 }

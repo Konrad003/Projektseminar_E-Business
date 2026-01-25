@@ -8,6 +8,7 @@ export class EnemySchatzgoblin extends Enemy {
         this.png = "./Graphics/enemiesPNG/Goblin/1.png"
         this.hitbox = {width: 530/8, height: 577/8}
 
+
         const img = new Image();
         img.src = this.png;
 
@@ -61,5 +62,11 @@ export class EnemySchatzgoblin extends Enemy {
 
     getColor() {
         return "DarkGreen"
+    }
+           updateStats() {
+        if (this.level === this._currentStatsLevel) return;
+        this.dmg += 8
+        this.hp += 15
+        this.speed += 0.05
     }
 }

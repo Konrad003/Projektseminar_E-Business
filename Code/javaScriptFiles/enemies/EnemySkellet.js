@@ -27,4 +27,10 @@ export class EnemySkellet extends Enemy {
     getColor() {
         return "white"
     }
+       updateStats() {
+        if (this.level === this._currentStatsLevel) return;
+        this.dmg += 8
+        this.hp += 15
+        this.speed += 0.05
+    }
 }

@@ -12,7 +12,7 @@ export class EnemyReiter extends Enemy {
         img.src = this.png;
 
         this.level = 1
-        this.xpDrop = 2
+        this.xpDrop = 15
         this.baseDamage = 15
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
@@ -24,5 +24,11 @@ export class EnemyReiter extends Enemy {
 
     getColor() {
         return "grey"
+    }
+           updateStats() {
+        if (this.level === this._currentStatsLevel) return;
+        this.dmg += 8
+        this.hp += 15
+        this.speed += 0.05
     }
 }

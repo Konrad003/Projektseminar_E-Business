@@ -18,7 +18,7 @@ export class EquipmentDash extends Equipment {
         // Dash auslösen (nur wenn Leertaste gedrückt, kein Cooldown und nicht bereits im Dash)
         // Wir nutzen hier testweise die Leertaste (spacePressed), die wir später im inputState brauchen
         if (inputState.spacePressed && this.cooldown <= 0) {
-            this.cooldown = 60; // 1 Sekunde bei 60 FPS
+            this.cooldown = 600; // 1 Sekunde bei 60 FPS
             this.isDashing = true;
 
             // Startposition merken
@@ -62,7 +62,7 @@ export class EquipmentDash extends Equipment {
         }
 
         // Nach einer kurzen Zeit den Dash-Status beenden
-        // (Einfachheitshalber hier sofort nach der Bewegung, 
+        // (Einfachheitshalber hier sofort nach der Bewegung,
         // für längere Dashes müsste man einen Counter einbauen)
         this.isDashing = false;
     }

@@ -11,6 +11,7 @@ import {
 import {Weapon} from "./weapons/Weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
+
 export class Enemy extends MovingEntity {
 
    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile) {
@@ -113,21 +114,22 @@ export class Enemy extends MovingEntity {
     die(enemies, positionWithin, enemyItemDrops) {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
-        const dropChance = 0.5 // Chance auf Drop - auf 50% zur besseren Visualisierung
+
+        const dropChance = 0.05 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
 
             let roll = Math.random()
-            if (roll < 0.1) {
+            if (roll < 0.0) {
                 enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
                     height: 32
                 }, null))
-            } else if (roll < 0.2) {
+            } else if (roll < 0.3) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
                     height: 32
                 }, "./Graphics/singleUsePng/3.png"))
-            } else if (roll < 0.65) {
+            } else if (roll < 0.6) {
                 enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
                     height: 32
@@ -142,12 +144,12 @@ export class Enemy extends MovingEntity {
                     width: 32,
                     height: 32
                 }, "./Graphics/singleUsePng/4.png"))
-            } else if (roll < 0.8) {
+            } else if (roll < 0.95) {
                 enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
                     height: 32
                 }, "./Graphics/singleUsePng/5.png"))
-            } else if (roll < 0.81) {
+            } else if (roll < 1) {
                 console.log("Instant Level Drop!!!");
                 enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
@@ -155,6 +157,13 @@ export class Enemy extends MovingEntity {
                 }, "./Graphics/singleUsePng/6.png"))
             }
         }
+
+        if (this.constructor.name === "EnemySchatzgoblin") {
+        enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
+            width: 32,
+            height: 32
+        }, "./Graphics/singleUsePng/6.png"))}
+
         enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 32,
             height: 32

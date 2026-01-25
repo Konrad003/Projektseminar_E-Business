@@ -12,7 +12,7 @@ export class EnemyHexe extends Enemy {
         img.src = this.png;
 
         this.level = 1
-        this.xpDrop = 4
+        this.xpDrop = 6
         this.baseDamage = 20
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
@@ -23,5 +23,11 @@ export class EnemyHexe extends Enemy {
 
     getColor() {
         return "purple"
+    }
+           updateStats() {
+        if (this.level === this._currentStatsLevel) return;
+        this.dmg += 8
+        this.hp += 15
+        this.speed += 0.05
     }
 }
