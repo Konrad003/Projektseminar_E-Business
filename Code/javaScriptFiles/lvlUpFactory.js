@@ -77,6 +77,8 @@ export class LvlUpFactory {
 
         let i = 1
         for (const value of this.lvlRolled) {
+
+            document.getElementById("lvl" + i + "Button").title = value.description;
             document.getElementById("lvl" + i + "Img").src = value.icon;
             document.getElementById("lvl" + i + "Button").innerHTML = value.name;
 

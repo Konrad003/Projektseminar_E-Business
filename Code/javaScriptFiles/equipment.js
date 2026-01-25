@@ -2,7 +2,7 @@ import {Item} from "./item.js";
 
 export class Equipment extends Item {
     constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
-        super(icon, description, level, playerStatKey);
+        super(0, 0, 0, null, icon, description);
         this.name = name;
         this.icon = icon;
         this.level = level;
