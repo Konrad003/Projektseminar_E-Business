@@ -23,30 +23,6 @@ export class DropSingleUse extends StaticEntity {
       }
   }
 
-
-export class SpeedBoostDrop extends DropSingleUse {
-  constructor(x, y, hitbox, png) {
-    super(x, y, hitbox, png)
-    this.duration = 10000
-    this.speedMultiplier = 3
-  }
-  apply(player) {
-    if (!player) return
-    if (player.baseSpeed == null) player.baseSpeed = player.speed
-
-    if (player.speedBoostTimeout) clearTimeout(player.speedBoostTimeout)
-    else player.speed = player.baseSpeed * this.speedMultiplier
-
-    player.speedBoostTimeout = setTimeout(() => {
-      player.speed = player.baseSpeed
-      player.speedBoostTimeout = null
-    }, this.duration)
-  }
-  getColor() {
-        return "orange"
-  }
-}
-
 export class AttackBoostDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
