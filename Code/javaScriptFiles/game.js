@@ -582,6 +582,7 @@ export class game {
 
         //Andere Variablen
         this.killCount = 0
+        
     }
 
     render() {
