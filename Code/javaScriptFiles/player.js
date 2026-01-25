@@ -22,6 +22,7 @@ export class Player extends MovingEntity {
         this.isInvincible = false; // für equipment holy aura
         this.armor = 0; // für equipment armor
         this.extraProjectiles = 0; // für equipment barrage
+        this.pickupRadius = 50; // für equipment radius: Basis-Sammelradius in Pixeln
         this.hitbox = hitbox;
         this.equipmentSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
         this.weaponSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment

@@ -9,12 +9,18 @@ export class DropSingleUse extends StaticEntity {
   apply(player) {}
   getColor() { return "white" }
 
-  tryPickup(player) {
-    if (this.checkCollisionWithEntity(player)) {
-      this.apply(player)
-      return true
-    }
-    return false
+  tryPickup(player) { //jetzt gleich hier machen, da entity.checkCollisionWithEntity nicht mit equipment Radius funktioniert
+      // Distanz berechnen zwischen Item-Mitte und Player-Mitte
+      const dx = (this.globalEntityX + this.hitbox.width / 2) - (player.globalEntityX + player.hitbox.width / 2);
+      const dy = (this.globalEntityY + this.hitbox.height / 2) - (player.globalEntityY + player.hitbox.height / 2);
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Wenn Distanz kleiner als der Sammelradius des Spielers ist
+      if (distance <= player.pickupRadius) {
+          this.apply(player);
+          return true;
+      }
+      return false;
   }
 
   render(ctx, player, enemyItemDrops, position) {
