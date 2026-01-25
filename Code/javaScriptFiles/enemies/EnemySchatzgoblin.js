@@ -1,12 +1,18 @@
 import {Enemy} from "../enemy.js"
 
 export class EnemySchatzgoblin extends Enemy {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.currentHPHP = this.hp = 1500
-        this.speed = 10
-        this.png = "EnemySchatzgoblin"
-        this.hitbox = {width: 22, height: 22}
+        this.level = level
+        this.currentHPHP = this.hp = 500
+        this.speed = 5
+        this.png = "./Graphics/enemiesPNG/Goblin/1.png"
+        this.hitbox = {width: 530/8, height: 577/8}
+
+
+        const img = new Image();
+        img.src = this.png;
+
         this.level = 1
         this.xpDrop = 30
         this.baseDamage = 0
@@ -33,7 +39,7 @@ export class EnemySchatzgoblin extends Enemy {
             this.attemptMoveAxis(this, "x", Math.cos(this.angle) * 1, enemies, MapOne);
             this.attemptMoveAxis(this, "y", Math.sin(this.angle) * 1, enemies, MapOne);
 
-        } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen        
+        } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen
             this.chasePlayer(MapOne, this.globalEntityX * 2 - PlayerOne.globalEntityX, this.globalEntityY * 2 - PlayerOne.globalEntityY, enemies)
             this.ticker++
             if (this.ticker > 300) {          // Nach 5 Sekunden ist der Schatzgoblin nicht mehr verängstigt
@@ -46,7 +52,7 @@ export class EnemySchatzgoblin extends Enemy {
         }
     }
 
-    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth) {
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops = []) {
         let position = this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.draw(ctx, PlayerOne)
         this.move(PlayerOne, MapOne, enemies)
@@ -57,5 +63,11 @@ export class EnemySchatzgoblin extends Enemy {
 
     getColor() {
         return "DarkGreen"
+    }
+           updateStats() {
+        if (this.level === this._currentStatsLevel) return;
+        this.dmg += 8
+        this.hp += 15
+        this.speed += 0.05
     }
 }
