@@ -135,10 +135,15 @@ export class Enemy extends MovingEntity {
                     height: 32
                 }, "./Graphics/singleUsePng/2.png"))
             } else if (roll < 0.7) {
-                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 32,
-                    height: 32
-                }, "./Graphics/singleUsePng/1.png"))
+                enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
+                    width: 16, 
+                    height: 16 
+                }, null))
+            } else if (roll < 0.72) { 
+                enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, null))
             } else if (roll < 0.75) {
                 enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
