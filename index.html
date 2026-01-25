@@ -100,6 +100,48 @@
     </form>
 </section>
 
+<section class="screen overlay-dark" id="inGameSettingsScreen">
+    <h2 class="screenTitle">Ingame Settings</h2>
+
+    <form id="inGameSettingsForm">
+        <div class="panel">
+            <div class="settings" id="inGameSoundSettings">
+
+            </div>
+
+            <div class="settings" id="inGameSettings">
+                <input id="testHealthInGameSettings" max="9999" min="1" name="testHealth" type="number" value="100">
+                <label for="testHealthInGameSettings">Set your Health</label>
+
+                <input id="testMaxHealthInGameSettings" max="9999" min="1" name="testMaxHealth" type="number"
+                       value="100">
+                <label for="testMaxHealthInGameSettings">Set your max. Health</label>
+
+                <input id="testXPInGameSettings" max="9999" min="0" name="testXP" type="number" value="0">
+                <label for="testXPInGameSettings">Set your XP</label>
+            </div>
+
+            <div class="settings">
+                <input checked id="testShootInGameSettings" name="testShoot" type="checkbox" value="true">
+                <label for="testShootInGameSettings">Enable Shooting</label>
+
+                <input checked id="testDieInGameSettings" name="testDie" type="checkbox" value="true">
+                <label for="testDieInGameSettings">Player can die?</label>
+
+                <input id="activateDashInGameSettings" name="activateDash" type="checkbox" value="false">
+                <label for="activateDashInGameSettings">Player can Dash?</label>
+
+            </div>
+
+            <div class="menu">
+                <button class="btn" id="startMenuButtonInGameSettings" onclick="Game.pauseGame()">Back</button>
+            </div>
+
+            <input class="btn" type="submit" value="Save"/>
+        </div>
+    </form>
+</section>
+
 <section class="screen" id="playerSelectScreen">
     <h2 class="screenTitle">Choose a Player</h2>
     <div class="slideSelect">
@@ -143,7 +185,7 @@
 
     <div class="menu">
         <button class="btn" onclick="Game.resumeGame()">RESUME</button>
-        <button class="btn" onclick="Game.settings()">SETTINGS</button>
+        <button class="btn" onclick="Game.inGameSettings()">SETTINGS</button>
         <button class="btn" onclick="Game.home()">MAIN MENU</button>
 
         <button class="btn" onclick="Game.end()">DEFEAT</button>

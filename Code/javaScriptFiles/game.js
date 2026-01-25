@@ -184,6 +184,22 @@ export class game {
         });
     }
 
+    settingsListenerInGameSettings() {
+        document.getElementById("inGameSettingsForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            // Save logic here
+
+            this.testShoot = document.getElementById("testShootInGameSettings").checked
+            this.testDie = document.getElementById("testDieInGameSettings").checked
+            this.dashActiveSetting = document.getElementById("activateDashInGameSettings").checked
+            this.Health = parseInt(document.getElementById("testHealthInGameSettings").value)
+            this.maxHealth = parseInt(document.getElementById("testMaxHealthInGameSettings").value)
+            this.XP = parseInt(document.getElementById("testXPInGameSettings").value)
+
+            this.pauseGame()
+        });
+    }
+
     updateTimerDisplay() { // Aktualisiert die Anzeige des Timers im Format mm:ss
         const minutes = Math.floor(this.gameTimer / 60)
         const seconds = this.gameTimer % 60
@@ -371,11 +387,13 @@ export class game {
 
     // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
-        this.gamePaused = true; //flag boolean for render function
-
-        this.stopGameTimer()
+        if (this.gamePaused === false) {
+            this.gamePaused = true; //flag boolean for render function
+            this.stopGameTimer()  // Verhindert mehrfaches Pausieren
+        }
 
         document.getElementById("pauseScreen").style.display = "flex";
+        document.getElementById("inGameSettingsScreen").style.display = "none";
     }
 
     resumeGame() {
@@ -413,6 +431,13 @@ export class game {
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "flex";
+    }
+
+    inGameSettings() {
+        this.settingsListenerInGameSettings()
+
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("inGameSettingsScreen").style.display = "flex";
     }
 
     selectPlayerScreen() {
