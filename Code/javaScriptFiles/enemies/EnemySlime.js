@@ -1,20 +1,20 @@
 import {Enemy} from "../enemy.js"
 
 export class EnemySlime extends Enemy {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
-        super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 20
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
+        super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, level)
+        this.hp = 20 + level*15
         this.speed = 1
         this.png = "./Graphics/enemiesPNG/Schleim/1.png"
-        this.hitbox = {width: 1706 / 22, height: 964 / 22}
+        this.hitbox = {width: 1706/ 22, height: 964 / 22}
 
         const img = new Image();
 
         img.src = this.png;
 
-        this.level = 1
+        this.level = level
         this.xpDrop = 1
-        this.baseDamage = 5
+        this.baseDamage = 5 + level*2
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX

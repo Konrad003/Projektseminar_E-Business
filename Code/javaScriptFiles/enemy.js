@@ -13,13 +13,14 @@ import {MovingEntity} from "./movingEntity.js"
 
 export class Enemy extends MovingEntity {
 
-   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile) {
+   constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, level) {
             super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
             this.gridMapTile = gridMapTile
             this.oldMoveX=0
             this.oldMoveY=0
             this.blockedX = false
             this.blockedY = false
+            this.level = level
         }
 
     draw(ctx, player) {

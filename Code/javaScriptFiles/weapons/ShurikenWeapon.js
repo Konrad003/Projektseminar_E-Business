@@ -40,7 +40,7 @@ export class ShurikenWeapon extends Weapon {
         const extra = this.shooter.extraProjectiles || 0;
         const amount = Math.floor((this.projectileAmount || this.projectileConfig.amount || 3) + extra);
 
-        console.log(`ShurikenWeapon: Erstelle ${amount} Shuriken (Level ${this.level})`);
+        //console.log(`ShurikenWeapon: Erstelle ${amount} Shuriken (Level ${this.level})`);
 
         for (let i = 0; i < amount; i++) {
             const angle = (2 * Math.PI / amount) * i;

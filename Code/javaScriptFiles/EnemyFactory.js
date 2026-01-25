@@ -9,7 +9,7 @@ import {Enemy} from "./enemy.js"
 import {WeaponConfig} from "./weapons/weaponConfig.js"
 import {MovingEntity} from "./movingEntity.js"
 export class EnemyFactory{
-    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight, MapOne, CountOfEnemies) {
+    static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight, MapOne, CountOfEnemies, enemyLvl) {
 
         const offset = 80
 
@@ -59,12 +59,12 @@ export class EnemyFactory{
 
                 let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
                 if(MovingEntity.spawnCheck(MapOne, x, y, tilewidth, tilewidth)){
-                    enemiesArray[gridMapTile.row][gridMapTile.column].within.push(EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth));
+                    enemiesArray[gridMapTile.row][gridMapTile.column].within.push(EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl));
                 }
             }
         }
     }
-    static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
+    static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
         const enemyTypes = [
             {cls: EnemySlime, weight: 70 , weapon: "BasicEnemy"},
             {cls: EnemyReiter, weight: 5, weapon: "BasicEnemy"},
@@ -81,7 +81,7 @@ export class EnemyFactory{
             random -= enemy.weight
             if (random < 0) {
                 // Erstelle Enemy zuerst ohne Waffe
-                const newEnemy = new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, null);
+                const newEnemy = new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, null, 1, enemyLvl);
                 // Dann erstelle Waffe mit der Enemy-Instanz als Shooter
                 newEnemy.weapon = WeaponConfig.createWeapon(enemy.weapon, newEnemy, mapWidth, mapHeight, gridWidth);
                 return newEnemy;
