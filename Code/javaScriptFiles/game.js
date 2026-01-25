@@ -4,16 +4,7 @@ import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
 // Equipment-Imports
-import {EquipmentDash} from "./equipments/equipmentDash.js";
-import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
-import {EquipmentDamage} from "./equipments/equipmentDamage.js";
-import {EquipmentHaste} from "./equipments/equipmentHaste.js";
-import {EquipmentRapidFire} from "./equipments/equipmentRapidFire.js";
-import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js";
-import {EquipmentArmor} from "./equipments/equipmentArmor.js";
-import {EquipmentExtraProjectile} from "./equipments/equipmentExtraProjectile.js";
 import {EnemyFactory} from "./EnemyFactory.js"
-import {LvlUpFactory} from "./lvlUpFactory.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -91,7 +82,7 @@ export class game {
     testDie = false
     Health = 100
     maxHealth = 100
-    XP = 20
+    XP = 0
 
     constructor() {
         this.MapOne = null
