@@ -1,9 +1,10 @@
 import {Enemy} from "../enemy.js"
 
 export class EnemyReiter extends Enemy {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 80
+        this.level = level
+        this.hp = 80+level*5
         this.speed = 2.5
         this.png = "./Graphics/enemiesPNG/Reiter/1.png"
         this.hitbox = {width: 663/9, height: 693/9}
@@ -13,7 +14,7 @@ export class EnemyReiter extends Enemy {
 
         this.level = 1
         this.xpDrop = 15
-        this.baseDamage = 15
+        this.baseDamage = 15+level*7
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX

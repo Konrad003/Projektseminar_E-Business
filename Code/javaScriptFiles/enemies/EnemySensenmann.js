@@ -1,10 +1,11 @@
 import {Enemy} from "../enemy.js"
 
 export class EnemySensenmann extends Enemy {
-    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon) {
+    constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 100
-        this.speed = 1
+        this.level = level
+        this.hp = 100+level*10
+        this.speed = 1+level*0.2
         this.png = "./Graphics/enemiesPNG/Sense/1.png"
         this.hitbox = {width: 634/9, height: 603/9}
 
@@ -13,7 +14,7 @@ export class EnemySensenmann extends Enemy {
 
         this.level = 1
         this.xpDrop = 10
-        this.baseDamage = 20
+        this.baseDamage = 20+level*5
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX

@@ -8,7 +8,7 @@ export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
 
-    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, equipmentSlots = [null, null, null, null, null, null], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
+    constructor(globalEntityX, globalEntityY, hp, maxHp, xp, png, speed, hitbox, equipmentSlots = [null, null, null, null], weapons = [], regeneration = 0, ctx, onDeath, canvasWidthMiddle, canvasHeightMiddle, mapWidth, mapHeight, gridWidth) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox)
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
@@ -24,8 +24,8 @@ export class Player extends MovingEntity {
         this.extraProjectiles = 0; // für equipment barrage
         this.pickupRadius = 50; // für equipment radius: Basis-Sammelradius in Pixeln
         this.hitbox = hitbox;
-        this.equipmentSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
-        this.weaponSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
+        this.equipmentSlots = [null, null, null, null]; // 4 leere Slots für Equipment
+        this.weaponSlots = [null, null, null, null]; // 4 leere Slots für Equipment
         this.regeneration = regeneration;
         this.ctx = ctx;
         this.onDeath = onDeath;

@@ -66,12 +66,12 @@ export class EnemyFactory{
     }
     static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
         const enemyTypes = [
-            {cls: EnemySlime, weight: 70 , weapon: "BasicEnemy"},
-            {cls: EnemyReiter, weight: 5, weapon: "BasicEnemy"},
-            {cls: EnemySensenmann, weight: 5, weapon: "BasicEnemy"},
-            {cls: EnemyHexe, weight: 3, weapon: "Fireball"},
-            {cls: EnemySchatzgoblin, weight: 1, weapon: "BasicEnemy"},
-            {cls: EnemyGepanzerterRitter, weight: 1, weapon: "BasicEnemy"},
+            {cls: EnemySlime, weight: 70 , weapon: null},
+            {cls: EnemyReiter, weight: 5, weapon: null},
+            {cls: EnemySensenmann, weight: 5, weapon: null},
+            {cls: EnemyHexe, weight: 3, weapon: "BasicEnemy" },
+            {cls: EnemySchatzgoblin, weight: 1, weapon: null},
+            {cls: EnemyGepanzerterRitter, weight: 1, weapon: null},
             {cls: EnemySkellet, weight: 15, weapon: "BasicEnemy"}
         ];
 

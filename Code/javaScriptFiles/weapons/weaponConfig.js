@@ -503,10 +503,10 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         true,
         OrbitingProjectile,
          {
-            amount: 2,  // Basis: 2 Shuriken
+            amount: 1,  // Basis: 2 Shuriken
             orbitRadius: 100,
-            orbitSpeed: 2,
-            size: 20,
+            orbitSpeed: 1.5,
+            size: 15,
             piercing: 10000,
             shooter : shooter
             });
@@ -547,7 +547,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         BoomerangProjectile,
          {
             speed: 8,
-            size: 15,
+            size: 300,
             maxRange: 500,
             piercing: 999,
             shooter: shooter,
@@ -564,7 +564,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
                 1,
                 false,
                 BasicProjectile,
-                { speed: 4, size: 5, duration: 2000, isEnemy: true }
+                { speed: 3 , size: 15, duration: 2000, isEnemy: true }
             );
 
         // Fallback: Generische Weapon-Klasse (für basic, basicEnemy, etc.)

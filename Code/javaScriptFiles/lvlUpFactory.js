@@ -104,5 +104,15 @@ export class LvlUpFactory {
         }
     }
 
+    resetAllItems() {
+        // Alle Waffen zurücksetzen
+        this.weaponSlots.forEach(weapon => {
+            weapon.level = 1;
+        });
 
+        // Alle Equipments zurücksetzen
+        this.EquipmentSlots.forEach(equipment => {
+            equipment.level = 1;
+        });
+    }
 }
