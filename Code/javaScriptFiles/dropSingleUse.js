@@ -187,6 +187,7 @@ class ShockwaveNukeEffect extends StaticEntity {
   constructor(x, y) {
     super(x, y, { width: 0, height: 0 }, null)
 
+    this.isVisualEffect = true
     this.radius = 0
     this.speed = 20
     this.maxRadius = 2500
@@ -235,6 +236,26 @@ class ShockwaveNukeEffect extends StaticEntity {
         }
       }
     }
+    // --- Boden-Items zerstören, wenn Shockwave sie erreicht ---
+  for (let i = enemyItemDrops.length - 1; i >= 0; i--) {
+    const drop = enemyItemDrops[i]
+
+    // Shockwave selbst / Effekte ignorieren
+    if (drop === this) continue
+    if (drop?.isVisualEffect) continue
+
+    // XP bleibt liegen
+    if (drop instanceof XpDrop) continue
+
+    const dx = drop.globalEntityX - this.globalEntityX
+    const dy = drop.globalEntityY - this.globalEntityY
+    const dist = Math.sqrt(dx * dx + dy * dy)
+
+    // Item von Shockwave zerstört
+    if (dist <= this.radius) {
+      enemyItemDrops.splice(i, 1)
+    }
+  }
 
     // Wenn die Shockwave "fertig" ist, Effekt entfernen
     if (this.radius >= this.maxRadius) {
@@ -260,15 +281,11 @@ export class NukeDrop extends DropSingleUse {
   }
 
   apply(player) {
-    if (!player || !player.enemyItemDrops) return
+  if (!player || !player.enemyItemDrops) return
 
-    // Shockwave startet genau an der Player-Position
-    player.enemyItemDrops.push(
-      new ShockwaveNukeEffect(
-        player.globalEntityX,
-        player.globalEntityY
-      )
-    )
+  player.enemyItemDrops.push(
+    new ShockwaveNukeEffect(player.globalEntityX, player.globalEntityY)
+  )
   }
 }
 
