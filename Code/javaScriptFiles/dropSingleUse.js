@@ -1,4 +1,4 @@
-  import { StaticEntity } from "./staticEntity.js"
+ import {StaticEntity} from "./staticEntity.js"
 
 export class DropSingleUse extends StaticEntity {
   constructor(x, y, hitbox, png) {
@@ -9,12 +9,18 @@ export class DropSingleUse extends StaticEntity {
   apply(player) {}
   getColor() { return "white" }
 
-  tryPickup(player) {
-    if (player.checkCollision(this, 0, 0)) {
-      this.apply(player)
-      return true
-    }
-    return false
+  tryPickup(player) { //jetzt gleich hier machen, da entity.checkCollisionWithEntity nicht mit equipment Radius funktioniert
+      // Distanz berechnen zwischen Item-Mitte und Player-Mitte
+      const dx = (this.globalEntityX + this.hitbox.width / 2) - (player.globalEntityX + player.hitbox.width / 2);
+      const dy = (this.globalEntityY + this.hitbox.height / 2) - (player.globalEntityY + player.hitbox.height / 2);
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Wenn Distanz kleiner als der Sammelradius des Spielers ist
+      if (distance <= player.pickupRadius) {
+          this.apply(player);
+          return true;
+      }
+      return false;
   }
 
   render(ctx, player, enemyItemDrops, position) {
@@ -23,54 +29,67 @@ export class DropSingleUse extends StaticEntity {
       }
   }
 
-
-export class SpeedBoostDrop extends DropSingleUse {
-  constructor(x, y, hitbox, png) {
-    super(x, y, hitbox, png)
-    this.duration = 10000
-    this.speedMultiplier = 3
-  }
-  apply(player) {
-    if (!player) return
-    if (player.baseSpeed == null) player.baseSpeed = player.speed
-
-    if (player.speedBoostTimeout) clearTimeout(player.speedBoostTimeout)
-    else player.speed = player.baseSpeed * this.speedMultiplier
-
-    player.speedBoostTimeout = setTimeout(() => {
-      player.speed = player.baseSpeed
-      player.speedBoostTimeout = null
-    }, this.duration)
-  }
-  getColor() {
-        return "orange"
-  }
-}
-
 export class AttackBoostDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
     this.duration = 10000
     this.damageMultiplier = 2
+
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "red" }
 
   apply(player) {
-    if (!player || !player.weapon) return
+  if (!player) return
 
-    // Basis-Damage einmal merken (wie baseSpeed beim SpeedBoost)
-    if (player.baseDmg == null) player.baseDmg = player.weapon.dmg
+  const weaponSlots = player.weaponSlots || []
+  const hasAnyWeapon = weaponSlots.some(w => w != null)
+  if (!hasAnyWeapon) return
 
-    // Timer-Logik wie beim SpeedBoost:
-    if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
-    else player.weapon.dmg = player.baseDmg * this.damageMultiplier
+  // merken, bis wann der Effekt aktiv ist (für roten Schimmer)
+  player.attackBoostActiveUntil = performance.now() + this.duration
 
-    player.attackBoostTimeout = setTimeout(() => {
-      player.weapon.dmg = player.baseDmg
-      player.attackBoostTimeout = null
-    }, this.duration)
+  // Basis-Schaden pro Slot merken (damit jede Waffe korrekt zurückgesetzt wird)
+  if (!player.baseWeaponDamageBySlot) player.baseWeaponDamageBySlot = []
+
+  // wenn Boost schon aktiv war -> Timer neu starten (Refresh)
+  if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
+
+  // Boost anwenden: ALLE Waffen buffen
+  for (let slotIndex = 0; slotIndex < weaponSlots.length; slotIndex++) {
+    const weapon = weaponSlots[slotIndex]
+    if (!weapon) continue
+
+    // Base-Damage einmalig pro Slot merken
+    if (player.baseWeaponDamageBySlot[slotIndex] == null) {
+      player.baseWeaponDamageBySlot[slotIndex] = weapon.dmg
+    }
+
+    weapon.dmg = player.baseWeaponDamageBySlot[slotIndex] * this.damageMultiplier
   }
+
+  // nach Ablauf: alle Waffen zurücksetzen
+  player.attackBoostTimeout = setTimeout(() => {
+    for (let slotIndex = 0; slotIndex < weaponSlots.length; slotIndex++) {
+      const weapon = weaponSlots[slotIndex]
+      if (!weapon) continue
+
+      const baseDmg = player.baseWeaponDamageBySlot?.[slotIndex]
+      if (baseDmg != null) weapon.dmg = baseDmg
+    }
+
+    player.attackBoostTimeout = null
+    player.attackBoostActiveUntil = 0
+  }, this.duration)
+}
+
 }
 
 
@@ -79,7 +98,10 @@ export class HealDrop extends DropSingleUse {
     super(x, y, hitbox, png)
     this.healAmount = 200
   }
-  getColor() { return "green" }
+
+  getColor() {
+    return "green"
+  }
   apply(player) {
     if (!player || this.used) return
     this.used = true
@@ -93,6 +115,13 @@ export class XpMagnetDrop extends DropSingleUse {
     super(x, y, hitbox, png)
     this.radius = 5000
     this.pullSpeed = 10
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "pink" }
@@ -120,10 +149,18 @@ export class XpDrop extends DropSingleUse {
     this.amount = amount
     this.pullTarget = null
     this.pullSpeed = 0
+
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 6), height: (img.naturalHeight / 6),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "brown" }
-  
+
   apply(player) {
     if (!player) return
     player.collectXp(this.amount)
@@ -161,17 +198,18 @@ class ShockwaveNukeEffect extends StaticEntity {
   constructor(x, y) {
     super(x, y, { width: 0, height: 0 }, null)
 
-    this.radius = 0               
-    this.speed = 20               
-    this.maxRadius = 2500         
+    this.isVisualEffect = true
+    this.radius = 0
+    this.speed = 20
+    this.maxRadius = 2500
   }
 
   render(ctx, player, enemyItemDrops, position) {
     // Shockwave wächst pro Frame
     this.radius += this.speed
 
-    const leftBorder = player.globalEntityX - StaticEntity.FOVwidthMiddle
-    const topBorder = player.globalEntityY - StaticEntity.FOVheightMiddle
+    const leftBorder = player.globalEntityX + (player.hitbox.width / 2) - StaticEntity.FOVwidthMiddle
+    const topBorder = player.globalEntityY + (player.hitbox.height / 2) - StaticEntity.FOVheightMiddle
 
     // Shockwave zeichnen (einfacher Kreis)
     ctx.beginPath()
@@ -186,9 +224,9 @@ class ShockwaveNukeEffect extends StaticEntity {
     ctx.lineWidth = 2
     ctx.stroke()
 
-    
+
      // Alle Gegner durchgehen und prüfen: Ist ein Gegner innerhalb des aktuellen Radius, wird er sofort getötet.
-    
+
     const enemies = Game.enemies
     for (let row = 0; row < enemies.length; row++) { //Reihe Y-Richtung
       for (let col = 0; col < enemies[row].length; col++) { //Spalte X-Richtung
@@ -209,6 +247,26 @@ class ShockwaveNukeEffect extends StaticEntity {
         }
       }
     }
+    // --- Boden-Items zerstören, wenn Shockwave sie erreicht ---
+  for (let i = enemyItemDrops.length - 1; i >= 0; i--) {
+    const drop = enemyItemDrops[i]
+
+    // Shockwave selbst / Effekte ignorieren
+    if (drop === this) continue
+    if (drop?.isVisualEffect) continue
+
+    // XP bleibt liegen
+    if (drop instanceof XpDrop) continue
+
+    const dx = drop.globalEntityX - this.globalEntityX
+    const dy = drop.globalEntityY - this.globalEntityY
+    const dist = Math.sqrt(dx * dx + dy * dy)
+
+    // Item von Shockwave zerstört
+    if (dist <= this.radius) {
+      enemyItemDrops.splice(i, 1)
+    }
+  }
 
     // Wenn die Shockwave "fertig" ist, Effekt entfernen
     if (this.radius >= this.maxRadius) {
@@ -218,18 +276,27 @@ class ShockwaveNukeEffect extends StaticEntity {
 }
 
 export class NukeDrop extends DropSingleUse {
-  getColor() { return "cyan" }
+  constructor(x, y, hitbox, png) {
+    super(x, y, hitbox, png)
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
+  }
+
+  getColor() {
+    return "black"
+  }
 
   apply(player) {
-    if (!player || !player.enemyItemDrops) return
+  if (!player || !player.enemyItemDrops) return
 
-    // Shockwave startet genau an der Player-Position
-    player.enemyItemDrops.push(
-      new ShockwaveNukeEffect(
-        player.globalEntityX,
-        player.globalEntityY
-      )
-    )
+  player.enemyItemDrops.push(
+    new ShockwaveNukeEffect(player.globalEntityX, player.globalEntityY)
+  )
   }
 }
 
@@ -237,7 +304,14 @@ export class FreezeDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
     this.duration = 3000 // 3 Sekunden
-    this.radius = 1500   // Radius um den Spieler 
+    this.radius = 1500   // Radius um den Spieler
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "lightcyan" }
@@ -276,6 +350,13 @@ export class FreezeDrop extends DropSingleUse {
 export class InstantLevelDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
+    const img = new Image()
+    img.onload = () => {
+      this.hitbox = {
+        width: (img.naturalWidth / 8), height: (img.naturalHeight / 8),
+      }
+    }
+    img.src = png
   }
 
   getColor() { return "gold" }

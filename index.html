@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <canvas id="game" ></canvas> <!-- brauch keine Breite und Höhe mehr, da es über game gesteuert wird -->
+    <canvas id="game"></canvas> <!-- brauch keine Breite und Höhe mehr, da es über game gesteuert wird -->
 </section>
 
 <section class="screen" id="startScreen">
@@ -48,6 +48,7 @@
     <div class="menu">
         <button class="btn" id="startButton" onclick="Game.chooseMap()">Start Game</button>
         <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
+        <button class="btn" id="playerSelectButton" onclick="Game.selectPlayerScreen()">Select Player</button>
     </div>
 
     <div class="credits" id="linksCredits">
@@ -108,6 +109,44 @@
     </form>
 </section>
 
+<section class="screen" id="playerSelectScreen">
+    <h2 class="screenTitle">Choose a Player</h2>
+    <div class="slideSelect">
+        <button class="btn" onclick="Game.prevPlayer()" style="width: auto;">&lt;</button>
+        <div class="slideSelect-item fade" id="player1">
+            <img alt="Player 1" class="slideImage" src="./players/Peters/8.png">
+            <h3 class="playerName">Player 1</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Peters/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player2">
+            <img alt="Player 2" class="slideImage" src="./players/Rene/8.png">
+            <h3 class="playerName">Player 2</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Rene/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player3">
+            <img alt="Player 3" class="slideImage" src="./players/Lars/8.png">
+            <h3 class="playerName">Player 3</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Lars/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player4">
+            <img alt="Player 4" class="slideImage" src="./players/Rupert/8.png">
+            <h3 class="playerName">Player 4</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Rupert/1.png')">Select</button>
+        </div>
+
+        <div class="slideSelect-item fade" id="player5">
+            <img alt="Player 5" class="slideImage" src="./players/Rene/8.png">
+            <h3 class="playerName">Player 5</h3>
+            <button class="btn" onclick="Game.selectPlayer('./players/Dana/1.png')">Select</button>
+        </div>
+
+        <button class="btn" onclick="Game.nextPlayer()" style="width: auto;">&gt;</button>
+    </div>
+</section>
+
 <section class="screen overlay-dark" id="pauseScreen">
     <h1 class="screenTitle">PAUSED</h1>
 
@@ -128,24 +167,33 @@
 
     <div class="panel">
         <div class="level">
-            <svg height="320" width="320" xmlns="http://www.w3.org/2000/svg">
-                <rect fill="yellow" height="320" rx="20" ry="20" width="320" x="0" y="0"/>
-                //x & y == offset; rx & ry == border radius
-            </svg>
+            <div class="lvlUpImg">
+                <svg height="320" width="320" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="yellow" height="320" rx="20" ry="20" width="320" x="0" y="0"/>
+                    //x & y == offset; rx & ry == border radius
+                </svg>
+                <img alt="lvl1" id="lvl1Img" src="./Graphics/lvl1.png">
+            </div>
             <button class="btn" id="lvl1Button" onclick="Game.lvlUPhide()">Option 1</button>
         </div>
         <div class="level">
-            <svg height="320" width="320" xmlns="http://www.w3.org/2000/svg">
-                <rect fill="yellow" height="320" rx="20" ry="20" width="320" x="0" y="0"/>
-                //x & y == offset; rx & ry == border radius
-            </svg>
+            <div class="lvlUpImg">
+                <svg height="320" width="320" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="yellow" height="320" rx="20" ry="20" width="320" x="0" y="0"/>
+                    //x & y == offset; rx & ry == border radius
+                </svg>
+                <img alt="lvl2" id="lvl2Img" src="./Graphics/lvl1.png">
+            </div>
             <button class="btn" id="lvl2Button" onclick="Game.lvlUPhide()">Option 2</button>
         </div>
         <div class="level">
-            <svg height="320" width="320" xmlns="http://www.w3.org/2000/svg">
-                <rect fill="yellow" height="320" rx="20" ry="20" width="320" x="0" y="0"/>
-                //x & y == offset; rx & ry == border radius
-            </svg>
+            <div class="lvlUpImg">
+                <svg height="320" width="320" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="yellow" height="320" rx="20" ry="20" width="320" x="0" y="0"/>
+                    //x & y == offset; rx & ry == border radius
+                </svg>
+                <img alt="lvl3" id="lvl3Img" src="./Graphics/lvl1.png">
+            </div>
             <button class="btn" id="lvl3Button" onclick="Game.lvlUPhide()">Option 3</button>
         </div>
     </div>
