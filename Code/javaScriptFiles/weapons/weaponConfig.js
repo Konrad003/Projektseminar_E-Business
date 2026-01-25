@@ -411,13 +411,24 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
     if (level <= 0) {
         return null;
     }
-
+/**
+ * Struktur: {
+ *   name: "Bow",
+ *   dmg: 100,                          // Schaden pro Treffer (Base)
+ *   cooldown: 1000,                    // ms zwischen Schüssen (Base)
+ *   range: 1000,                       // Zielweite (Base)
+ *   piercing: 0,                       // 0 = stop on hit, 1+ = pierce (Base)
+ *   projectile: ProjectileClass,       // Welche Projectile-Klasse
+ *   projectileConfig: { ... }          // Projectile-spezifische Daten
+ *   maxLevel: 20                       // Max erreichbares Level
+ * }
+ */
     // Erstelle Waffe basierend auf Typ
     // Wir übergeben null für icon/desc/name, damit die Klasse sie aus der Config holt
     switch (name) {
         // Simple Weapons (keine spezielle Logik, aber eigene Klasse für Übersichtlichkeit)
         case "Bow":          return new BowWeapon("./Graphics/equipmentIcons/PNG/2.png", "Fast piercing arrows", level, "Bow", shooter, mapWidth, mapHeight, gridWidth,
-        100,
+        45,
         1000,
         1000,
         0,
@@ -432,7 +443,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             amount: 1  // Basis-Anzahl Projektile
         });
         case "Knife":        return new KnifeWeapon("./Graphics/equipmentIcons/PNG/10.png", "Quick throwing knives", level, "Knife", shooter, mapWidth, mapHeight, gridWidth,
-        40,
+        20,
         400,
         600,
         0,
@@ -441,14 +452,14 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         true,
         BasicProjectile,
         {
-            speed: 8,
+            speed: 9,
             size: 5,
             duration: 2000,
             amount: 1
         });
         case "Fireball":     return new FireballWeapon("./Graphics/equipmentIcons/PNG/8.png", "Explosive fire attack", level, "Fireball", shooter, mapWidth, mapHeight, gridWidth,
-        100,
-        1500,
+        80,
+        2000,
         1500,
         0,
         20,
@@ -464,7 +475,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             amount: 1});
         case "Molotov":      return new MolotovWeapon("./Graphics/equipmentIcons/PNG/5.png", "Burning area damage", level, "Molotov", shooter, mapWidth, mapHeight, gridWidth,
         25,
-        1200,
+        1800,
         1500,
         0,
         20,
@@ -495,13 +506,13 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             amount: 2,  // Basis: 2 Shuriken
             orbitRadius: 100,
             orbitSpeed: 2,
-            size: 6,
-            piercing: 999,
+            size: 20,
+            piercing: 10000,
             shooter : shooter
             });
         case "Thunderstrike": return new ThunderstrikeWeapon( "./Graphics/equipmentIcons/PNG/9.png", "Lightning bolt strike", level, "Thunderstrike", shooter, mapWidth, mapHeight, gridWidth,
-         5,
-         400,
+         50,
+         1500,
          300,
          0,
         20,
@@ -526,7 +537,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             auraDmgInterval: 500,
             auraColor: 'rgba(255, 255, 100, 0.3)'});
         case "Boomerang":          return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/11.png", "Returning boomerang", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
-        150,
+        50,
         1500,
         600,
         999,
@@ -536,8 +547,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         BoomerangProjectile,
          {
             speed: 8,
-            size: 10,
-            maxRange: 400,
+            size: 15,
+            maxRange: 500,
             piercing: 999,
             shooter: shooter,
             });
@@ -559,7 +570,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         // Fallback: Generische Weapon-Klasse (für basic, basicEnemy, etc.)
         default:
             return new Weapon("./Graphics/equipmentIcons/PNG/2.png", "Fast piercing arrows", level, "Bow", shooter, mapWidth, mapHeight, gridWidth,
-        100,
+        10,
         1000,
         1000,
         0,
