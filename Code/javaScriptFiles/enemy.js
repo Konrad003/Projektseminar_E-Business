@@ -1,4 +1,4 @@
-import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop, AttackBoostDrop, InstantLevelDrop} from "./dropSingleUse.js"
+import {HealDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop, AttackBoostDrop, InstantLevelDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -99,12 +99,7 @@ export class Enemy extends MovingEntity {
         if (Math.random() < dropChance) {
 
             let roll = Math.random()
-            if (roll < 0.1) {
-                enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
-            } else if (roll < 0.2) {
+            if (roll < 0.2) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
@@ -119,7 +114,7 @@ export class Enemy extends MovingEntity {
                     width: 16, 
                     height: 16 
                 }, null))
-            } else if (roll < 0.72) { // z.B. 5%
+            } else if (roll < 0.72) { 
                 enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
