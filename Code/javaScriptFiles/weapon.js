@@ -29,6 +29,7 @@ export class Weapon extends Item {
         //if (window.Game && typeof window.Game.playShotSound === 'function') {
            // return;
         //}
+        this.hpUpSound = new Audio('./Sound/hp-up.mp3');
         if (window.Game && !window.Game.soundEffects) return;
         if (window.Sounds && window.Sounds.shotSound) {
             window.Sounds.shotSound.play();

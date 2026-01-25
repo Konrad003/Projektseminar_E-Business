@@ -77,6 +77,10 @@ export class AttackBoostDrop extends DropSingleUse {
       player.weapon.dmg = player.baseDmg
       player.attackBoostTimeout = null
     }, this.duration)
+
+    if (window.Game.soundEffects) {
+      window.Sounds.hpUpSound.play()
+    }
   }
 }
 
@@ -265,6 +269,10 @@ export class FreezeDrop extends DropSingleUse {
 
     const now = performance.now()
     const enemies = Game.enemies
+
+    if (window.Game.soundEffects) {
+      window.Sounds.freezeSound.play()
+    }
 
     // alle enemies im Grid prüfen, aber nur die im Radius einfrieren
     for (let row = 0; row < enemies.length; row++) {
