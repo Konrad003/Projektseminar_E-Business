@@ -288,37 +288,102 @@ export class game {
         if (t < 60) {       //Zeitstempel in Sekunden
             return 1;       //lvl
         }
-        else if (t < 150) {
+        else if (t < 120) {
             return 2;
         }
-        else if (t < 300) {
+        else if (t < 180) {
             return 3;
         }
-        else if (t < 450) {
+        else if (t < 240) {
             return 4;
         }
+        else if (t < 300) {
+            return 5;
+        }
+        else if (t < 360) {
+            return 6;
+        }
+        else if (t < 420) {
+            return 7;
+        }
+        else if (t < 480) {
+            return 8;
+        }
+        else if (t < 540) {
+            return 9;
+        }
+        else if (t < 600) {
+            return 10;
+        }
+        else if (t < 660) {
+            return 11;
+        }
+        else if (t < 720) {
+            return 12;
+        }
+        else if (t < 780) {
+            return 13;
+        }
+        else if (t < 840) {
+            return 14;
+        }
+        else if (t < 900) {
+            return 15;
+        }
+        else if (t < 960) {
+            return 16;
+        }
+        else if (t < 1020) {
+            return 17;
+        }
+        else if (t < 1080) {
+            return 18;
+        }
+        else if (t < 1140) {
+            return 19;
+        }
+        else if (t < 1200) {
+            return 20;
+        }
     }
+
     getCurrentSpawnInterval() {
-        return 500 / this.getSpawnIntensity(this.gameTimer); // 5000  is das Startintervall
+    // Basisspawnintervall in ms (je kleiner, desto härter)
+    return 1100 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {
-        if (t < 60) {
-            return 0.2 + 0.4 * (t / 60);
-        } else if (t < 150) {
-            return 0.6 + 0.4 * ((t - 60) / 90);
-        } else if (t < 180) {
-            return 0.5;
-        } else if (t < 300) {
-            return 0.5 + 0.4 * ((t - 180) / 120);
-        } else if (t < 330) {
-            return 0.4;
-        } else if (t < 510) {
-            return 0.4 + 0.6 * ((t - 330) / 180);
-        } else {
-            return 1.0;
-        }
-    }
+  // 0:00–1:00 (0–60s) -> ruhig reinstarten
+  if (t < 60) {
+    return 0.15 + 0.35 * (t / 60);          // 0.20 → 0.60
+  }
+
+  // 1:00–2:30 (60–150s) -> mehr Druck
+  else if (t < 150) {
+    return 0.55 + 0.40 * ((t - 60) / 90);   // 0.60 → 1.05
+  }
+
+  // 2:30–3:30 (150–210s) -> weiterhin steigern 
+  else if (t < 210) {
+    return 1.05 + 0.15 * ((t - 150) / 60);  // 1.05 → 1.20
+  }
+
+  // 3:30–5:00 (210–300s) -> hier wird’s deutlich schneller (damit ab 5:00 schwer)
+  else if (t < 300) {
+    return 1.20 + 0.90 * ((t - 210) / 90);  // 1.20 → 2.10
+  }
+
+  // 5:00–10:00 (300–600s) -> Wellen werden immer härter, bis 10 Minuten
+  else if (t < 600) {
+    return 2.10 + 0.90 * ((t - 300) / 300); // 2.10 → 3.00
+  }
+
+  // ab 10:00 -> konstant brutal (oder hier noch weiter ansteigen lassen)
+  else {
+    return 3.00;
+  }
+}
+
     /*
     updateEnemyStats(t)  {
          if (!this.gamePaused) {

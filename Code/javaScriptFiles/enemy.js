@@ -212,7 +212,7 @@ export class Enemy extends MovingEntity {
         // save/restore ist wichtig, damit danach nicht alles im Spiel halbtransparent wird.
          if (frozen) {
         ctx.save()
-        ctx.globalAlpha = 0.5           // leicht transparent
+        ctx.globalAlpha = 0.8           // leicht transparent
         this.draw(ctx, PlayerOne)
         ctx.restore()
     } else {
