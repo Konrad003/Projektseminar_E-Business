@@ -592,6 +592,7 @@ export class game {
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
+        this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp
     }
 }
