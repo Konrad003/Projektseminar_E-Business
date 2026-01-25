@@ -7,7 +7,6 @@ import {
     XpDrop,
     XpMagnetDrop
 } from "./dropSingleUse.js"
-import {Weapon} from "./weapons/Weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
 
@@ -118,6 +117,8 @@ export class Enemy extends MovingEntity {
         const { dropItems = true } = dropSettings 
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
+
+        Game.killCount++
 
         if (dropItems) {
         const dropChance = 0.05 // Chance auf Drop - auf 50% zur besseren Visualisierung

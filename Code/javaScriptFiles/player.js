@@ -4,6 +4,7 @@ import {EquipmentDash} from "./equipments/equipmentDash.js";
 import {LvlUpFactory} from "./lvlUpFactory.js"
 import {Equipment} from "./equipment.js";
 import {WeaponConfig} from "./weapons/weaponConfig.js";
+
 export class Player extends MovingEntity {
     ctx
     xpForNextLevel;
@@ -146,6 +147,7 @@ export class Player extends MovingEntity {
 
     collectXp(xpAmount) {
         this.xp += xpAmount;
+        Game.totalXP += xpAmount;
 
         this.xp = Math.floor(this.xp)
 

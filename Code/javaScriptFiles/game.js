@@ -4,16 +4,7 @@ import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
 // Equipment-Imports
-import {EquipmentDash} from "./equipments/equipmentDash.js";
-import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
-import {EquipmentDamage} from "./equipments/equipmentDamage.js";
-import {EquipmentHaste} from "./equipments/equipmentHaste.js";
-import {EquipmentRapidFire} from "./equipments/equipmentRapidFire.js";
-import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js";
-import {EquipmentArmor} from "./equipments/equipmentArmor.js";
-import {EquipmentExtraProjectile} from "./equipments/equipmentExtraProjectile.js";
 import {EnemyFactory} from "./EnemyFactory.js"
-import {LvlUpFactory} from "./lvlUpFactory.js";
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
@@ -85,6 +76,7 @@ export class game {
 
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
+    totalXP = 0
 
     //Tests
     testShoot = true
@@ -275,7 +267,7 @@ export class game {
         const spawn = () => {
             if (!this.gamePaused) {
 
-                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/, this.getEnemyLvl )
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/, this.getEnemyLvl)
             }
             this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
@@ -287,102 +279,83 @@ export class game {
         const t = this.gameTimer;
         if (t < 60) {       //Zeitstempel in Sekunden
             return 1;       //lvl
-        }
-        else if (t < 120) {
+        } else if (t < 120) {
             return 2;
-        }
-        else if (t < 180) {
+        } else if (t < 180) {
             return 3;
-        }
-        else if (t < 240) {
+        } else if (t < 240) {
             return 4;
-        }
-        else if (t < 300) {
+        } else if (t < 300) {
             return 5;
-        }
-        else if (t < 360) {
+        } else if (t < 360) {
             return 6;
-        }
-        else if (t < 420) {
+        } else if (t < 420) {
             return 7;
-        }
-        else if (t < 480) {
+        } else if (t < 480) {
             return 8;
-        }
-        else if (t < 540) {
+        } else if (t < 540) {
             return 9;
-        }
-        else if (t < 600) {
+        } else if (t < 600) {
             return 10;
-        }
-        else if (t < 660) {
+        } else if (t < 660) {
             return 11;
-        }
-        else if (t < 720) {
+        } else if (t < 720) {
             return 12;
-        }
-        else if (t < 780) {
+        } else if (t < 780) {
             return 13;
-        }
-        else if (t < 840) {
+        } else if (t < 840) {
             return 14;
-        }
-        else if (t < 900) {
+        } else if (t < 900) {
             return 15;
-        }
-        else if (t < 960) {
+        } else if (t < 960) {
             return 16;
-        }
-        else if (t < 1020) {
+        } else if (t < 1020) {
             return 17;
-        }
-        else if (t < 1080) {
+        } else if (t < 1080) {
             return 18;
-        }
-        else if (t < 1140) {
+        } else if (t < 1140) {
             return 19;
-        }
-        else if (t < 1200) {
+        } else if (t < 1200) {
             return 20;
         }
     }
 
     getCurrentSpawnInterval() {
-    // Basisspawnintervall in ms (je kleiner, desto härter)
-    return 1100 / this.getSpawnIntensity(this.gameTimer);
+        // Basisspawnintervall in ms (je kleiner, desto härter)
+        return 1100 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {
-  // 0:00–1:00 (0–60s) -> ruhig reinstarten
-  if (t < 60) {
-    return 0.15 + 0.35 * (t / 60);          // 0.20 → 0.60
-  }
+        // 0:00–1:00 (0–60s) -> ruhig reinstarten
+        if (t < 60) {
+            return 0.15 + 0.35 * (t / 60);          // 0.20 → 0.60
+        }
 
-  // 1:00–2:30 (60–150s) -> mehr Druck
-  else if (t < 150) {
-    return 0.55 + 0.40 * ((t - 60) / 90);   // 0.60 → 1.05
-  }
+        // 1:00–2:30 (60–150s) -> mehr Druck
+        else if (t < 150) {
+            return 0.55 + 0.40 * ((t - 60) / 90);   // 0.60 → 1.05
+        }
 
-  // 2:30–3:30 (150–210s) -> weiterhin steigern 
-  else if (t < 210) {
-    return 1.05 + 0.15 * ((t - 150) / 60);  // 1.05 → 1.20
-  }
+        // 2:30–3:30 (150–210s) -> weiterhin steigern
+        else if (t < 210) {
+            return 1.05 + 0.15 * ((t - 150) / 60);  // 1.05 → 1.20
+        }
 
-  // 3:30–5:00 (210–300s) -> hier wird’s deutlich schneller (damit ab 5:00 schwer)
-  else if (t < 300) {
-    return 1.20 + 0.90 * ((t - 210) / 90);  // 1.20 → 2.10
-  }
+        // 3:30–5:00 (210–300s) -> hier wird’s deutlich schneller (damit ab 5:00 schwer)
+        else if (t < 300) {
+            return 1.20 + 0.90 * ((t - 210) / 90);  // 1.20 → 2.10
+        }
 
-  // 5:00–10:00 (300–600s) -> Wellen werden immer härter, bis 10 Minuten
-  else if (t < 600) {
-    return 2.10 + 0.90 * ((t - 300) / 300); // 2.10 → 3.00
-  }
+        // 5:00–10:00 (300–600s) -> Wellen werden immer härter, bis 10 Minuten
+        else if (t < 600) {
+            return 2.10 + 0.90 * ((t - 300) / 300); // 2.10 → 3.00
+        }
 
-  // ab 10:00 -> konstant brutal (oder hier noch weiter ansteigen lassen)
-  else {
-    return 3.00;
-  }
-}
+        // ab 10:00 -> konstant brutal (oder hier noch weiter ansteigen lassen)
+        else {
+            return 3.00;
+        }
+    }
 
     /*
     updateEnemyStats(t)  {
@@ -394,7 +367,7 @@ export class game {
             }
         }
                 }
-*/
+    */
 
     // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
@@ -496,7 +469,7 @@ export class game {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("defeatTime").innerHTML = document.getElementById("hudTime").innerHTML
-        document.getElementById("defeatXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("defeatXP").innerHTML = this.totalXP
         document.getElementById("defeatKills").innerHTML = this.killCount
         document.getElementById("defeatScreen").style.display = "flex";
 
@@ -512,7 +485,7 @@ export class game {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("winTime").innerHTML = document.getElementById("hudTime").innerHTML
-        document.getElementById("winXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("winXP").innerHTML = this.totalXP
         document.getElementById("winKills").innerHTML = this.killCount
         document.getElementById("winScreen").style.display = "flex";
 
@@ -582,7 +555,7 @@ export class game {
 
         //Andere Variablen
         this.killCount = 0
-        
+
     }
 
     render() {
@@ -610,10 +583,11 @@ export class game {
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
-                for (let i = 0 ; i < this.enemies[row][column].within.length; i++) {
+                for (let i = 0; i < this.enemies[row][column].within.length; i++) {
                     if (this.enemies[row][column].within[i] === undefined) {
-                    console.log(this.enemies[row][column].within.length)
-                    console.log(i)}
+                        console.log(this.enemies[row][column].within.length)
+                        console.log(i)
+                    }
                     this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
             }
