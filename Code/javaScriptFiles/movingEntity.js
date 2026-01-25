@@ -8,12 +8,29 @@ export class MovingEntity extends Entity {
         this.globalEntityY = globalEntityY;
         this.hp = hp;
         this.maxHp = hp; // MaxHP entspricht Startwert
-        this.png = png;
         this.speed = speed;
         this.hitbox = hitbox;
     }
 
     // Prüft, ob zwei Entities kollidieren (AABB-Kollision)
+
+    static spawnCheck(map, x, y, hitboxWidth, hitboxHeight) {
+        return (map.findTile(x, y).walkable && map.findTile(x, y + hitboxHeight-1).walkable && map.findTile(x + hitboxWidth-1, y).walkable && map.findTile(x + hitboxWidth-1, y + hitboxHeight -1).walkable)
+    }
+
+    checkSpawnCollision(enemiesArray, gridMapTile) {
+        for (let row = gridMapTile.row - 1; row <= gridMapTile.row + 1; row++) {
+            for (let column = gridMapTile.column - 1; column <= gridMapTile.column + 1; column++) {
+                for (const other of enemiesArray[row][column].within){
+                    if (other === this) continue
+                    if (this.checkCollision(other, 0, 0)){
+                    return true
+                    }
+                }
+            }
+        }
+        return false
+    }
 
     checkCollision(other, proposedMoveX, proposedMoveY) {
         return (this.checkCollisionHorizontal(other, proposedMoveX) && this.checkCollisionVertical(other, proposedMoveY))
@@ -63,13 +80,6 @@ export class MovingEntity extends Entity {
             return false
         }                           // Prüfe ob vertikale Überschneidung
         return true // Überschneidung
-    }
-
-    static spawnCheck(map, globalEntityX, globalEntityY, hitboxWidth, hitboxHeight){
-        return (map.findTile(globalEntityX , globalEntityY ).walkable &&
-        map.findTile(globalEntityX , globalEntityY + hitboxHeight).walkable &&
-        map.findTile(globalEntityX + hitboxWidth, globalEntityY ).walkable &&
-        map.findTile(globalEntityX + hitboxWidth, globalEntityY + hitboxHeight).walkable)
     }
 
     attemptMoveAxis(self, axis, move, enemyArray, map, visited = new Set) {
@@ -147,7 +157,7 @@ export class MovingEntity extends Entity {
         const testDieEnabled = (typeof Game !== 'undefined') && Game.testDie;
         if (this.hp <= 0) {
             this.hp = 0;
-            if (!isPlayer || testDieEnabled) {
+            if (!isPlayer || !testDieEnabled) {
                 this.die(enemies, positionWithin, enemyItemDrops);
             }
         }

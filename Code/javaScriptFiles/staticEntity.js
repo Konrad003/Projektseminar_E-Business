@@ -7,6 +7,5 @@ export class StaticEntity extends Entity {
         this.globalEntityX = globalEntityX
         this.globalEntityY = globalEntityY
         this.hitbox = hitbox
-        this.png = png
     }
 }
