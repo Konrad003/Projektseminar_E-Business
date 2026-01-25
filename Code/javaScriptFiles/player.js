@@ -22,6 +22,7 @@ export class Player extends MovingEntity {
         this.isInvincible = false; // für equipment holy aura
         this.armor = 0; // für equipment armor
         this.extraProjectiles = 0; // für equipment barrage
+        this.pickupRadius = 50; // für equipment radius: Basis-Sammelradius in Pixeln
         this.hitbox = hitbox;
         this.equipmentSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
         this.weaponSlots = [null, null, null, null, null, null]; // sechs leere Slots für Equipment
@@ -70,6 +71,14 @@ export class Player extends MovingEntity {
 
     draw(ctx, player) {
         ctx.save();
+
+    // ✅ AttackBoost: rotes Leuchten (solange aktiv)
+    const attackBoostIsActive = (this.attackBoostActiveUntil || 0) > performance.now()
+    if (attackBoostIsActive) {
+    ctx.shadowBlur = 25
+    ctx.shadowColor = "red"
+    ctx.globalAlpha = 1.0
+    }
 
         // Wenn die Aura aktiv ist, wird Zeichnen angepasst
         if (this.isInvincible) {

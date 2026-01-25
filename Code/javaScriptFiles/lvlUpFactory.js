@@ -6,6 +6,7 @@ import {EquipmentInvincibility} from "./equipments/equipmentInvincibility.js"
 import {EquipmentRapidFire} from "./equipments/equipmentRapidFire.js"
 import {EquipmentMaxHealth} from "./equipments/equipmentMaxHealth.js";
 import {EquipmentDash} from "./equipments/equipmentDash.js";
+import {EquipmentRadius} from "./equipments/equipmentRadius.js";
 import {WeaponConfig} from "./weapons/weaponConfig.js";
 
 export class LvlUpFactory {
@@ -13,7 +14,7 @@ export class LvlUpFactory {
         this.PlayerOne = PlayerOne;
         const { mapWidth, mapHeight, gridWidth } = PlayerOne;
 
-        this.equipmentObjekte = [new EquipmentArmor("./Graphics/equipmentIcons/PNG/18.png", "Reduces incoming damage", 1, "Armor", "armor", 2), new EquipmentDamage("./Graphics/equipmentIcons/PNG/6.png", "Increases overall damage", 1, "Damage", "damageMultiplier", 0.2), new EquipmentDash("./Graphics/equipmentIcons/PNG/12.png", "Allows a quick dodge move", 1, "Dash", null, 0), new EquipmentExtraProjectile("./Graphics/equipmentIcons/PNG/1.png", "Fires extra projectiles", 1, "ExtraProjectile", "extraProjectiles", 0), new EquipmentHaste("./Graphics/equipmentIcons/PNG/20.png", "Increases movement speed", 1, "Haste", "speed", 0.5), new EquipmentInvincibility("./Graphics/equipmentIcons/PNG/17.png", "Grant temporary invincibility", 1, "Invincibility", "isInvincible", 0), new EquipmentMaxHealth("./Graphics/equipmentIcons/PNG/15.png", "Increases maximum health", 1, "MaxHealth", "maxHp", 50), new EquipmentRapidFire("./Graphics/equipmentIcons/PNG/16.png", "Reduces attack cooldown", 1, "RapidFire", "cooldownMultiplier", -0.1)]
+        this.equipmentObjekte = [new EquipmentArmor("./Graphics/equipmentIcons/PNG/18.png", "Reduces incoming damage", 1, "Armor", "armor", 2), new EquipmentDamage("./Graphics/equipmentIcons/PNG/6.png", "Increases overall damage", 1, "Damage", "damageMultiplier", 0.2), new EquipmentDash("./Graphics/equipmentIcons/PNG/12.png", "Allows a quick dodge move", 1, "Dash", null, 0), new EquipmentExtraProjectile("./Graphics/equipmentIcons/PNG/1.png", "Fires extra projectiles", 1, "ExtraProjectile", "extraProjectiles", 0), new EquipmentHaste("./Graphics/equipmentIcons/PNG/20.png", "Increases movement speed", 1, "Haste", "speed", 0.5), new EquipmentInvincibility("./Graphics/equipmentIcons/PNG/17.png", "Grant temporary invincibility", 1, "Invincibility", "isInvincible", 0), new EquipmentMaxHealth("./Graphics/equipmentIcons/PNG/15.png", "Increases maximum health", 1, "MaxHealth", "maxHp", 50), new EquipmentRapidFire("./Graphics/equipmentIcons/PNG/16.png", "Reduces attack cooldown", 1, "RapidFire", "cooldownMultiplier", -0.1), new EquipmentRadius("./Graphics/equipmentIcons/PNG/ radius_icon.png", "Increases item pickup range", 1, "Radius", "pickupRadius", 50)]
         this.weaponObjekte = [
             WeaponConfig.createWeapon("Bow", PlayerOne, mapWidth, mapHeight, gridWidth),
             WeaponConfig.createWeapon("Knife", PlayerOne, mapWidth, mapHeight, gridWidth),

@@ -9,12 +9,18 @@ export class DropSingleUse extends StaticEntity {
   apply(player) {}
   getColor() { return "white" }
 
-  tryPickup(player) {
-    if (this.checkCollisionWithEntity(player)) {
-      this.apply(player)
-      return true
-    }
-    return false
+  tryPickup(player) { //jetzt gleich hier machen, da entity.checkCollisionWithEntity nicht mit equipment Radius funktioniert
+      // Distanz berechnen zwischen Item-Mitte und Player-Mitte
+      const dx = (this.globalEntityX + this.hitbox.width / 2) - (player.globalEntityX + player.hitbox.width / 2);
+      const dy = (this.globalEntityY + this.hitbox.height / 2) - (player.globalEntityY + player.hitbox.height / 2);
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      // Wenn Distanz kleiner als der Sammelradius des Spielers ist
+      if (distance <= player.pickupRadius) {
+          this.apply(player);
+          return true;
+      }
+      return false;
   }
 
   render(ctx, player, enemyItemDrops, position) {
@@ -22,30 +28,6 @@ export class DropSingleUse extends StaticEntity {
       this.draw(ctx, player, this.getColor())
       }
   }
-
-
-export class SpeedBoostDrop extends DropSingleUse {
-  constructor(x, y, hitbox, png) {
-    super(x, y, hitbox, png)
-    this.duration = 10000
-    this.speedMultiplier = 3
-  }
-  apply(player) {
-    if (!player) return
-    if (player.baseSpeed == null) player.baseSpeed = player.speed
-
-    if (player.speedBoostTimeout) clearTimeout(player.speedBoostTimeout)
-    else player.speed = player.baseSpeed * this.speedMultiplier
-
-    player.speedBoostTimeout = setTimeout(() => {
-      player.speed = player.baseSpeed
-      player.speedBoostTimeout = null
-    }, this.duration)
-  }
-  getColor() {
-        return "orange"
-  }
-}
 
 export class AttackBoostDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
@@ -65,20 +47,49 @@ export class AttackBoostDrop extends DropSingleUse {
   getColor() { return "red" }
 
   apply(player) {
-    if (!player || !player.weapon) return
+  if (!player) return
 
-    // Basis-Damage einmal merken (wie baseSpeed beim SpeedBoost)
-    if (player.baseDmg == null) player.baseDmg = player.weapon.dmg
+  const weaponSlots = player.weaponSlots || []
+  const hasAnyWeapon = weaponSlots.some(w => w != null)
+  if (!hasAnyWeapon) return
 
-    // Timer-Logik wie beim SpeedBoost:
-    if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
-    else player.weapon.dmg = player.baseDmg * this.damageMultiplier
+  // merken, bis wann der Effekt aktiv ist (für roten Schimmer)
+  player.attackBoostActiveUntil = performance.now() + this.duration
 
-    player.attackBoostTimeout = setTimeout(() => {
-      player.weapon.dmg = player.baseDmg
-      player.attackBoostTimeout = null
-    }, this.duration)
+  // Basis-Schaden pro Slot merken (damit jede Waffe korrekt zurückgesetzt wird)
+  if (!player.baseWeaponDamageBySlot) player.baseWeaponDamageBySlot = []
+
+  // wenn Boost schon aktiv war -> Timer neu starten (Refresh)
+  if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
+
+  // Boost anwenden: ALLE Waffen buffen
+  for (let slotIndex = 0; slotIndex < weaponSlots.length; slotIndex++) {
+    const weapon = weaponSlots[slotIndex]
+    if (!weapon) continue
+
+    // Base-Damage einmalig pro Slot merken
+    if (player.baseWeaponDamageBySlot[slotIndex] == null) {
+      player.baseWeaponDamageBySlot[slotIndex] = weapon.dmg
+    }
+
+    weapon.dmg = player.baseWeaponDamageBySlot[slotIndex] * this.damageMultiplier
   }
+
+  // nach Ablauf: alle Waffen zurücksetzen
+  player.attackBoostTimeout = setTimeout(() => {
+    for (let slotIndex = 0; slotIndex < weaponSlots.length; slotIndex++) {
+      const weapon = weaponSlots[slotIndex]
+      if (!weapon) continue
+
+      const baseDmg = player.baseWeaponDamageBySlot?.[slotIndex]
+      if (baseDmg != null) weapon.dmg = baseDmg
+    }
+
+    player.attackBoostTimeout = null
+    player.attackBoostActiveUntil = 0
+  }, this.duration)
+}
+
 }
 
 
