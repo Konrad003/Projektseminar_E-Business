@@ -1,4 +1,4 @@
-import {HealDrop, SpeedBoostDrop, XpDrop, XpMagnetDrop, NukeDrop} from "./dropSingleUse.js"
+import {HealDrop, XpDrop, XpMagnetDrop, NukeDrop, FreezeDrop, AttackBoostDrop, InstantLevelDrop} from "./dropSingleUse.js"
 import {Weapon} from "./weapon.js"
 import {MovingEntity} from "./movingEntity.js"
 
@@ -99,18 +99,28 @@ export class Enemy extends MovingEntity {
         if (Math.random() < dropChance) {
 
             let roll = Math.random()
-            if (roll < 0.1) {
-                enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 16,
-                    height: 16
-                }, null))
-            } else if (roll < 0.4) {
+            if (roll < 0.2) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 16,
                     height: 16
                 }, null))
-            }   else if (roll < 0.65) {
+            } else if (roll < 0.65) { 
+                enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, { 
+                    width: 16, 
+                    height: 16 
+                }, null))
+            } else if (roll < 0.7) {
                 enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, { 
+                    width: 16, 
+                    height: 16 
+                }, null))
+            } else if (roll < 0.72) { 
+                enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
+                    width: 16,
+                    height: 16
+                }, null))
+            } else if (roll < 0.75) {
+                enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, { 
                     width: 16, 
                     height: 16 
                 }, null))
@@ -146,14 +156,33 @@ export class Enemy extends MovingEntity {
 
         return distance <= stopDistance;
     }
+
+    freeze(now, duration) {
+        const current = this.frozenUntil || 0 // Speichert, bis wann dieser Enemy eingefroren ist
+        this.frozenUntil = Math.max(current, now + duration) // wenn er schon gefreezt ist, wird die Dauer verlängert 
+    }
+
      
     render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth){
+        const frozen = this.frozenUntil && performanceNow < this.frozenUntil
+        if (!frozen) {
         let position=this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
         this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
         if (this.weapon)  {
             this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth)
         }
+    }
+        // Zeichnen passiert IMMER, auch wenn gefreezt (damit Enemies nicht "verschwinden").
+        // Bei Freeze ändern wir nur kurz den Canvas-Zustand: halbtransparent = sichtbarer Freeze-Effekt.
+        // save/restore ist wichtig, damit danach nicht alles im Spiel halbtransparent wird.
+         if (frozen) {
+        ctx.save()
+        ctx.globalAlpha = 0.5           // leicht transparent
+        this.draw(ctx, PlayerOne)
+        ctx.restore()
+    } else {
         this.draw(ctx, PlayerOne) // Gegner im Sichtbereich zeichnen
+    } 
         if (PlayerOne.checkCollision(this, 0, 0)) {        // Treffer?
             PlayerOne.takeDmg(15, enemies, positionWithin)
             this.killCount++

@@ -30,8 +30,9 @@ export class EnemySchatzgoblin extends Enemy {
     move(PlayerOne, MapOne, enemies) {
         if (!this.scared) {
         this.angle += this.angularSpeed;
-        this.globalEntityX = this.centerX + Math.cos(this.angle) * this.radius;
-        this.globalEntityY = this.centerY + Math.sin(this.angle) * this.radius;
+        this.attemptMoveAxis(this, "x", Math.cos(this.angle) * 1, enemies, MapOne);
+        this.attemptMoveAxis(this, "y", Math.sin(this.angle) * 1, enemies, MapOne);
+
         } else {                                                                                    // Wenn verängstigt, dann weg vom Spieler bewegen        
             this.chasePlayer(MapOne, this.globalEntityX * 2 - PlayerOne.globalEntityX, this.globalEntityY * 2 - PlayerOne.globalEntityY, enemies)
             this.ticker++

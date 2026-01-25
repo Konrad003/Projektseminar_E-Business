@@ -1,14 +1,56 @@
 import {Entity} from "./entity.js"
-//import { Equipment } from "./equipment.js"
 //import { Item } from "./item.js"
 import {Map} from "./map.js"
 //import { Obstacles } from "./obstacles.js"
 import {Player} from "./player.js"
-import {Enemy} from "./enemy.js"
 import {Projectile} from "./projectile.js"
-import { EnemyFactory } from "./EnemyFactory.js"
+import {EquipmentDash} from "./equipmentDash.js";
+import {EquipmentValor} from "./equipmentValor.js";
+import {EquipmentHolyAura} from "./equipmentHolyAura.js";
+import {EnemyFactory} from "./EnemyFactory.js"
+
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
+let zoomFactor = 0.90;
+let BasicWidth = 2560;
+let BasicHeight = 1440;  
+canvas.width  = BasicWidth * zoomFactor;
+canvas.height = BasicHeight * zoomFactor;
+
+function resizeCanvas(){              // Canvas Skalierung je nach Fenstergröße --> soll flackern der Grafik verhindern
+
+    let windowWidth  = window.innerWidth;   // von dem Browserfenster
+    let windowHeight = window.innerHeight;// von dem Browserfenster
+    let targetRatio = BasicWidth / BasicHeight; // Verhältnis von internem Canvas
+    let windowRatio = windowWidth / windowHeight;// Verhältnis von internem Canvas
+    let newWidth, newHeight;
+
+    if (windowRatio > targetRatio) {    //targetRatio = 16:9, zum verändern Base_WIDTH / BASE_HEIGHT anpassen   
+        newHeight = windowHeight;// Bildschirm breiter --> volle Höhe nutzen, Breite anpassen
+        newWidth  = newHeight * targetRatio;
+    } else {
+        newWidth  = windowWidth;// Bildschirm schmaler --> volle Breite nutzen, Höhe anpassen
+        newHeight = newWidth / targetRatio;
+    }
+    canvas.style.width  = newWidth + "px";  // Not sure ob das besser geht mit CSS Skalierung
+    canvas.style.height = newHeight + "px";
+}
+
+resizeCanvas()
+window.addEventListener('resize', resizeCanvas);
+window.addEventListener("keydown", function(e) {
+    
+    if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {// Blockiere Strg  +, Strg  -, Strg 0  und Stgr = (Zoom / Zoomreset)
+        e.preventDefault(); // wenn man unbedingt zoomen will, dann über das Stgr Shift und dann auf die Taste mit (~+*) / (_-)
+    }
+});
+window.addEventListener("wheel", function(e) {// Mausrad-Zoom blockieren
+    if (e.ctrlKey) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
 
 export class game {
 
@@ -18,6 +60,7 @@ export class game {
     downPressed = false
     leftPressed = false
     rightPressed = false
+    spacePressed = false;
     mapData
     gridWidth = 8
     killCount = 0
@@ -28,7 +71,7 @@ export class game {
 
     enemySpawnInterval = null // Intervall für Gegner-Spawns
     renderInterval = null // Intervall für das Rendern
-
+    
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
     hudHealthProgress = document.getElementById("hudHealthProgress")
@@ -52,6 +95,8 @@ export class game {
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
         this.Sounds();
+
+        this.dashTrails = [] // Array für Dash-Effekte
     }
 
     loadMap(file) {
@@ -70,8 +115,8 @@ export class game {
                 this.start()
                 break;
             case 1:
-                this.mapChoice = './Code/Tiled/Map1.json';
-                this.mapChoicePng = './Code/Tiled/Map1.png';
+                this.mapChoice = './Code/Tiled/Dungeon.json';
+                this.mapChoicePng = './Code/Tiled/Dungeon.png';
                 this.start()
                 break;
             default:
@@ -82,38 +127,47 @@ export class game {
     }
 
     keyDownHandler(e) { // liest Input der Tastatur aus
-        if ((e.key === "ArrowUp") || (e.key === 'w')) {
+        if ((e.key === "ArrowUp") || (e.key === 'w') || (e.key === 'W')) {
             this.upPressed = true;
         }
-        if ((e.key === "ArrowLeft") || (e.key === 'a')) {
+        if ((e.key === "ArrowLeft") || (e.key === 'a') || (e.key === 'A')) {
             this.leftPressed = true;
         }
-        if ((e.key === "ArrowRight") || (e.key === 'd')) {
+        if ((e.key === "ArrowRight") || (e.key === 'd') || (e.key === 'D')) {
             this.rightPressed = true;
         }
-        if ((e.key === "ArrowDown") || (e.key === 's')) {
+        if ((e.key === "ArrowDown") || (e.key === 's') || (e.key === 'S')) {
             this.downPressed = true;
         }
+        if (e.code === "Space") {
+            this.spacePressed = true;
+        }
+
         // Escape zum Pausieren
         if (e.key === "Escape") {
-            if (document.getElementById("gameScreen").style.display === "flex") {
+            if (document.getElementById("gameScreen").style.display === "flex" && this.gamePaused === false) {
                 this.pauseGame() // Spiel nur pausieren, wenn Game läuft
+            } else if (document.getElementById("pauseScreen").style.display === "flex" && (this.gamePaused === true)) {
+                this.resumeGame()
             }
         }
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
-        if ((e.key === "ArrowUp") || (e.key === 'w')) {
+        if ((e.key === "ArrowUp") || (e.key === 'w') || (e.key === 'W')) {
             this.upPressed = false;
         }
-        if ((e.key === "ArrowLeft") || (e.key === 'a')) {
+        if ((e.key === "ArrowLeft") || (e.key === 'a') || (e.key === 'A')) {
             this.leftPressed = false;
         }
-        if ((e.key === "ArrowRight") || (e.key === 'd')) {
+        if ((e.key === "ArrowRight") || (e.key === 'd') || (e.key === 'D')) {
             this.rightPressed = false;
         }
-        if ((e.key === "ArrowDown") || (e.key === 's')) {
+        if ((e.key === "ArrowDown") || (e.key === 's') || (e.key === 'S')) {
             this.downPressed = false;
+        }
+        if (e.code === "Space") {
+            this.spacePressed = false;
         }
     }
 
@@ -130,6 +184,7 @@ export class game {
 
             this.testShoot = document.getElementById("testShoot").checked
             this.testDie = document.getElementById("testDie").checked
+            this.dashActiveSetting = document.getElementById("activateDash").checked
             this.Health = parseInt(document.getElementById("testHealth").value)
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
@@ -172,8 +227,8 @@ export class game {
 
         this.keyDownBound = this.keyDownHandler.bind(this);
         this.keyUpBound = this.keyUpHandler.bind(this);
-        document.addEventListener("keydown", this.keyDownBound);
-        document.addEventListener("keyup", this.keyUpBound);
+        window.addEventListener('keydown', (e) => this.keyDownHandler(e));
+        window.addEventListener('keyup', (e) => this.keyUpHandler(e));
 
         Entity.FOVwidthMiddle = canvas.width / 2
         Entity.FOVheightMiddle = canvas.height / 2
@@ -186,12 +241,17 @@ export class game {
             this.PlayerOne = new Player(this.mapData.width * this.mapData.tilewidth / 2, this.mapData.height * this.mapData.tilewidth / 2, this.Health, this.maxHealth, this.XP, null, 5, {
                 width: 16, height: 16
             }, 0, 0, 1, ctx, this.end.bind(this), canvas.width / 2, canvas.height / 2, this.mapData.width, this.mapData.height, this.gridWidth) //game abonniert tod des players, indem es this.end übergibt (Observer pattern)
+            // 3 slots mit ausrüstung belegen, nur zum testen während der entwicklung:
+            this.PlayerOne.acquireEquipment(new EquipmentHolyAura()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new EquipmentDash()); // Test-Ausrüstung
+            this.PlayerOne.acquireEquipment(new EquipmentValor()); // Test-Ausrüstung
             this.ProjectileSystem = new Projectile(0, 0, 0, 0, 0, 0, 0, 0, 0)
             this.hudHealthProgress.max = this.PlayerOne.maxHp
             this.hudHealthProgress.value = this.PlayerOne.hp
             this.hudXpProgress.max = this.PlayerOne.xpForNextLevel
             this.hudXpProgress.value = this.PlayerOne.xp
             // Erstellen des GridArrays für Enemie und Projectile
+
             for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
                 this.enemies[row] = []
                 for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
@@ -199,9 +259,7 @@ export class game {
                 }
             }
             this.renderInterval = setInterval(() => this.render(), 5);
-            this.enemySpawnInterval = setInterval(() => {
-                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height)
-            }, 200)
+            this.startEnemySpawning();
             this.resetTimer()
             this.startGameTimer()
         });
@@ -215,6 +273,41 @@ export class game {
 
     }
 
+    startEnemySpawning() {
+        const spawn = () => {
+            if (!this.gamePaused) {
+
+            EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8 /*Anzahl der Gegner pro Spawn*/)
+            }
+            this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
+        };
+    
+    spawn();
+    }
+    getCurrentSpawnInterval() {
+        return 500 / this.getSpawnIntensity(this.gameTimer); // 5000  is das Startintervall
+}
+
+    getSpawnIntensity(t) {
+        console.log("Timer: " + t)
+        if (t < 60) {
+            return 0.2 + 0.4 * (t / 60);
+        } else if (t < 150) {
+            return 0.6 + 0.4 * ((t - 60) / 90);
+        } else if (t < 180) {
+            return 0.5;
+        } else if (t < 300) {
+            return 0.5 + 0.4 * ((t - 180) / 120);
+        } else if (t < 330) {
+            return 0.4;
+        } else if (t < 510) {
+            return 0.4 + 0.6 * ((t - 330) / 180);
+        } else {
+            return 1.0;
+        }    
+    }
+
+    // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
         this.gamePaused = true; //flag boolean for render function
         this.stopGameTimer()
@@ -440,14 +533,17 @@ export class game {
             document.removeEventListener("keyup", this.keyUpBound);
             this.keyUpBound = null;
         }
+
         // Gegner-Array leeren
 
         this.enemies.length = 0
         this.projectiles.length = 0
+        this.dashTrails = []
         this.MapOne = null
         this.PlayerOne = null
         this.mapData = null
 
+        this.DropSystem = null
         this.ProjectileSystem = null
         this.weapon = null
         this.Game = null
@@ -479,14 +575,16 @@ export class game {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
+
         this.PlayerOne.render(this.MapOne, {
             upPressed: this.upPressed,
             downPressed: this.downPressed,
             leftPressed: this.leftPressed,
-            rightPressed: this.rightPressed
+            rightPressed: this.rightPressed,
+            spacePressed: this.spacePressed
         }, performance.now(), this.enemies, this.gridWidth)
 
-        
+
         //this.killCount += kills
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
@@ -496,7 +594,7 @@ export class game {
                 }
             }
         }
-        
+
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
         document.getElementById("hudXP").innerHTML = this.PlayerOne.xp

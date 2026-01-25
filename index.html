@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <canvas height="1600" id="game" width="2400"></canvas>
+    <canvas id="game" ></canvas> <!-- brauch keine Breite und Höhe mehr, da es über game gesteuert wird -->
 </section>
 
 <section class="screen" id="startScreen">
@@ -99,6 +99,10 @@
 
                 <input checked id="testDie" name="testDie" type="checkbox" value="true">
                 <label for="testDie">Player can die?</label>
+
+                <input id="activateDash" name="activateDash" type="checkbox" value="false">
+                <label for="activateDash">Player can Dash?</label>
+
             </div>
 
             <div class="menu">

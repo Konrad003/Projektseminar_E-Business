@@ -26,7 +26,9 @@ export class Weapon extends Item {
     }
 
     playShotSound() {
-
+        //if (window.Game && typeof window.Game.playShotSound === 'function') {
+           // return;
+        //}
         if (window.Game && !window.Game.soundEffects) return;
         if (window.Sounds && window.Sounds.shotSound) {
             window.Sounds.shotSound.play();
