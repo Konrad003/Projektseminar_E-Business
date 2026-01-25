@@ -110,11 +110,13 @@ export class Enemy extends MovingEntity {
     }
 
 
-    die(enemies, positionWithin, enemyItemDrops) {
+    die(enemies, positionWithin, enemyItemDrops, dropSettings = {}) {
+        const { dropItems = true } = dropSettings 
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
 
-        const dropChance = 1 // Chance auf Drop - auf 50% zur besseren Visualisierung
+        if (dropItems) {
+        const dropChance = 0.05 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
 
             let roll = Math.random()
@@ -162,6 +164,7 @@ export class Enemy extends MovingEntity {
             width: 32,
             height: 32
         }, "./Graphics/singleUsePng/6.png"))}
+    }
 
         enemyItemDrops.push(new XpDrop(this.globalEntityX, this.globalEntityY, {
             width: 32,
