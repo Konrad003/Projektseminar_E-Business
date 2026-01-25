@@ -47,20 +47,49 @@ export class AttackBoostDrop extends DropSingleUse {
   getColor() { return "red" }
 
   apply(player) {
-    if (!player || !player.weapon) return
+  if (!player) return
 
-    // Basis-Damage einmal merken (wie baseSpeed beim SpeedBoost)
-    if (player.baseDmg == null) player.baseDmg = player.weapon.dmg
+  const weaponSlots = player.weaponSlots || []
+  const hasAnyWeapon = weaponSlots.some(w => w != null)
+  if (!hasAnyWeapon) return
 
-    // Timer-Logik wie beim SpeedBoost:
-    if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
-    else player.weapon.dmg = player.baseDmg * this.damageMultiplier
+  // merken, bis wann der Effekt aktiv ist (für roten Schimmer)
+  player.attackBoostActiveUntil = performance.now() + this.duration
 
-    player.attackBoostTimeout = setTimeout(() => {
-      player.weapon.dmg = player.baseDmg
-      player.attackBoostTimeout = null
-    }, this.duration)
+  // Basis-Schaden pro Slot merken (damit jede Waffe korrekt zurückgesetzt wird)
+  if (!player.baseWeaponDamageBySlot) player.baseWeaponDamageBySlot = []
+
+  // wenn Boost schon aktiv war -> Timer neu starten (Refresh)
+  if (player.attackBoostTimeout) clearTimeout(player.attackBoostTimeout)
+
+  // Boost anwenden: ALLE Waffen buffen
+  for (let slotIndex = 0; slotIndex < weaponSlots.length; slotIndex++) {
+    const weapon = weaponSlots[slotIndex]
+    if (!weapon) continue
+
+    // Base-Damage einmalig pro Slot merken
+    if (player.baseWeaponDamageBySlot[slotIndex] == null) {
+      player.baseWeaponDamageBySlot[slotIndex] = weapon.dmg
+    }
+
+    weapon.dmg = player.baseWeaponDamageBySlot[slotIndex] * this.damageMultiplier
   }
+
+  // nach Ablauf: alle Waffen zurücksetzen
+  player.attackBoostTimeout = setTimeout(() => {
+    for (let slotIndex = 0; slotIndex < weaponSlots.length; slotIndex++) {
+      const weapon = weaponSlots[slotIndex]
+      if (!weapon) continue
+
+      const baseDmg = player.baseWeaponDamageBySlot?.[slotIndex]
+      if (baseDmg != null) weapon.dmg = baseDmg
+    }
+
+    player.attackBoostTimeout = null
+    player.attackBoostActiveUntil = 0
+  }, this.duration)
+}
+
 }
 
 

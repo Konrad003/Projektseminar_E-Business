@@ -72,6 +72,14 @@ export class Player extends MovingEntity {
     draw(ctx, player) {
         ctx.save();
 
+    // ✅ AttackBoost: rotes Leuchten (solange aktiv)
+    const attackBoostIsActive = (this.attackBoostActiveUntil || 0) > performance.now()
+    if (attackBoostIsActive) {
+    ctx.shadowBlur = 25
+    ctx.shadowColor = "red"
+    ctx.globalAlpha = 1.0
+    }
+
         // Wenn die Aura aktiv ist, wird Zeichnen angepasst
         if (this.isInvincible) {
             ctx.shadowBlur = 20;

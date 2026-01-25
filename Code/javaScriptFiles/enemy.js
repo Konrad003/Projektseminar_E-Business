@@ -4,7 +4,6 @@ import {
     HealDrop,
     InstantLevelDrop,
     NukeDrop,
-    SpeedBoostDrop,
     XpDrop,
     XpMagnetDrop
 } from "./dropSingleUse.js"
@@ -115,16 +114,11 @@ export class Enemy extends MovingEntity {
         //console.log("Enemy ist gestorben! XP gedroppt:", this.xpDrop);
         enemies[this.gridMapTile.row][this.gridMapTile.column].within.splice(positionWithin, 1)
 
-        const dropChance = 0.05 // Chance auf Drop - auf 50% zur besseren Visualisierung
+        const dropChance = 1 // Chance auf Drop - auf 50% zur besseren Visualisierung
         if (Math.random() < dropChance) {
 
             let roll = Math.random()
-            if (roll < 0.0) {
-                enemyItemDrops.push(new SpeedBoostDrop(this.globalEntityX, this.globalEntityY, {
-                    width: 32,
-                    height: 32
-                }, null))
-            } else if (roll < 0.3) {
+            if (roll < 0.3) {
                 enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                     width: 32,
                     height: 32
