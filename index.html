@@ -196,7 +196,105 @@
             </div>
             <button class="btn" id="lvl3Button" onclick="Game.lvlUPhide()">Option 3</button>
         </div>
+
     </div>
+    <div class="menu" style="margin-top: 20px;">
+        <button class="btn" onclick="Game.playerStats()">Show applied</button>
+    </div>
+</section>
+
+<section class="screen overlay-dark" id="playerStatsScreen">
+    <div style="display: flex; gap: 20px; flex-direction: row; align-items: flex-start; justify-content: center; margin-bottom: 20px; align-content: center;">
+        <button class="btn" onclick="Game.statsScreenHide()" style="width: auto; padding-top: 5px; padding-bottom: 5px">
+            &lt;
+        </button>
+        <h1 class="screenTitle" style="margin: 0px">
+            Currently Applied
+        </h1>
+    </div>
+
+
+    <div class="playerStats">
+        <div class="playerEquipments">
+            <div class="playerStatsEqui">
+                <div class="playerStatsEquiLeft">
+                    <p><span id="appliedEquipment1">Nothing equipped</span> <span id="applied1"></span></p>
+                    <div>
+                        <img alt="statsLeft" src="./Graphics/statsleft.svg" width="300">
+                    </div>
+                </div>
+                <div>
+                    <p><span id="appliedEquipment2">Nothing equipped</span> <span id="applied2"></span></p>
+                    <div>
+                        <img alt="statsLeft" height="auto" src="./Graphics/statsleft.svg" width="300">
+                    </div>
+                </div>
+            </div>
+            <img alt="Player" class="playerStatsImg" id="playerStatsImg" src="">
+            <div class="playerStatsEqui">
+                <div class="playerStatsEquiRight">
+                    <p><span id="appliedEquipment3">Nothing equipped</span> <span id="applied3"></span></p>
+                    <div>
+                        <img alt="statsLeft" src="./Graphics/statsright.svg" width="300">
+                    </div>
+                </div>
+                <div class="playerStatsEquiRight">
+                    <p><span id="appliedEquipment4">Nothing equipped</span> <span id="applied4"></span></p>
+                    <div>
+                        <img alt="statsLeft" src="./Graphics/statsright.svg" width="300">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="playerWeapons">
+            <div class="weaponsSection">
+                <div class="lvlUpImg">
+                    <svg height="260" width="260" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="yellow" height="260" rx="20" ry="20" width="260" x="0" y="0"/>
+                        //x & y == offset; rx & ry == border radius
+                    </svg>
+                    <img alt="PsWeapon1" id="PsWeapon1" src="./Graphics/equipmentIcons/PNG/21.png">
+                </div>
+                <p id="PsWeapon1N">Nothing equipped</p>
+                <p id="PsWeapon1L">Has no Level</p>
+            </div>
+            <div class="weaponsSection">
+                <div class="lvlUpImg">
+                    <svg height="260" width="260" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="yellow" height="260" rx="20" ry="20" width="260" x="0" y="0"/>
+                        //x & y == offset; rx & ry == border radius
+                    </svg>
+                    <img alt="PsWeapon2" id="PsWeapon2" src="./Graphics/equipmentIcons/PNG/21.png">
+                </div>
+                <p id="PsWeapon2N">Nothing equipped</p>
+                <p id="PsWeapon2L">Has no Level</p>
+            </div>
+            <div class="weaponsSection">
+                <div class="lvlUpImg">
+                    <svg height="260" width="260" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="yellow" height="260" rx="20" ry="20" width="260" x="0" y="0"/>
+                        //x & y == offset; rx & ry == border radius
+                    </svg>
+                    <img alt="PsWeapon3" id="PsWeapon3" src="./Graphics/equipmentIcons/PNG/21.png">
+                </div>
+                <p id="PsWeapon3N">Nothing equipped</p>
+                <p id="PsWeapon3L">Has no Level</p>
+            </div>
+            <div class="weaponsSection">
+                <div class="lvlUpImg">
+                    <svg height="260" width="260" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="yellow" height="260" rx="20" ry="20" width="260" x="0" y="0"/>
+                        //x & y == offset; rx & ry == border radius
+                    </svg>
+                    <img alt="PsWeapon4" id="PsWeapon4" src="./Graphics/equipmentIcons/PNG/21.png">
+                </div>
+                <p id="PsWeapon4N">Nothing equipped</p>
+                <p id="PsWeapon4L">Has no Level</p>
+            </div>
+        </div>
+    </div>
+
 
 </section>
 
