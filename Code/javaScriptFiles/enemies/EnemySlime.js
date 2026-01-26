@@ -3,7 +3,7 @@ import {Enemy} from "../enemy.js"
 export class EnemySlime extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, level)
-        this.hp = 2000 + level*5
+        this.hp = 20 + level*5
         this.speed = 1
         this.png = "./Graphics/enemiesPNG/Schleim/1.png"
         this.hitbox = {width: 1706/ 22, height: 964 / 22}
