@@ -110,7 +110,7 @@ export class Projectile extends MovingEntity {
     checkCollision(enemies, player, projectiles, projectileIndex, enemyItemDrops, currentTime) {
         if (this.isEnemy) {
             // Enemy-Projektil trifft Spieler
-            if (this.checkCollisionWith(player)) {
+            if (this.checkCollisionWithEntity(player)) {
                 player.takeDmg(this.dmg, [], null, enemyItemDrops);
                 this.isAlive = false;
             }
@@ -148,7 +148,7 @@ export class Projectile extends MovingEntity {
      */
     checkCollisionWithEnemies(enemies, enemyItemDrops) {
         this.forEachEnemy(enemies, (enemy, enemies, j) => {
-            if (this.checkCollisionWith(enemy)) {
+            if (this.checkCollisionWithEntity(enemy)) {
                 enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
                 if (!this.piercing) this.isAlive = false;
                 return false; // break

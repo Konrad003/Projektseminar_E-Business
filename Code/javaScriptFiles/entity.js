@@ -24,10 +24,18 @@ export class Entity {
         return "magenta"
     }
 
+    checkCollisionWithEntity(otherEntity) {
+        return !(
+            this.globalEntityX + this.hitbox.width < otherEntity.globalEntityX ||
+            this.globalEntityX > otherEntity.globalEntityX + otherEntity.hitbox.width ||
+            this.globalEntityY + this.hitbox.height < otherEntity.globalEntityY ||
+            this.globalEntityY > otherEntity.globalEntityY + otherEntity.hitbox.height
+        );
+    }
     draw(ctx, player, overrideColor = null) {
         let color = overrideColor || this.getColor()
-        let leftBorder = player.globalEntityX - Entity.FOVwidthMiddle
-        let topBorder = player.globalEntityY - Entity.FOVheightMiddle
+        let leftBorder = player.globalEntityX + (player.hitbox.width / 2) - Entity.FOVwidthMiddle
+        let topBorder = player.globalEntityY + (player.hitbox.height / 2) - Entity.FOVheightMiddle
 
         if (this.png && this.png.complete && this.png.naturalWidth !== 0) {
             ctx.drawImage(this.png, this.globalEntityX - leftBorder, this.globalEntityY - topBorder, this.hitbox.width, this.hitbox.height);
