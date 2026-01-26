@@ -65,7 +65,7 @@ export class Player extends MovingEntity {
         }
         img.src = png
         // Blickrichtung (wird durch Bewegung aktualisiert)
-        this.facingDirection = { x: 1, y: 0 }; // Standard: rechts
+        this.facingDirection = {x: 1, y: 0}; // Standard: rechts
 
         this.LvlUpFactory = new LvlUpFactory(this);
     }
@@ -73,13 +73,13 @@ export class Player extends MovingEntity {
     draw(ctx, player) {
         ctx.save();
 
-    // ✅ AttackBoost: rotes Leuchten (solange aktiv)
-    const attackBoostIsActive = (this.attackBoostActiveUntil || 0) > performance.now()
-    if (attackBoostIsActive) {
-    ctx.shadowBlur = 25
-    ctx.shadowColor = "red"
-    ctx.globalAlpha = 1.0
-    }
+        // ✅ AttackBoost: rotes Leuchten (solange aktiv)
+        const attackBoostIsActive = (this.attackBoostActiveUntil || 0) > performance.now()
+        if (attackBoostIsActive) {
+            ctx.shadowBlur = 25
+            ctx.shadowColor = "red"
+            ctx.globalAlpha = 1.0
+        }
 
         // Wenn die Aura aktiv ist, wird Zeichnen angepasst
         if (this.isInvincible) {
@@ -123,7 +123,7 @@ export class Player extends MovingEntity {
         // Nur aktualisieren wenn tatsächlich Bewegung stattfindet
         if (dirX !== 0 || dirY !== 0) {
             const length = Math.sqrt(dirX * dirX + dirY * dirY);
-            this.facingDirection = { x: dirX / length, y: dirY / length };
+            this.facingDirection = {x: dirX / length, y: dirY / length};
         }
     }
 
@@ -131,8 +131,7 @@ export class Player extends MovingEntity {
         this.LvlUpFactory.lvlUpRoll(this.equipmentSlots, this.weaponSlots)
         Game.lvlUPshow()
         this.level++;
-        this.xpForNextLevel = this.level * 10; //warum hier? muss das nicht in lvlup funktion (achtet bitte auf eure leerzeichen)
-        document.getElementById("hudXpProgress").style.max = this.xpForNextLevel;
+        this.xpForNextLevel = this.level * 10;
     }
 
     die() {
@@ -155,6 +154,8 @@ export class Player extends MovingEntity {
             this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
         }
+
+        localStorage.setItem("gameXP", (parseInt(localStorage.getItem("gameXP") || "0") + xpAmount).toString());
         Game.hudXpProgress.value = this.xp;
     }
 
@@ -236,6 +237,7 @@ export class Player extends MovingEntity {
     getColor() {
         return 'blue'
     }
+
     /**
      * Entfernt alle Equipment-Effekte (für Reset)
      */
