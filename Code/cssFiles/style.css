@@ -124,9 +124,11 @@ h1 {
 }
 
 .credits img {
-    display: block;
-    height: auto;
-    width: 50px;
+	display: block;
+	height: auto;
+	width: 50px;
+}
+
 .creditsTopLeft {
 	align-items: center;
 	display: flex;

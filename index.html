@@ -58,18 +58,21 @@
     </div>
 
     <div class="creditsTopLeft">
-        <a href="javascript:void(0);" onclick="Game.statsShow()" onmousedown="Game.playButtonSound()">
-            <img alt="GitHub" src="./Graphics/stats.svg">
-        </a>
+        <button class="btn" onclick="Game.statsShow()" onmousedown="Game.playButtonSound()">
+            <img alt="Stats" src="./Graphics/stats.svg">
+        </button>
     </div>
 
     <div class="credits" id="linksCredits">
-        <a href="https://github.com/Der-Mehlmann/Projektseminar_E-Business">
+        <button class="btn" onclick="window.open('https://github.com/Der-Mehlmann/Projektseminar_E-Business', '_blank')"
+                onmousedown="Game.playButtonSound()">
             <img alt="GitHub" src="./Graphics/GitHub_Invertocat_White.svg">
-        </a>
-        <a href="https://github.com/Der-Mehlmann/Projektseminar_E-Business/wiki">
-            <img alt="GitHub" src="./Graphics/book.svg">
-        </a>
+        </button>
+        <button class="btn"
+                onclick="window.open('https://github.com/Der-Mehlmann/Projektseminar_E-Business/wiki', '_blank')"
+                onmousedown="Game.playButtonSound()">
+            <img alt="Wiki" src="./Graphics/book.svg">
+        </button>
     </div>
 </section>
 
