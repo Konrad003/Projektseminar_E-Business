@@ -153,6 +153,8 @@ export class Player extends MovingEntity {
             this.xp -= this.xpForNextLevel; // Überschüssige XP behalten
             this.lvlUp();
         }
+
+        localStorage.setItem("gameXP", (parseInt(localStorage.getItem("gameXP") || "0") + xpAmount).toString());
         Game.hudXpProgress.value = this.xp;
     }
 

@@ -55,11 +55,28 @@ export class EnemyFactory{
 
                 x = Math.max(1, Math.min(x, mapWidth * tilewidth - 1))
                 y = Math.max(1, Math.min(y, mapHeight * tilewidth - 1))
-
-
+                          
+                let dx = 1
+                if ( x < player.globalEntityX){
+                    dx = -1
+                }
+                let dy = 1
+                if ( y < player.globalEntityY){
+                    dy = -1
+                }
                 let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
-                if(MovingEntity.spawnCheck(MapOne, x, y, tilewidth, tilewidth)){
-                    enemiesArray[gridMapTile.row][gridMapTile.column].within.push(EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl));
+                let enemy = EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl)
+                for (let i =0; i<=5; i++){
+                    if(!enemy.checkSpawnCollision(enemiesArray, enemy.gridMapTile) && enemy.spawnCheck(MapOne, tilewidth, tilewidth)){
+                        //console.log(enemy.spawnCheckWithEnemy(enemiesArray, gridMapTile)+ " " +enemy.spawnCheck(MapOne, enemy.globalEntityX, enemy.globalEntityY, tilewidth, tilewidth))
+                        enemiesArray[gridMapTile.row][gridMapTile.column].within.push(enemy);
+                        
+                        break
+                    }else {
+                        enemy.globalEntityX += tilewidth * dx
+                        enemy.globalEntityY += tilewidth * dy
+                        enemy.gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
+                    }
                 }
             }
         }
