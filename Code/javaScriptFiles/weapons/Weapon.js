@@ -7,7 +7,7 @@ import {Enemy} from "../enemy.js";
 export class Weapon extends Item {
     constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startlevel, isSpecial, projectile, projectileConfig){  // Für Testing: upgradebarprojectile,projectileConfig)
 
-        super(0, 0, 0, null, icon, description);
+        super(icon, description);
 
 
         this.name = name;

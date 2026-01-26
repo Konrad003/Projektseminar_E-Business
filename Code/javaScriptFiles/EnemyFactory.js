@@ -10,7 +10,7 @@ import {WeaponConfig} from "./weapons/weaponConfig.js"
 import {MovingEntity} from "./movingEntity.js"
 export class EnemyFactory{
     static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight, MapOne, CountOfEnemies, enemyLvl) {
-
+        
         const offset = 80
 
 

@@ -222,7 +222,7 @@ export class game {
         const totalSeconds = (parseInt(localStorage.getItem("totalGameTime"))) % 60
         // Format mm:ss
         localStorage.setItem("gameTime", `${totalMinutes.toString().padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`)
-        console.log(localStorage.getItem("gameTime"))
+        //console.log(localStorage.getItem("gameTime"))
     }
 
     startGameTimer() { // Startet den Spieltimer
@@ -805,8 +805,8 @@ export class game {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
                 for (let i = 0; i < this.enemies[row][column].within.length; i++) {
                     if (this.enemies[row][column].within[i] === undefined) {
-                        console.log(this.enemies[row][column].within.length)
-                        console.log(i)
+                        //console.log(this.enemies[row][column].within.length)
+                        //console.log(i)
                     }
                     this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
