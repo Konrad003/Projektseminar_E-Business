@@ -50,6 +50,12 @@
         <button class="btn" id="settingsButton" onclick="Game.settings()">Settings</button>
         <button class="btn" id="playerSelectButton" onclick="Game.selectPlayerScreen()">Select Player</button>
     </div>
+
+    <div class="creditsTopLeft">
+        <a href="javascript:void(0);" onclick="Game.statsShow()">
+            <img alt="GitHub" src="./Graphics/stats.svg">
+        </a>
+    </div>
 </section>
 
 <section class="screen" id="mapScreen">
@@ -222,6 +228,25 @@
     <div class="flex-row-gap" style="margin-top: 20px;">
         <button class="btn" id="retryButtonWin" onclick="Game.restart()">Retry</button>
         <button class="btn" id="startMenuButtonWin" onclick="Game.home()">Start Menu</button>
+    </div>
+</section>
+
+<section class="screen" id="statsScreen">
+    <h1 class="screenTitle">
+        Your Total Game Stats
+    </h1>
+
+    <div class="statsPanel">
+        <p>Your Game Time: <span class="stat-val" id="gameTime">00:00</span></p>
+        <p>Your Game XP: <span class="stat-val" id="gameXP">0</span></p>
+        <p>Your Game Kills: <span class="stat-val" id="gameKills">0</span></p>
+        <p>Your Game Wins: <span class="stat-val" id="gameWins">0</span></p>
+        <p>Your Game Defeats: <span class="stat-val" id="gameDefeats">0</span></p>
+    </div>
+
+    <div class="flex-row-gap" style="margin-top: 20px;">
+        <button class="btn" id="clearLocalStorage" onclick="Game.statsReset()">Reset</button>
+        <button class="btn" id="startMenuButtonStats" onclick="Game.home()">Back</button>
     </div>
 </section>
 
