@@ -90,53 +90,52 @@
 <section class="screen" id="settingsScreen">
     <h2 class="screenTitle">Settings</h2>
 
-    <form id="settingsForm">
-        <div class="panel">
-            <div class="settings" id="soundSettings">
-                <input checked id="effectsOn" name="effectsOn" type="checkbox" value="true">
-                <label for="effectsOn">Sound</label>
+    <form id="settingsForm" style="color: yellow">
+        <div class="panel" style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="display: flex; flex-direction: row; gap: 10px;">
+                <div class="settings" id="soundSettings">
+                    <input id="soundEffectsVol" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
+                           value="1.0">
+                    <label for="soundEffectsVol">Sound Effects Volume</label>
 
-                <input checked id="musicOn" name="musicOn" type="checkbox" value="true">
-                <label for="musicOn">Music</label>
+                    <input id="musicVol" max="1.0" min="0.0" name="musicVol" step="0.1" type="range" value="1.0">
+                    <label for="musicVol">Music Volume</label>
+                </div>
 
-                <input id="soundEffectsVol" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
-                       value="1.0">
-                <label for="soundEffectsVol">Sound Effects Volume</label>
+                <div class="settings" id="gameSettings">
+                    <input id="testHealth" max="9999" min="1" name="testHealth" type="number" value="100">
+                    <label for="testHealth">Set your Health</label>
 
-                <input id="musicVol" max="1.0" min="0.0" name="musicVol" step="0.1" type="range" value="1.0">
-                <label for="musicVol">Music Volume</label>
+                    <input id="testMaxHealth" max="9999" min="1" name="testMaxHealth" type="number" value="100">
+                    <label for="testMaxHealth">Set your max. Health</label>
+
+                    <input id="testXP" max="9999" min="0" name="testXP" type="number" value="0">
+                    <label for="testXP">Set your XP</label>
+                </div>
+
+                <div class="settings">
+                    <input checked id="testShoot" name="testShoot" type="checkbox" value="true">
+                    <label for="testShoot">Enable Shooting</label>
+
+                    <input id="testDie" name="testDie" type="checkbox" value="false">
+                    <label for="testDie">Player can die?</label>
+
+                    <input id="activateDash" name="activateDash" type="checkbox" value="false">
+                    <label for="activateDash">Player can Dash?</label>
+                </div>
             </div>
 
-            <div class="settings" id="gameSettings">
-                <input id="testHealth" max="9999" min="1" name="testHealth" type="number" value="100">
-                <label for="testHealth">Set your Health</label>
+            <div class="menu" style="display: flex; flex-direction: row; gap: 10px;">
+                <div class="menu">
+                    <button class="btn" id="startMenuButton" onclick="Game.home()" onmousedown="Game.playButtonSound()">
+                        Back
+                    </button>
+                </div>
 
-                <input id="testMaxHealth" max="9999" min="1" name="testMaxHealth" type="number" value="100">
-                <label for="testMaxHealth">Set your max. Health</label>
-
-                <input id="testXP" max="9999" min="0" name="testXP" type="number" value="0">
-                <label for="testXP">Set your XP</label>
+                <input class="btn" onmousedown="Game.playButtonSound()" type="submit" value="Save"/>
             </div>
 
-            <div class="settings">
-                <input checked id="testShoot" name="testShoot" type="checkbox" value="true">
-                <label for="testShoot">Enable Shooting</label>
 
-                <input checked id="testDie" name="testDie" type="checkbox" value="true">
-                <label for="testDie">Player can die?</label>
-
-                <input id="activateDash" name="activateDash" type="checkbox" value="false">
-                <label for="activateDash">Player can Dash?</label>
-
-            </div>
-
-            <div class="menu">
-                <button class="btn" id="startMenuButton" onclick="Game.home()" onmousedown="Game.playButtonSound()">
-                    Back
-                </button>
-            </div>
-
-            <input class="btn" onmousedown="Game.playButtonSound()" type="submit" value="Save"/>
         </div>
     </form>
 </section>
@@ -251,13 +250,14 @@
 
     </div>
     <div class="menu" style="margin-top: 20px;">
-        <button class="btn" onclick="Game.playerStats()">Show applied</button>
+        <button class="btn" onclick="Game.playerStats()" onmousedown="Game.playButtonSound()">Show applied</button>
     </div>
 </section>
 
 <section class="screen overlay-dark" id="playerStatsScreen">
     <div style="display: flex; gap: 20px; flex-direction: row; align-items: flex-start; justify-content: center; margin-bottom: 20px; align-content: center;">
-        <button class="btn" onclick="Game.statsScreenHide()" style="width: auto; padding-top: 5px; padding-bottom: 5px">
+        <button class="btn" onclick="Game.statsScreenHide()" onmousedown="Game.playButtonSound()"
+                style="width: auto; padding-top: 5px; padding-bottom: 5px">
             &lt;
         </button>
         <h1 class="screenTitle" style="margin: 0px">

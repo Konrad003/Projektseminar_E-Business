@@ -178,10 +178,6 @@ export class game {
         document.getElementById("settingsForm").addEventListener("submit", (e) => {
             e.preventDefault();
             // Save logic here
-
-            this.soundEffects = document.getElementById("effectsOn").checked
-            this.music = document.getElementById("musicOn").checked
-
             this.soundEffectsVol = parseFloat(document.getElementById("soundEffectsVol").value)
             this.musicVol = parseFloat(document.getElementById("musicVol").value)
 
