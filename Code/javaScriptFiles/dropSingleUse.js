@@ -1,4 +1,4 @@
- import {StaticEntity} from "./staticEntity.js"
+import {StaticEntity} from "./staticEntity.js"
 
 export class DropSingleUse extends StaticEntity {
   constructor(x, y, hitbox, png) {
@@ -107,6 +107,9 @@ export class HealDrop extends DropSingleUse {
     this.used = true
     if (typeof player.maxHp === "number") player.hp = Math.min(player.hp + this.healAmount, player.maxHp)
     else player.hp += this.healAmount
+      if (window.Game.soundEffects) {
+          window.Sounds.hpUpSound.play()
+      }
   }
 }
 
@@ -139,6 +142,9 @@ export class XpMagnetDrop extends DropSingleUse {
       if (dist <= this.radius) {
         drop.startPullTo(player, this.pullSpeed)
       }
+        if (window.Game.soundEffects) {
+            window.Sounds.xpMagnetSound.play()
+        }
     }
   }
 }
@@ -161,7 +167,7 @@ export class XpDrop extends DropSingleUse {
 
   getColor() { return "brown" }
 
-  apply(player) {
+    apply(player) {
     if (!player) return
     player.collectXp(this.amount)
   }
@@ -224,10 +230,14 @@ class ShockwaveNukeEffect extends StaticEntity {
     ctx.lineWidth = 2
     ctx.stroke()
 
+      if (window.Game.soundEffects) {
+          window.Sounds.nukeSound.play()
+      }
+
 
      // Alle Gegner durchgehen und prüfen: Ist ein Gegner innerhalb des aktuellen Radius, wird er sofort getötet.
 
-    const enemies = Game.enemies
+      const enemies = Game.enemies
     for (let row = 0; row < enemies.length; row++) { //Reihe Y-Richtung
       for (let col = 0; col < enemies[row].length; col++) { //Spalte X-Richtung
         const list = enemies[row][col].within // Enemy-Liste für dieses Grid-Feld (row/col)
@@ -322,6 +332,10 @@ export class FreezeDrop extends DropSingleUse {
 
     const now = performance.now()
     const enemies = Game.enemies
+
+      if (window.Game.soundEffects) {
+          window.Sounds.freezeSound.play()
+      }
 
     // alle enemies im Grid prüfen, aber nur die im Radius einfrieren
     for (let row = 0; row < enemies.length; row++) {

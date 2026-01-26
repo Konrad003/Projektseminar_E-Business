@@ -8,7 +8,7 @@ import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
-ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
 let BasicHeight = 1440;
@@ -78,12 +78,17 @@ export class game {
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
 
+    soundEffects = true
+    music = true
+    soundEffectsVol = 1.0
+    musicVol = 1.0
+
     //Tests
     testShoot = true
     testDie = false
     Health = 100
     maxHealth = 100
-    XP = 20
+    XP = 0
 
     constructor() {
         this.MapOne = null
@@ -91,6 +96,7 @@ export class game {
         this.enemies = [] // Array für alle aktiven Gegner
         this.projectiles = [] // Array für alle aktiven Projektile
         this.LevelUpFactory = null
+        this.Sounds();
 
         this.dashTrails = [] // Array für Dash-Effekte
     }
@@ -173,6 +179,12 @@ export class game {
             e.preventDefault();
             // Save logic here
 
+            this.soundEffects = document.getElementById("effectsOn").checked
+            this.music = document.getElementById("musicOn").checked
+
+            this.soundEffectsVol = parseFloat(document.getElementById("soundEffectsVol").value)
+            this.musicVol = parseFloat(document.getElementById("musicVol").value)
+
             this.testShoot = document.getElementById("testShoot").checked
             this.testDie = document.getElementById("testDie").checked
             this.dashActiveSetting = document.getElementById("activateDash").checked
@@ -180,6 +192,7 @@ export class game {
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
 
+            this.Sounds()
             this.home()
         });
     }
@@ -383,10 +396,11 @@ export class game {
     // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
         this.gamePaused = true; //flag boolean for render function
-
         this.stopGameTimer()
 
         document.getElementById("pauseScreen").style.display = "flex";
+
+        Sounds.musikSound.pause()
     }
 
     resumeGame() {
@@ -394,7 +408,12 @@ export class game {
 
         this.startGameTimer()
 
+
         document.getElementById("pauseScreen").style.display = "none";
+
+        if (this.music) {
+            Sounds.musikSound.play()
+        }
     }
 
     statsShow() {
@@ -422,6 +441,11 @@ export class game {
         this.stopGameTimer()
 
         document.getElementById("lvlScreen").style.display = "flex";
+
+        Sounds.musikSound.pause()
+        if (this.soundEffects) {
+            Sounds.lvlUpSound.play()
+        }
     }
 
     lvlUPhide() {
@@ -429,6 +453,10 @@ export class game {
         this.startGameTimer()
 
         document.getElementById("lvlScreen").style.display = "none";
+
+        if (this.music) {
+            Sounds.musikSound.play()
+        }
     }
 
     chooseMap() {
@@ -511,6 +539,10 @@ export class game {
         this.resetTimer()
 
         this.resetGame()
+        if (this.soundEffects) {
+            Sounds.loseSound.play()
+        }
+        this.BackgroundMusicStop()
     }
 
     endWin() {
@@ -529,12 +561,100 @@ export class game {
         this.resetTimer()
 
         this.resetGame()
+
+        if (this.soundEffects) {
+            Sounds.WinSound.play()
+        }
+        this.BackgroundMusicStop()
+
     }
 
-    // Ende der Screen-Wechsel-Funktionen
+    Sounds() {
+        this.buttonSound = new Audio('./Sound/click.mp3');
+        this.buttonSound.volume = this.soundEffectsVol;
+
+        this.winSound = new Audio('./Sound/Win.mp3');
+        this.winSound.volume = this.soundEffectsVol;
+
+        this.loseSound = new Audio('./Sound/lose.mp3');
+        this.loseSound.volume = this.soundEffectsVol;
+
+        this.equipSound = new Audio('./Sound/item-equip.mp3');
+        this.equipSound.volume = this.soundEffectsVol;
+
+        this.lvlUpSound = new Audio('./Sound/level-up.mp3');
+        this.lvlUpSound.volume = this.soundEffectsVol;
+
+        this.hpUpSound = new Audio('./Sound/hp-up.mp3');
+        this.hpUpSound.volume = this.soundEffectsVol;
+
+        this.shotSound = new Audio('./Sound/shot.mp3');
+        this.shotSound.volume = this.soundEffectsVol;
+
+        this.nukeSound = new Audio('./Sound/nuke-sound.mp3');
+        this.nukeSound.volume = this.soundEffectsVol;
+
+        this.xpMagnetSound = new Audio('./Sound/xp-magnet-sound.mp3');
+        this.xpMagnetSound.volume = this.soundEffectsVol;
+
+        this.freezeSound = new Audio('./Sound/freeze-sound.mp3');
+        this.freezeSound.volume = this.soundEffectsVol;
+
+        this.musikSound = new Audio('./Sound/musik.mp3');
+        this.musikSound.volume = this.musicVol;
+
+        window.Sounds = {
+            buttonSound: this.buttonSound, //backgroundMusic: backgroundMusic,
+            WinSound: this.winSound,
+            loseSound: this.loseSound,
+            equipSound: this.equipSound,
+            lvlUpSound: this.lvlUpSound,
+            hpUpSound: this.hpUpSound,
+            shotSound: this.shotSound,
+            nukeSound: this.nukeSound,
+            xpMagnetSound: this.xpMagnetSound,
+            freezeSound: this.freezeSound,
+            musikSound: this.musikSound
+        };
+    }
+
+    playButtonSound() {
+        if (!this.soundEffects) return;
+        if (!window.Sounds || !window.Sounds.buttonSound) return;
+
+        Sounds.buttonSound.play();
+
+    }
+
+    BackgroundMusicPlay() {
+        if (!this.music) return;
+        if (!window.Sounds || !window.Sounds.musikSound) return;
+
+        Sounds.musikSound.loop = true;
+        Sounds.musikSound.play()
+    }
+
+    BackgroundMusicStop() {
+        if (!window.Sounds || !window.Sounds.musikSound) return;
+        Sounds.musikSound.pause();
+        // Auf 0 zurücksetzen, damit beim nächsten Abspielen von vorn begonnen wird
+        Sounds.musikSound.currentTime = 0;
+    }
+
+    equipSoundPlay() {
+        if (!this.soundEffects) return;
+        if (!window.Sounds || !window.Sounds.equipSound) return;
+
+        Sounds.equipSound.play();
+    }
+
     restart() {
         this.resetGame()
         this.start()
+
+        if (this.music) {
+            Sounds.musikSound.play()
+        }
     }
 
     resetGame() {
