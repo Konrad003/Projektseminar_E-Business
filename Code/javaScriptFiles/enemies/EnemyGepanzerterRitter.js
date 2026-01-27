@@ -3,8 +3,8 @@ import {Enemy} from "../enemy.js"
 export class EnemyGepanzerterRitter extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 600+level*125
-        this.speed = 0.5
+        this.hp = 600+level*200
+        this.speed = 0.55
         this.png = "./Graphics/enemiesPNG/GepanzertRitter/1.png"
         this.hitbox = {width: 518/6, height: 598/6}
 

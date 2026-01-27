@@ -4,8 +4,8 @@ export class EnemyReiter extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.level = level
-        this.hp = 110+level*5
-        this.speed = 2.5
+        this.hp = 70 + level*18
+        this.speed = 2.6
         this.png = "./Graphics/enemiesPNG/Reiter/1.png"
         this.hitbox = {width: 663/9, height: 693/9}
 
@@ -14,7 +14,7 @@ export class EnemyReiter extends Enemy {
 
    
         this.xpDrop = 15
-        this.baseDamage = 20+level*7
+        this.baseDamage = 4 + level*3
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX

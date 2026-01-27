@@ -42,7 +42,8 @@ export class Player extends MovingEntity {
         this.canvasWidthMiddle = canvasWidthMiddle
         this.canvasWidthHeight = canvasHeightMiddle
 
-        this.xpForNextLevel = this.level * 10;
+        this.xpForNextLevel = this.getXpForNextLevel();
+
 
         // Initialisiere Waffen-Slots mit Bogen (da Level 1)
         this.weaponSlots[0] = WeaponConfig.createWeapon("Bow", this, mapWidth, mapHeight, gridWidth, 1);
@@ -131,8 +132,30 @@ export class Player extends MovingEntity {
         this.LvlUpFactory.lvlUpRoll(this.equipmentSlots, this.weaponSlots)
         Game.lvlUPshow()
         this.level++;
-        this.xpForNextLevel = this.level * 10;
+        this.xpForNextLevel = this.getXpForNextLevel();
     }
+
+    getXpForNextLevel() {
+    const l = this.level;
+
+    // Early: sehr schnell
+    if (l === 1) return 5;
+    if (l === 2) return 8;
+    if (l === 3) return 12;
+
+    // Early/Mid: schnell genug, um Builds zu bauen
+    if (l <= 6)  return 20 + (l - 3) * 10;   // L4=30, L5=40, L6=50
+
+    // Mid: normal
+    if (l <= 10) return 70 + (l - 6) * 18;   // L7=88 ... L10=142
+
+    // Late: richtig langsam (Ende kaum noch Level-Ups)
+    if (l <= 14) return 170 + (l - 10) * 30; // L11=200 ... L14=290
+
+    // Super-Late: brutal zäh
+    return 320 + (l - 14) * 45;              // L15=365, L20=590
+}
+
 
     die() {
         //console.log("Player ist gestorben!"); //zum testen, da noch keine end funktion in game

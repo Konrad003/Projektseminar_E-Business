@@ -304,19 +304,19 @@ export class game {
         } else if (t < 180) {
             return 3;
         } else if (t < 240) {
-            return 4;
-        } else if (t < 300) {
-            return 5;
-        } else if (t < 360) {
             return 6;
-        } else if (t < 420) {
-            return 7;
-        } else if (t < 480) {
+        } else if (t < 300) {
             return 8;
-        } else if (t < 540) {
-            return 9;
-        } else if (t < 600) {
+        } else if (t < 360) {
             return 10;
+        } else if (t < 420) {
+            return 12;
+        } else if (t < 480) {
+            return 16;
+        } else if (t < 540) {
+            return 18;
+        } else if (t < 600) {
+            return 20;
         } else if (t < 660) {
             return 11;
         } else if (t < 720) {
@@ -342,7 +342,7 @@ export class game {
 
     getCurrentSpawnInterval() {
         // Basisspawnintervall in ms (je kleiner, desto härter)
-        return 1100 / this.getSpawnIntensity(this.gameTimer);
+        return 2000 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {

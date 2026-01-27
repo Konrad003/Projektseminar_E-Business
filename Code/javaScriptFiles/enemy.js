@@ -216,7 +216,8 @@ export class Enemy extends MovingEntity {
             const now = performanceNow ?? performance.now()
 
             if (now >= this.nextAllowedContactDamageAt) {
-                PlayerOne.takeDmg(15, enemies, positionWithin, [])
+                const contactDmg = this.baseDamage ?? 15;
+                PlayerOne.takeDmg(contactDmg, enemies, positionWithin, [])
                 this.nextAllowedContactDamageAt = now + this.contactDamageCooldownMs
             }
         }
