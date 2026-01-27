@@ -22,7 +22,7 @@ export class EnemyFactory{
         let x, y
         for (let i = 0; i < 4; i++){
             const side = Math.floor(Math.random() * 4)
-            for (let i = 0; i < CountOfEnemies / 4; i++){
+            for (let j = 0; j < CountOfEnemies / 4; j++){
                 switch (side) {
                     case 0: // oben
                         x = left + Math.random() * (right - left)
@@ -66,16 +66,17 @@ export class EnemyFactory{
                 }
                 let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
                 let enemy = EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl)
-                for (let i =0; i<=5; i++){
+                for (let tries =0; tries<=5; tries++){
                     if(!enemy.checkSpawnCollision(enemiesArray, enemy.gridMapTile) && enemy.spawnCheck(MapOne, tilewidth, tilewidth)){
                         //console.log(enemy.spawnCheckWithEnemy(enemiesArray, gridMapTile)+ " " +enemy.spawnCheck(MapOne, enemy.globalEntityX, enemy.globalEntityY, tilewidth, tilewidth))
-                        enemiesArray[gridMapTile.row][gridMapTile.column].within.push(enemy);
-                        
+                        enemiesArray[enemy.gridMapTile.row][enemy.gridMapTile.column].within.push(enemy);
                         break
                     }else {
                         enemy.globalEntityX += tilewidth * dx
                         enemy.globalEntityY += tilewidth * dy
-                        enemy.gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
+                        enemy.gridMapTile = {
+                        column: Math.floor(enemy.globalEntityX / (gridWidth * tilewidth)),
+                        row: Math.floor(enemy.globalEntityY / (gridWidth * tilewidth))}
                     }
                 }
             }

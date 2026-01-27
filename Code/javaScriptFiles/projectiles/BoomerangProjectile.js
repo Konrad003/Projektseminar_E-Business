@@ -38,6 +38,10 @@ export class BoomerangProjectile extends Projectile {
             if (this.distanceTraveled >= this.maxRange) {
                 this.returning = true;
             }
+            if ((oldX === this.globalEntityX && this.direction.x !== 0) ||
+            (oldY === this.globalEntityY && this.direction.y !== 0)) {
+            this.returning = true;}
+
         } else {
             // Kehre zurück
             if (this.config.shooter) {
@@ -45,7 +49,7 @@ export class BoomerangProjectile extends Projectile {
                 const dy = this.config.shooter.globalEntityY - this.globalEntityY;
                 const dist = Math.hypot(dx, dy);
 
-                if (dist < 30) {
+                if (dist <= 30) {
                     this.isAlive = false;
                     return;
                 }
@@ -55,6 +59,8 @@ export class BoomerangProjectile extends Projectile {
                 this.globalEntityY += returnDir.y * this.speed;
             }
         }
+   
+        
     }
 
     draw(ctx, player) {
