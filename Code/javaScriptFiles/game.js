@@ -187,6 +187,8 @@ export class game {
             this.Health = parseInt(document.getElementById("testHealth").value)
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
+            //localStorage.setItem("soundVol", toString(this.soundEffectsVol))
+            //this.soundEffectsVol = parseInt(localStorage.getItem("soundVol") || 1.0);
 
             this.Sounds()
             this.home()
@@ -605,6 +607,7 @@ export class game {
     }
 
     Sounds() {
+
         this.buttonSound = new Audio('./Sound/click.mp3');
         this.buttonSound.volume = this.soundEffectsVol;
 

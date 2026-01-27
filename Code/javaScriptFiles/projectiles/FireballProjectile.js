@@ -1,4 +1,4 @@
-import { Projectile } from "./Projectile.js";
+import {Projectile} from "./Projectile.js";
 
 /**
  * FireballProjectile: Fliegt → Explosion bei Timeout oder Collision
@@ -77,10 +77,7 @@ export class FireballProjectile extends Projectile {
             ctx.arc(screenX, screenY, this.explosionRadius, 0, Math.PI * 2);
             ctx.fill();
         } else {
-            ctx.fillStyle = '#FF4500';
-            ctx.beginPath();
-            ctx.arc(screenX, screenY, this.size, 0, Math.PI * 2);
-            ctx.fill();
+            super.draw(ctx, player);
         }
     }
 }

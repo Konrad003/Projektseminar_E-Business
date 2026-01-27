@@ -1,4 +1,4 @@
-import { Projectile } from "./Projectile.js";
+import {Projectile} from "./Projectile.js";
 
 /**
  * OrbitingProjectile: Shurikens orbiting um Schütze
@@ -20,12 +20,6 @@ export class OrbitingProjectile extends Projectile {
     }
 
     draw(ctx, player) {
-        const screenX = this.globalEntityX - player.globalEntityX + player.canvasWidthMiddle;
-        const screenY = this.globalEntityY - player.globalEntityY + player.canvasWidthHeight;
-        // TODO: Ersetzen durch PNG (Shuriken)
-        ctx.fillStyle = '#8B4513';
-        ctx.beginPath();
-        ctx.arc(screenX, screenY, this.size, 0, Math.PI * 2);
-        ctx.fill();
+        super.draw(ctx, player);
     }
 }

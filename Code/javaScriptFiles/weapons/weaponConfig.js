@@ -1,17 +1,17 @@
-import { BasicProjectile } from '../projectiles/BasicProjectile.js';
-import { FireballProjectile } from '../projectiles/FireballProjectile.js';
-import { MolotovProjectile } from '../projectiles/MolotovProjectile.js';
-import { OrbitingProjectile } from '../projectiles/OrbitingProjectile.js';
-import { BoomerangProjectile } from '../projectiles/BoomerangProjectile.js';
-import { Weapon } from "./Weapon.js";
-import { BowWeapon } from "./BowWeapon.js";
-import { KnifeWeapon } from "./KnifeWeapon.js";
-import { FireballWeapon } from "./FireballWeapon.js";
-import { MolotovWeapon } from "./MolotovWeapon.js";
-import { ShurikenWeapon } from "./ShurikenWeapon.js";
-import { ThunderstrikeWeapon } from "./ThunderstrikeWeapon.js";
-import { BoomerangWeapon } from "./BoomerangWeapon.js";
-import { AuraWeapon } from "./AuraWeapon.js";
+import {BasicProjectile} from '../projectiles/BasicProjectile.js';
+import {FireballProjectile} from '../projectiles/FireballProjectile.js';
+import {MolotovProjectile} from '../projectiles/MolotovProjectile.js';
+import {OrbitingProjectile} from '../projectiles/OrbitingProjectile.js';
+import {BoomerangProjectile} from '../projectiles/BoomerangProjectile.js';
+import {Weapon} from "./Weapon.js";
+import {BowWeapon} from "./BowWeapon.js";
+import {KnifeWeapon} from "./KnifeWeapon.js";
+import {FireballWeapon} from "./FireballWeapon.js";
+import {MolotovWeapon} from "./MolotovWeapon.js";
+import {ShurikenWeapon} from "./ShurikenWeapon.js";
+import {ThunderstrikeWeapon} from "./ThunderstrikeWeapon.js";
+import {BoomerangWeapon} from "./BoomerangWeapon.js";
+import {AuraWeapon} from "./AuraWeapon.js";
 
 export class WeaponConfig {
 
@@ -54,7 +54,10 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         BasicProjectile,
        {
             speed: 6,
-            size: 6,
+           width: 40,
+           height: 10,
+           size: 10, // Fallback / hitbox adjustments might use this if logic changed, but basically ignored for width/height now if above are present
+           image: "./Graphics/projectiles/pfleil.png",
             duration: 3000,
             amount: 1  // Basis-Anzahl Projektile
         });
@@ -69,7 +72,10 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         BasicProjectile,
         {
             speed: 9,
-            size: 5,
+            width: 45,
+            height: 15,
+            size: 20,
+            image: "./Graphics/projectiles/knifel.png",
             duration: 2000,
             amount: 1
         });
@@ -84,29 +90,66 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         FireballProjectile,
          {
             speed: 5,
-            size: 8,
+             size: 90,
+             image: "./Graphics/projectiles/feuerwal2.png",
             duration: 3000,
             explosionRadius: 100,
             explosionColor: 'rgba(255, 50, 0, 0.9)',
+             glow: {color: "#FF4500", blur: 30},
             amount: 1});
         case "Molotov":      return new MolotovWeapon("./Graphics/equipmentIcons/PNG/5.png", "Burning area damage", level, "Molotov", shooter, mapWidth, mapHeight, gridWidth,
         25,
         1800,
+            600,
+            0,
+            20,
+            1,
+            false,
+            MolotovProjectile,
+            {
+                speed: 400, // Molotov flight distance
+                size: 30,
+                image: "./Graphics/projectiles/molowow.png",
+                duration: 5000,
+                amount: 1
+            });
+        case "Boomerang":
+            return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/4.png", "Returns after travel", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
+                35,
         1500,
-        0,
+                800,
+                5,  // High piercing
         20,
         1,
         false,
-        MolotovProjectile,
+                BoomerangProjectile,
         {
-            speed: 200,
-            size: 8,
-            flightDuration: 1000,
-            dotRadius: 100,
-            dotDmg: 25,
-            dotInterval: 500,
+            speed: 7,
+            size: 24,
+            image: "./Graphics/projectiles/bumerwang.png",
+            maxRange: 400,
+            spinSpeed: 0.2,
+            duration: 3000, // Safe-Fail
             amount: 1
         });
+        /*
+        case "Shuriken":     return new ShurikenWeapon("./Graphics/equipmentIcons/PNG/10.png", "Bounces between enemies", level, "Shuriken", shooter, mapWidth, mapHeight, gridWidth,
+        30,
+        1200,
+        600,
+        3, // Bounces 3 times
+        20,
+        1,
+        false,
+        BasicProjectile, // Shuriken nutzt BasicProjectile aber mit Bounce-Logic
+        {
+            speed: 8,
+            size: 24,
+            image: "./Graphics/projectiles/shuriwaaa.png",
+            bounces: 3,
+            amount: 1
+        });
+        */
 
         // Special Weapons (mit spezieller Logik)
         case "Shuriken":     return new ShurikenWeapon("./Graphics/equipmentIcons/PNG/3.png", "Orbiting blade stars", level, "Shuriken", shooter, mapWidth, mapHeight, gridWidth,
@@ -122,10 +165,13 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             amount: 1,  // Basis: 2 Shuriken
             orbitRadius: 100,
             orbitSpeed: 1.5,
-            size: 15,
+             size: 24,
+             image: "./Graphics/projectiles/shuriwaaa.png",
+             spinSpeed: 0.15,
             piercing: 10000,
             shooter : shooter
             });
+
         case "Thunderstrike": return new ThunderstrikeWeapon( "./Graphics/equipmentIcons/PNG/9.png", "Lightning bolt strike", level, "Thunderstrike", shooter, mapWidth, mapHeight, gridWidth,
          50,
          1500,
@@ -152,6 +198,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             auraRadius: 150,
             auraDmgInterval: 500,
             auraColor: 'rgba(255, 255, 100, 0.3)'});
+        /*
         case "Boomerang":          return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/11.png", "Returning boomerang", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
         50,
         1500,
@@ -168,6 +215,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             piercing: 999,
             shooter: shooter,
             });
+        */
 
         case "BasicEnemy":
             return new Weapon(
@@ -180,7 +228,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
                 1,
                 false,
                 BasicProjectile,
-                { speed: 3 , size: 15, duration: 2000, isEnemy: true }
+                {speed: 3, width: 30, height: 8, size: 30, duration: 2000, isEnemy: true}
             );
 
         // Fallback: Generische Weapon-Klasse (für basic, basicEnemy, etc.)
@@ -196,7 +244,9 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         BasicProjectile,
        {
             speed: 6,
-            size: 6,
+           width: 40,
+           height: 10,
+           size: 10,
             duration: 3000,
             amount: 1  // Basis-Anzahl Projektile
             });
