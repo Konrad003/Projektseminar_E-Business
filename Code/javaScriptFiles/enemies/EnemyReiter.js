@@ -12,7 +12,7 @@ export class EnemyReiter extends Enemy {
         const img = new Image();
         img.src = this.png;
 
-        this.level = 1
+   
         this.xpDrop = 15
         this.baseDamage = 20+level*7
         this.oldMoveX = oldMoveX

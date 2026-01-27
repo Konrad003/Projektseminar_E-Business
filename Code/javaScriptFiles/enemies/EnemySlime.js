@@ -6,7 +6,7 @@ export class EnemySlime extends Enemy {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, level)
           console.log("[EnemySlime ctor] after super, this.level =", this.level);
         this.hp = 25 + level*5
-        this.speed = 1 + level*0.5
+        this.speed = 1 //+ level*0.5//
         this.png = "./Graphics/enemiesPNG/Schleim/1.png"
         this.hitbox = {width: 1706/ 22, height: 964 / 22}
 
@@ -15,7 +15,6 @@ export class EnemySlime extends Enemy {
         img.src = this.png;
 
         this.level = level
-
         this.xpDrop = 1
         this.baseDamage = 6 + level*3
         this.oldMoveX = oldMoveX

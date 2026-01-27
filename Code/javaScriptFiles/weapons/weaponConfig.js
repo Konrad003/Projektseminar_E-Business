@@ -90,7 +90,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             explosionColor: 'rgba(255, 50, 0, 0.9)',
             amount: 1});
         case "Molotov":      return new MolotovWeapon("./Graphics/equipmentIcons/PNG/5.png", "Burning area damage", level, "Molotov", shooter, mapWidth, mapHeight, gridWidth,
-        25,
+        20,
         1800,
         1500,
         0,
@@ -153,7 +153,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             auraDmgInterval: 500,
             auraColor: 'rgba(255, 255, 100, 0.3)'});
         case "Boomerang":          return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/11.png", "Returning boomerang", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
-        50,
+        20,
         1500,
         600,
         999,

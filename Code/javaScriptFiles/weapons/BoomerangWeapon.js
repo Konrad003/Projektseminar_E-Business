@@ -34,7 +34,7 @@ export class BoomerangWeapon extends Weapon {
     }
        updateStats() {
         if (this.level === this._currentStatsLevel) return;
-        this.dmg += 25
+        this.dmg += 15
         this.cooldown -= 100;           // +15 Schaden pro Level
         this.piercing += 0,     // +1 Piercing alle 2 Level
         this.range += 50,         // +50 Range pro Level

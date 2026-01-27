@@ -304,9 +304,9 @@ export class game {
         if (t < 10) {       //Zeitstempel in Sekunden
             return 1;       //funktioniert levelsystem überhaupt?
         } else if (t < 20) {
-            return 4;
-        } else if (t < 30) {
-            return 7;
+            return 5;
+        } else if (t < 180) {
+            return 3;
         } else if (t < 240) {
             return 4;
         } else if (t < 300) {
@@ -346,7 +346,7 @@ export class game {
 
     getCurrentSpawnInterval() {
         // Basisspawnintervall in ms (je kleiner, desto härter)
-        return 1600 / this.getSpawnIntensity(this.gameTimer);
+        return 2000 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {

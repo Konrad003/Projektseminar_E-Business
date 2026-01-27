@@ -14,7 +14,7 @@ export class EnemySkellet extends Enemy {
         const img = new Image();
         img.src = this.png;
 
-        this.level = 1
+    
         this.xpDrop = 2
         this.baseDamage = 13 + level*3
         this.oldMoveX = oldMoveX

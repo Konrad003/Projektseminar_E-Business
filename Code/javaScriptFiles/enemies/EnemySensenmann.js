@@ -12,7 +12,7 @@ export class EnemySensenmann extends Enemy {
         const img = new Image();
         img.src = this.png;
 
-        this.level = 1
+       
         this.xpDrop = 10
         this.baseDamage = 30+level*5
         this.oldMoveX = oldMoveX

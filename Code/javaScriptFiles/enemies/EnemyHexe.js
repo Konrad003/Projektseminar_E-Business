@@ -12,7 +12,7 @@ export class EnemyHexe extends Enemy {
         img.src = this.png;
 
         this.level = level
-        this.level = 1
+        
         this.xpDrop = 6
         this.baseDamage = 30+level*5
         this.oldMoveX = oldMoveX
