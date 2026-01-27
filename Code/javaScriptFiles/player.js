@@ -146,6 +146,7 @@ export class Player extends MovingEntity {
 
     collectXp(xpAmount) {
         this.xp += xpAmount;
+        Game.totalXP += xpAmount;
 
         this.xp = Math.floor(this.xp)
 

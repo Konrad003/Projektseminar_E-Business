@@ -140,6 +140,62 @@
     </form>
 </section>
 
+<section class="screen overlay-dark" id="inGameSettingsScreen">
+    <h2 class="screenTitle">Ingame Settings</h2>
+
+    <form id="inGameSettingsForm" style="color: yellow">
+        <div class="panel" style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="display: flex; flex-direction: row; gap: 10px;">
+                <div class="settings" id="inGameSoundSettings">
+                    <input id="soundEffectsVol" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
+                           value="1.0">
+                    <label for="soundEffectsVol">Sound Effects Volume</label>
+
+                    <input id="musicVol" max="1.0" min="0.0" name="musicVol" step="0.1" type="range" value="1.0">
+                    <label for="musicVol">Music Volume</label>
+                </div>
+
+                <div class="settings" id="inGameSettings">
+                    <input id="testHealthInGameSettings" max="9999" min="1" name="testHealthInGameSettings"
+                           type="number" value="100">
+                    <label for="testHealthInGameSettings">Set your Health</label>
+
+                    <input id="testMaxHealthInGameSettings" max="9999" min="1" name="testMaxHealthInGameSettings"
+                           type="number" value="100">
+                    <label for="testMaxHealthInGameSettings">Set your max. Health</label>
+
+                    <input id="testXPInGameSettings" max="9999" min="0" name="testXPInGameSettings" type="number"
+                           value="0">
+                    <label for="testXPInGameSettings">Set your XP</label>
+                </div>
+
+                <div class="settings">
+                    <input checked id="testShootInGameSettings" name="testShootInGameSettings" type="checkbox"
+                           value="true">
+                    <label for="testShootInGameSettings">Enable Shooting</label>
+
+                    <input id="testDieInGameSettings" name="testDieInGameSettings" type="checkbox" value="false">
+                    <label for="testDieInGameSettings">Player can die?</label>
+
+                    <input id="activateDashInGameSettings" name="activateDashInGameSettings" type="checkbox"
+                           value="false">
+                    <label for="activateDashInGameSettings">Player can Dash?</label>
+                </div>
+            </div>
+
+            <div class="menu" style="display: flex; flex-direction: row; gap: 10px;">
+                <div class="menu">
+                    <button class="btn" id="startMenuButtonInGameSettings" onclick="Game.home()"
+                            onmousedown="Game.playButtonSound()">Back
+                    </button>
+                </div>
+
+                <input class="btn" onmousedown="Game.playButtonSound()" type="submit" value="Save"/>
+            </div>
+        </div>
+    </form>
+</section>
+
 <section class="screen" id="playerSelectScreen">
     <h2 class="screenTitle">Choose a Player</h2>
     <div class="slideSelect">
@@ -357,7 +413,7 @@
 
     <div class="statsPanel">
         <p>Time: <span class="stat-val" id="defeatTime">02:13</span></p>
-        <p>XP: <span class="stat-val" id="defeatXP">2300</span></p>
+        <p>Total XP: <span class="stat-val" id="defeatXP">2300</span></p>
         <p>Kills: <span class="stat-val" id="defeatKills">0</span></p>
     </div>
 
@@ -378,7 +434,7 @@
 
     <div class="statsPanel">
         <p>Time: <span class="stat-val" id="winTime">10:00</span></p>
-        <p>XP: <span class="stat-val" id="winXP">2300</span></p>
+        <p>Total XP: <span class="stat-val" id="winXP">2300</span></p>
         <p>Kills: <span class="stat-val" id="winKills">0</span></p>
     </div>
 

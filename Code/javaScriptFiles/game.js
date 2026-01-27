@@ -77,6 +77,7 @@ export class game {
 
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
+    totalXP = 0
 
     soundEffects = true
     music = true
@@ -193,6 +194,22 @@ export class game {
         });
     }
 
+    settingsListenerInGameSettings() {
+        document.getElementById("inGameSettingsForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            // Save logic here
+
+            this.testShoot = document.getElementById("testShootInGameSettings").checked
+            this.testDie = document.getElementById("testDieInGameSettings").checked
+            this.dashActiveSetting = document.getElementById("activateDashInGameSettings").checked
+            this.Health = parseInt(document.getElementById("testHealthInGameSettings").value)
+            this.maxHealth = parseInt(document.getElementById("testMaxHealthInGameSettings").value)
+            this.XP = parseInt(document.getElementById("testXPInGameSettings").value)
+
+            this.pauseGame()
+        });
+    }
+
     updateTimerDisplay() { // Aktualisiert die Anzeige des Timers im Format mm:ss
         const minutes = Math.floor(this.gameTimer / 60)
         const seconds = this.gameTimer % 60
@@ -205,7 +222,7 @@ export class game {
         const totalSeconds = (parseInt(localStorage.getItem("totalGameTime"))) % 60
         // Format mm:ss
         localStorage.setItem("gameTime", `${totalMinutes.toString().padStart(2, "0")}:${totalSeconds.toString().padStart(2, "0")}`)
-        console.log(localStorage.getItem("gameTime"))
+        //console.log(localStorage.getItem("gameTime"))
     }
 
     startGameTimer() { // Startet den Spieltimer
@@ -387,10 +404,17 @@ export class game {
             }
         }
                 }
-*/
+    */
 
     // Beginn der Screen-Wechsel-Funktionen
     pauseGame() {
+        if (this.gamePaused === false) {
+            this.gamePaused = true; //flag boolean for render function
+            this.stopGameTimer()  // Verhindert mehrfaches Pausieren
+        }
+
+        document.getElementById("pauseScreen").style.display = "flex";
+        document.getElementById("inGameSettingsScreen").style.display = "none";
         this.gamePaused = true; //flag boolean for render function
         this.stopGameTimer()
 
@@ -509,6 +533,13 @@ export class game {
         document.getElementById("settingsScreen").style.display = "flex";
     }
 
+    inGameSettings() {
+        this.settingsListenerInGameSettings()
+
+        document.getElementById("pauseScreen").style.display = "none";
+        document.getElementById("inGameSettingsScreen").style.display = "flex";
+    }
+
     selectPlayerScreen() {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("gameScreen").style.display = "none";
@@ -564,7 +595,7 @@ export class game {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("defeatTime").innerHTML = document.getElementById("hudTime").innerHTML
-        document.getElementById("defeatXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("defeatXP").innerHTML = this.totalXP
         document.getElementById("defeatKills").innerHTML = this.killCount
         document.getElementById("defeatScreen").style.display = "flex";
 
@@ -586,7 +617,7 @@ export class game {
         document.getElementById("settingsScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
         document.getElementById("winTime").innerHTML = document.getElementById("hudTime").innerHTML
-        document.getElementById("winXP").innerHTML = this.PlayerOne.xp
+        document.getElementById("winXP").innerHTML = this.totalXP
         document.getElementById("winKills").innerHTML = this.killCount
         document.getElementById("winScreen").style.display = "flex";
 
@@ -774,8 +805,8 @@ export class game {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
                 for (let i = 0; i < this.enemies[row][column].within.length; i++) {
                     if (this.enemies[row][column].within[i] === undefined) {
-                        console.log(this.enemies[row][column].within.length)
-                        console.log(i)
+                        //console.log(this.enemies[row][column].within.length)
+                        //console.log(i)
                     }
                     this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
