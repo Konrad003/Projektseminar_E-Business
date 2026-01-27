@@ -65,7 +65,9 @@ export class EnemyFactory{
                     dy = -1
                 }
                 let gridMapTile = {column : Math.floor(x / (gridWidth*tilewidth)), row : Math.floor(y / (gridWidth*tilewidth))}
-                let enemy = EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl)
+                const lvl = (typeof enemyLvl === "function") ? enemyLvl() : enemyLvl; // aus Funktion -> Zahl
+                let enemy = EnemyFactory.createRandomEnemy(x, y, gridMapTile, mapWidth, mapHeight, gridWidth, lvl);
+
                 for (let i =0; i<=5; i++){
                     if(!enemy.checkSpawnCollision(enemiesArray, enemy.gridMapTile) && enemy.spawnCheck(MapOne, tilewidth, tilewidth)){
                         //console.log(enemy.spawnCheckWithEnemy(enemiesArray, gridMapTile)+ " " +enemy.spawnCheck(MapOne, enemy.globalEntityX, enemy.globalEntityY, tilewidth, tilewidth))
@@ -81,7 +83,7 @@ export class EnemyFactory{
             }
         }
     }
-    static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLvl) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
+    static createRandomEnemy(globalEntityX, globalEntityY, gridMapTile, mapWidth, mapHeight, gridWidth, enemyLevel) {  // muss statisch sein, da sie vor der Instanziierung eines Enemys aufgerufen wird
         const enemyTypes = [
             {cls: EnemySlime, weight: 70 , weapon: null},
             {cls: EnemyReiter, weight: 5, weapon: null},
@@ -94,15 +96,15 @@ export class EnemyFactory{
 
         let totalWeight = enemyTypes.reduce((sum, enemy) => sum + enemy.weight, 0)
         let random = Math.random() * totalWeight
-        for (let enemy of enemyTypes) {
-            random -= enemy.weight
-            if (random < 0) {
-                // Erstelle Enemy zuerst ohne Waffe
-                const newEnemy = new enemy.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, null, 1, enemyLvl);
-                // Dann erstelle Waffe mit der Enemy-Instanz als Shooter
-                newEnemy.weapon = WeaponConfig.createWeapon(enemy.weapon, newEnemy, mapWidth, mapHeight, gridWidth);
-                return newEnemy;
-            }
-        }
+        for (let entry of enemyTypes) {
+        random -= entry.weight;
+        if (random < 0) {
+        const newEnemy = new entry.cls(globalEntityX, globalEntityY, null, null, null, null, gridMapTile, 0, 0, false, false, null,enemyLevel);
+
+        newEnemy.weapon = WeaponConfig.createWeapon(entry.weapon, newEnemy, mapWidth, mapHeight, gridWidth);
+        return newEnemy;
+    }
+}
+
     }
 }
