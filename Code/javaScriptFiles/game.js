@@ -8,7 +8,7 @@ import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
-ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
 let BasicHeight = 1440;
@@ -287,11 +287,7 @@ export class game {
         const spawn = () => {
             if (!this.gamePaused) {
 
-                console.log(
-        "[SPAWN-TICK] t=", this.gameTimer,
-        "getEnemyLvl()=", this.getEnemyLvl()
-      );
-                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/,  () => this.getEnemyLvl())
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/, this.getEnemyLvl())
             }
             this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
@@ -301,10 +297,10 @@ export class game {
 
     getEnemyLvl() {
         const t = this.gameTimer;
-        if (t < 10) {       //Zeitstempel in Sekunden
-            return 1;       //funktioniert levelsystem überhaupt?
-        } else if (t < 20) {
-            return 5;
+        if (t < 60) {       //Zeitstempel in Sekunden
+            return 1;       //lvl
+        } else if (t < 120) {
+            return 2;
         } else if (t < 180) {
             return 3;
         } else if (t < 240) {
@@ -341,12 +337,12 @@ export class game {
             return 19;
         } else if (t < 1200) {
             return 20;
-        }  // mehrere Level mit einmal erhöhen -> Scaling
+        }
     }
 
     getCurrentSpawnInterval() {
         // Basisspawnintervall in ms (je kleiner, desto härter)
-        return 2000 / this.getSpawnIntensity(this.gameTimer);
+        return 1100 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {
@@ -783,6 +779,14 @@ export class game {
                     }
                     this.enemies[row][column].within[i].render(ctx, this.MapOne, this.PlayerOne, this.enemies, this.projectiles, performance.now(), i, this.gridWidth, this.PlayerOne.enemyItemDrops)
                 }
+            }
+        }
+
+        // Render global projectiles (Enemy Projectiles)
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const projectile = this.projectiles[i];
+            if (projectile && projectile.handleProjectile) {
+                projectile.handleProjectile(ctx, this.projectiles, i, this.enemies, this.PlayerOne, this.MapOne, this.gridWidth, this.PlayerOne.enemyItemDrops, performance.now());
             }
         }
 

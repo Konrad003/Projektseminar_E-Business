@@ -197,10 +197,8 @@ export class Enemy extends MovingEntity {
             let position = this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
             this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
             if (this.weapon) {
-                // Shoot Logik - PlayerOne wird übergeben damit die Richtung korrekt berechnet wird
-                this.weapon.shoot(PlayerOne, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
-                // Render Projektile
-                this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops);
+                // Render ruft auch shoot auf, wir übergeben projectiles für globale Speicherung
+                this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops, null, projectiles);
             }
         }
         // Zeichnen passiert IMMER, auch wenn gefreezt (damit Enemies nicht "verschwinden").
