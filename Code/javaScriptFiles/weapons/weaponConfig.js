@@ -228,7 +228,40 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
                 1,
                 false,
                 BasicProjectile,
-                {speed: 3, width: 30, height: 8, size: 30, duration: 2000, isEnemy: true}
+                {
+                    speed: 3,
+                    width: 30,
+                    height: 8,
+                    size: 30,
+                    duration: 2000,
+                    isEnemy: true,
+                    image: "./Graphics/projectiles/pfleil.png"
+                }
+            );
+
+        case "EnemyFireball":
+            return new Weapon(
+                // Generic Weapon class handling FireballProjectile
+                null, "Enemy Fireball", level, "EnemyFireball", shooter, mapWidth, mapHeight, gridWidth,
+                20,    // Damage
+                2000,  // Cooldown
+                700,   // Range
+                0,     // Piercing
+                1,
+                1,
+                false,
+                FireballProjectile, // Uses FireballProjectile logic (explosion)
+                {
+                    speed: 4,
+                    size: 60,
+                    image: "./Graphics/projectiles/feuerwal2.png",
+                    duration: 3000,
+                    explosionRadius: 80,
+                    explosionColor: 'rgba(255, 50, 0, 0.9)',
+                    glow: {color: "#FF4500", blur: 20},
+                    amount: 1,
+                    isEnemy: true
+                }
             );
 
         // Fallback: Generische Weapon-Klasse (für basic, basicEnemy, etc.)
