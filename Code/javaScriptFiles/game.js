@@ -287,7 +287,11 @@ export class game {
         const spawn = () => {
             if (!this.gamePaused) {
 
-                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/, this.getEnemyLvl)
+                console.log(
+        "[SPAWN-TICK] t=", this.gameTimer,
+        "getEnemyLvl()=", this.getEnemyLvl()
+      );
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/,  () => this.getEnemyLvl())
             }
             this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
@@ -297,10 +301,10 @@ export class game {
 
     getEnemyLvl() {
         const t = this.gameTimer;
-        if (t < 60) {       //Zeitstempel in Sekunden
-            return 1;       //lvl
-        } else if (t < 120) {
-            return 2;
+        if (t < 10) {       //Zeitstempel in Sekunden
+            return 1;       //funktioniert levelsystem überhaupt?
+        } else if (t < 20) {
+            return 5;
         } else if (t < 180) {
             return 3;
         } else if (t < 240) {
@@ -337,12 +341,12 @@ export class game {
             return 19;
         } else if (t < 1200) {
             return 20;
-        }
+        }  // mehrere Level mit einmal erhöhen -> Scaling
     }
 
     getCurrentSpawnInterval() {
         // Basisspawnintervall in ms (je kleiner, desto härter)
-        return 1100 / this.getSpawnIntensity(this.gameTimer);
+        return 2000 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {
