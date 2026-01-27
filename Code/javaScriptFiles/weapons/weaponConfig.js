@@ -84,7 +84,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         FireballProjectile,
          {
             speed: 5,
-            size: 8,
+            size: 18,
             duration: 3000,
             explosionRadius: 100,
             explosionColor: 'rgba(255, 50, 0, 0.9)',
@@ -168,6 +168,22 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             piercing: 999,
             shooter: shooter,
             });
+
+        case "WitchFireball":
+            return new FireballWeapon(
+                null, "Witch Fireball", level, "WitchFireball", shooter, mapWidth, mapHeight, gridWidth,
+                25,   // Schaden
+                2000, // Cooldown
+                600,  // Range
+                0,    // Piercing
+                1,    // MaxLevel
+                1,    // StartLevel
+                false,// isSpecial
+                FireballProjectile,
+                { speed: 4, size: 15, duration: 3000, explosionRadius: 80, explosionColor: 'rgba(138, 43, 226, 0.8)', amount: 1, isEnemy: true },
+                80,   // ExplosionRadius (für Weapon Stats)
+                'rgba(138, 43, 226, 0.8)' // ExplosionColor
+            );
 
         case "BasicEnemy":
             return new Weapon(

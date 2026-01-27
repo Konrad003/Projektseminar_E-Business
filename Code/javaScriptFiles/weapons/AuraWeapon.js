@@ -51,7 +51,7 @@ export class AuraWeapon extends Weapon {
         this.piercing += 0;
         this.range += 20;
         // this.projectileConfig.amount += 0;
-        this.projectileConfig.auraRadius += 20;
+        this.projectileConfig.auraRadius += 25;
         this.projectileConfig.auraDmgInterval -= 30;
         this._currentStatsLevel = this.level;
     }

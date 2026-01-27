@@ -18,8 +18,8 @@ export class BowWeapon extends Weapon {
     }
      updateStats() {
         if (this.level === this._currentStatsLevel) return;
-        this.dmg += 15
-        this.cooldown -= 50;           // +15 Schaden pro Level
+        this.dmg += 10
+        this.cooldown -= 25;           // +15 Schaden pro Level
         this.piercing += 0.5;     // +1 Piercing alle 2 Level
         this.range += 50;         // +50 Range pro Level
         this.projectileConfig.amount += 0;   // Keine Extra-Projektile

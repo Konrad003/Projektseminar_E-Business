@@ -65,7 +65,7 @@ export class ThunderstrikeWeapon extends Weapon {
         this.range += 30;
         // this.projectileConfig.amount += 0;
         this.projectileConfig.lightningLength += 30;
-        this.projectileConfig.lightningCount += 0.5;
+        this.projectileConfig.lightningCount += 0;
         this._currentStatsLevel = this.level;
     }
 

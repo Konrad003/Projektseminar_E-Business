@@ -22,9 +22,9 @@ export class MolotovWeapon extends Weapon {
     updateStats() {
         this.dmg += 5 // warscheinlich reduntant, da DoT Schaden im Projektil geregelt wird
         this.cooldown -= 80;           // +15 Schaden pro Level
-        this.piercing += 0,     // +1 Piercing alle 2 Level
+        this.piercing += 0,
         this.range += 50,         // +50 Range pro Level
-        this.projectileConfig.amount += 0.334;   // Keine Extra-Projektile
+        this.projectileConfig.amount += 0;   // Keine Extra-Projektile
         this.projectileConfig.dotRadius += 10;
         this.projectileConfig.dotDmg += 5;
     }

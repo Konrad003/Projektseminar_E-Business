@@ -1,5 +1,5 @@
 import {Enemy} from "../enemy.js"
-
+import { WeaponConfig } from "../weapons/weaponConfig.js"
 export class EnemyHexe extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY,weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
@@ -11,8 +11,7 @@ export class EnemyHexe extends Enemy {
         const img = new Image();
         img.src = this.png;
 
-        this.level = level
-        this.level = 1
+        this.level = level || 1
         this.xpDrop = 6
         this.baseDamage = 20+level*5
         this.oldMoveX = oldMoveX
@@ -20,11 +19,20 @@ export class EnemyHexe extends Enemy {
         this.blockedX = blockedX
         this.blockedY = blockedY
         this.ranged = true
+        this.weapon = WeaponConfig.createWeapon("WitchFireball", this, 420, 420, 8, this.level)
     }
 
     getColor() {
         return "purple"
     }
+
+    render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops = []) {
+        if (!this.weapon || this.weapon.name !== "WitchFireball") {
+            this.weapon = WeaponConfig.createWeapon("WitchFireball", this, 420, 420, 8, this.level);
+        }
+        super.render(ctx, MapOne, PlayerOne, enemies, projectiles, performanceNow, positionWithin, gridWidth, enemyItemDrops);
+    }
+
            updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 8

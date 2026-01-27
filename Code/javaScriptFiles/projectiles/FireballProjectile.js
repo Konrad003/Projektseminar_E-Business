@@ -37,7 +37,11 @@ export class FireballProjectile extends Projectile {
         if (this.exploded) {
             // Explosion-Schaden in Radius
             if (!this.explosionDamageDealt) {
-                this.applyExplosionDamage(enemies, enemyItemDrops);
+                if (this.isEnemy) {
+                    this.applyExplosionDamageToPlayer(player, enemyItemDrops);
+                } else {
+                    this.applyExplosionDamage(enemies, enemyItemDrops);
+                }
                 this.explosionDamageDealt = true;
             }
             // Explosion abgelaufen → löschen
@@ -45,13 +49,19 @@ export class FireballProjectile extends Projectile {
                 this.isAlive = false;
             }
         } else {
-            // Vor Explosion: Check ob Gegner getroffen
-            this.forEachEnemy(enemies, (enemy) => {
-                if (this.checkCollisionWithEntity(enemy)) {
+            // Vor Explosion: Check ob Ziel getroffen
+            if (this.isEnemy) {
+                if (this.checkCollisionWithEntity(player)) {
                     this.triggerExplosion(currentTime);
-                    return false; // break
                 }
-            });
+            } else {
+                this.forEachEnemy(enemies, (enemy) => {
+                    if (this.checkCollisionWithEntity(enemy)) {
+                        this.triggerExplosion(currentTime);
+                        return false; // break
+                    }
+                });
+            }
         }
     }
 
@@ -63,6 +73,14 @@ export class FireballProjectile extends Projectile {
                 enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
             }
         });
+    }
+
+    applyExplosionDamageToPlayer(player, enemyItemDrops) {
+        const dx = player.globalEntityX - this.globalEntityX;
+        const dy = player.globalEntityY - this.globalEntityY;
+        if (Math.hypot(dx, dy) < this.explosionRadius) {
+            player.takeDmg(this.dmg, [], null, enemyItemDrops);
+        }
     }
 
     draw(ctx, player) {

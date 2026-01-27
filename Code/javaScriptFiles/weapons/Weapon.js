@@ -91,6 +91,9 @@ export class Weapon extends Item {
         if (currentTime - this.lastShotTime < effectiveCooldown) {
             return;
         }
+            if (this.shooter && this.shooter.constructor.name === "EnemyHexe") {
+            console.log("Hexe schießt mit Waffe:", this.name);
+         }
         this.lastShotTime = currentTime;
 
         // Starte Burst wenn extraProjectiles > 0
@@ -260,7 +263,8 @@ export class Weapon extends Item {
         // Unterscheide nur: Grid vs Array (bestimmt durch Shooter)
         if (this.shooter instanceof Enemy) {
             // Enemy: einfaches Array
-            this._renderArray(this.projectiles, ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops);
+            // Fix: Übergebe leeres Array für enemies, damit Gegner sich nicht gegenseitig treffen
+            this._renderArray(this.projectiles, ctx, playerOne, performanceNow, [], map, gridWidth, enemyItemDrops);
         } else {
             // Player: Grid oder Array (Projectile entscheidet)
             this._renderGrid(this.projectiles, ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops);
