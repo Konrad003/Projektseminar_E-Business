@@ -342,7 +342,7 @@ export class game {
 
     getCurrentSpawnInterval() {
         // Basisspawnintervall in ms (je kleiner, desto härter)
-        return 1100 / this.getSpawnIntensity(this.gameTimer);
+        return 1600 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {
