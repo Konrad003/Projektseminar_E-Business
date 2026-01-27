@@ -20,10 +20,12 @@ export class MovingEntity extends Entity {
     checkSpawnCollision(enemiesArray, gridMapTile) {
         for (let row = gridMapTile.row - 1; row <= gridMapTile.row + 1; row++) {
             for (let column = gridMapTile.column - 1; column <= gridMapTile.column + 1; column++) {
-                for (const other of enemiesArray[row][column].within){
-                    if (other === this) continue
-                    if (this.checkCollisionWithEntity(other)){
-                    return true
+                if (enemiesArray[row] && enemiesArray[row][column]) {
+                    for (const other of enemiesArray[row][column].within) {
+                        if (other === this) continue
+                        if (this.checkCollisionWithEntity(other)) {
+                            return true
+                        }
                     }
                 }
             }
