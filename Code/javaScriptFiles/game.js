@@ -663,6 +663,7 @@ export class game {
         document.getElementById("lvlScreen").style.display = "none";
         document.getElementById("playerSelectScreen").style.display = "none";
         document.getElementById("statsScreen").style.display = "none";
+        document.getElementById("mapScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "flex";
     }
 
@@ -819,10 +820,10 @@ export class game {
 
     resetGame() {
         this.winLoseSoundStop()
+
         // Timer stoppen und zurücksetzen
         this.stopGameTimer()
         this.resetTimer()
-
 
         // Intervalle für Rendern und Gegner-Spawns stoppen
         if (this.renderInterval) {
@@ -834,6 +835,7 @@ export class game {
             this.enemySpawnInterval = null
         }
 
+        // Event-Listener entfernen
         if (this.keyDownBound) {
             window.removeEventListener("keydown", this.keyDownBound);
             this.keyDownBound = null;
@@ -843,8 +845,7 @@ export class game {
             this.keyUpBound = null;
         }
 
-        // Gegner-Array leeren
-
+        // Arrays und Objekte leeren
         this.enemies.length = 0
         this.projectiles.length = 0
         this.dashTrails = []
@@ -854,25 +855,23 @@ export class game {
 
         this.DropSystem = null
         this.weapon = null
-        this.Game = null
-        //console.log(this.LevelUpFactory)
-        //this.LevelUpFactory = null
-        //console.log(this.LevelUpFactory)
+        // this.Game = null // (Optional entfernen: this.Game existiert in der Klasse normalerweise nicht, window.Game ist die Instanz)
+
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
         this.leftPressed = false
         this.rightPressed = false
+        this.spacePressed = false // Neu: Space-Input zurücksetzen
 
-        // Spiel-status zurücksetzen
+        // Spiel-Status zurücksetzen
         this.gamePaused = false
 
         // Canvas leeren
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        //Andere Variablen
+        // Spielstatistiken für den Run zurücksetzen
         this.killCount = 0
-
     }
 
     render() {
