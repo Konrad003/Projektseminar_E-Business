@@ -153,7 +153,7 @@ export class Enemy extends MovingEntity {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/5.png"))
                 } else if (roll < 1) {
-                    console.log("Instant Level Drop!!!");
+                    //console.log("Instant Level Drop!!!");
                     enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/6.png"))

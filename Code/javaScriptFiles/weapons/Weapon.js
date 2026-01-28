@@ -1,5 +1,5 @@
-import { Item } from "../item.js";
-import { Enemy } from "../enemy.js";
+import {Item} from "../item.js";
+import {Enemy} from "../enemy.js";
 
 /**
  * Basis-Klasse für alle Waffen
@@ -7,7 +7,7 @@ import { Enemy } from "../enemy.js";
 export class Weapon extends Item {
     constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startlevel, isSpecial, projectile, projectileConfig){  // Für Testing: upgradebarprojectile,projectileConfig)
 
-        super(icon, description, level, null);
+        super(icon, description);
 
 
         this.name = name;
@@ -29,7 +29,7 @@ export class Weapon extends Item {
         // Fallback: Wenn Name/Icon nicht übergeben wurden (Game-Mode), aus Config nehmen
         if (!this.name) this.name = name || this.name || "Weapon";
         if (!this.icon) this.icon = icon || this.icon;
-        if (!this.description && this.description) this.description = this.description;
+        if (!this.description && description) this.description = description;
 
         // Hole Level-basierte Stats
         this._currentStatsLevel = -1;

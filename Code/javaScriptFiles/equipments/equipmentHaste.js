@@ -12,6 +12,6 @@ export class EquipmentHaste extends Equipment {
         // Spezifische Zusatzlogik für Haste:
         player.baseSpeed = player.speed;
 
-        console.log(`[Haste] Speed-Update: ${player.speed} (baseSpeed synchronisiert)`);
+        //console.log(`[Haste] Speed-Update: ${player.speed} (baseSpeed synchronisiert)`);
     }
 }
