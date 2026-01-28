@@ -1,4 +1,4 @@
-import { Projectile } from "./Projectile.js";
+import {Projectile} from "./Projectile.js";
 
 /**
  * BasicProjectile: Pfeil, Speer, Messer - einfache Bewegung

@@ -6,8 +6,8 @@ import {Weapon} from "./Weapon.js";
  * WARUM SPECIAL: Boomerangs brauchen Array-Speicherung (nicht Grid) wegen Rückkehr-Logik
  */
 export class BoomerangWeapon extends Weapon {
-    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
-        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig);
+    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
+        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig);
 
         // Eigenes Array für Boomerangs (nicht Grid!)
         this.boomerangProjectiles = [];
@@ -20,21 +20,12 @@ export class BoomerangWeapon extends Weapon {
 
         // Pass shooter in config so boomerang can return
         const extendedConfig = {
-            ...this.projectileConfig,
-            shooter: this.shooter,
-            piercing: this.piercing // Pass piercing stat to projectile
+            ...this.projectileConfig, shooter: this.shooter, piercing: this.piercing // Pass piercing stat to projectile
         };
 
         const ProjectileClass = this.projectile;
-        const projectile = new ProjectileClass(
-            this.shooter.globalEntityX,
-            this.shooter.globalEntityY,
-            direction,
-            effectiveDamage,
-            extendedConfig,
-            {},  // Kein Grid
-            currentTime,
-            false  // isEnemy
+        const projectile = new ProjectileClass(this.shooter.globalEntityX, this.shooter.globalEntityY, direction, effectiveDamage, extendedConfig, {},  // Kein Grid
+            currentTime, false  // isEnemy
         );
 
         this.boomerangProjectiles.push(projectile);
@@ -59,12 +50,12 @@ export class BoomerangWeapon extends Weapon {
     updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 15
-        this.cooldown -= 100;           // +15 Schaden pro Level
-        this.piercing += 0,     // +1 Piercing alle 2 Level
-        this.range += 50,         // +50 Range pro Level
+        this.cooldown -= 100          // +15 Schaden pro Level
+        this.piercing += 0     // +1 Piercing alle 2 Level
+        this.range += 50         // +50 Range pro Level
         this.projectileConfig.projectileAmount += 0   // Keine Extra-Projektile
-        this.projectileConfig.maxRange += 50;    // +50 maxRange pro Level
-        this._currentStatsLevel = this.level;
+        this.projectileConfig.maxRange += 50    // +50 maxRange pro Level
+        this._currentStatsLevel = this.level
     }
 
 

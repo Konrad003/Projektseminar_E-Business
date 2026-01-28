@@ -4,22 +4,9 @@ import {MovingEntity} from "../movingEntity.js";
  * Basis-Klasse für alle Projektile
  */
 export class Projectile extends MovingEntity {
-    /**
-     * Statische Methode: Generiert eine zufällige Richtung
-     * Wird von Molotov, Thunderstrike etc. genutzt
-     */
-    static getRandomDirection() {
-        const randomAngle = Math.random() * Math.PI * 2;
-        return {
-            x: Math.cos(randomAngle),
-            y: Math.sin(randomAngle)
-        };
-    }
-
     constructor(globalEntityX, globalEntityY, direction, dmg, config = {}, gridMapTile = {}, creationTime, isEnemy = false) {
         super(globalEntityX, globalEntityY, 1, config.image || null, config.speed || 6, {
-            width: config.width || config.size || 6,
-            height: config.height || config.size || 6
+            width: config.width || config.size || 6, height: config.height || config.size || 6
         });
 
         this.direction = direction;
@@ -45,6 +32,17 @@ export class Projectile extends MovingEntity {
         // Graphical tweaks
         this.glow = config.glow || null; // { color: 'red', blur: 20 }
         this.rotationOffset = config.rotationOffset || 0; // In Radians (e.g., Math.PI/2 for 90°)
+    }
+
+    /**
+     * Statische Methode: Generiert eine zufällige Richtung
+     * Wird von Molotov, Thunderstrike etc. genutzt
+     */
+    static getRandomDirection() {
+        const randomAngle = Math.random() * Math.PI * 2;
+        return {
+            x: Math.cos(randomAngle), y: Math.sin(randomAngle)
+        };
     }
 
     /**
@@ -101,8 +99,7 @@ export class Projectile extends MovingEntity {
         }
 
         // Wandkollisions-Handling
-        if ((oldGlobalEntityX === this.globalEntityX && this.direction.x !== 0) ||
-            (oldGlobalEntityY === this.globalEntityY && this.direction.y !== 0)) {
+        if ((oldGlobalEntityX === this.globalEntityX && this.direction.x !== 0) || (oldGlobalEntityY === this.globalEntityY && this.direction.y !== 0)) {
             this.onWallCollision();
         }
     }
@@ -212,7 +209,7 @@ export class Projectile extends MovingEntity {
             weaponProjectiles.push(this);
         } else if (Object.keys(this.gridMapTile).length > 0) {
             // Grid-basiert (Standard für Player-Projektile)
-            const { row, column } = this.gridMapTile;
+            const {row, column} = this.gridMapTile;
             if (!Array.isArray(weaponProjectiles[row]?.[column]?.within)) {
                 weaponProjectiles[row][column].within = [];
             }
@@ -232,7 +229,7 @@ export class Projectile extends MovingEntity {
             weaponProjectiles.splice(index, 1);
         } else {
             // Grid-basiert
-            const { row, column } = this.gridMapTile;
+            const {row, column} = this.gridMapTile;
             if (weaponProjectiles[row]?.[column]?.within) {
                 weaponProjectiles[row][column].within.splice(index, 1);
             }

@@ -1,5 +1,3 @@
-/*rerun for code check*/
-
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Pixelify+Sans:wght@400..700&display=swap');
 
 :root {
@@ -115,15 +113,15 @@ h1 {
 }
 
 .credits {
-    align-items: center;
-    bottom: 40px;
-    display: flex;
-    flex-direction: row;
+	align-items: center;
+	bottom: 40px;
+	display: flex;
+	flex-direction: row;
 
-    gap: 30px;
-    position: fixed;
-    right: 100px;
-    z-index: 1000;
+	gap: 30px;
+	position: fixed;
+	right: 100px;
+	z-index: 1000;
 
 }
 

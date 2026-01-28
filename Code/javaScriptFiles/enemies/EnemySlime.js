@@ -2,13 +2,11 @@ import {Enemy} from "../enemy.js"
 
 export class EnemySlime extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
-        console.log("[EnemySlime ctor] received level =", level);
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, level)
-          console.log("[EnemySlime ctor] after super, this.level =", this.level);
-        this.hp = 22 + level*10
-        this.speed = 1 + level*0.05 //+ level*0.5//
+        this.hp = 22 + level * 10
+        this.speed = 1 + level * 0.05 //+ level*0.5//
         this.png = "./Graphics/enemiesPNG/Schleim/1.png"
-        this.hitbox = {width: 1706/ 22, height: 964 / 22}
+        this.hitbox = {width: 1706 / 22, height: 964 / 22}
 
         const img = new Image();
 
@@ -16,7 +14,7 @@ export class EnemySlime extends Enemy {
 
         this.level = level
         this.xpDrop = 1
-        this.baseDamage = 3 + level*3
+        this.baseDamage = 3 + level * 3
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX
@@ -28,7 +26,8 @@ export class EnemySlime extends Enemy {
     getColor() {
         return "green"
     }
-           updateStats() {
+
+    updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 8
         this.hp += 15

@@ -73,7 +73,7 @@ export class game {
     gamePaused = false // Flag, ob das Spiel pausiert ist
 
     playerSelect = 1
-    playerPngPath = './players/Peters/1.png'
+    playerPngPath = './players/P/1.png'
 
     hudHealthProgress = document.getElementById("hudHealthProgress")
     hudXpProgress = document.getElementById("hudXpProgress")
@@ -81,6 +81,8 @@ export class game {
 
     GP = false
 
+    soundEffects = true
+    music = true
     soundEffectsVol = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
     musicVol = parseFloat(localStorage.getItem("musicVol") || "1.0");
 

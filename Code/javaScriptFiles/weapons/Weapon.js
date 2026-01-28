@@ -5,10 +5,9 @@ import {Enemy} from "../enemy.js";
  * Basis-Klasse für alle Waffen
  */
 export class Weapon extends Item {
-    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startlevel, isSpecial, projectile, projectileConfig){  // Für Testing: upgradebarprojectile,projectileConfig)
+    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startlevel, isSpecial, projectile, projectileConfig) {  // Für Testing: upgradebarprojectile,projectileConfig)
 
         super(icon, description);
-
 
         this.name = name;
         this.shooter = shooter;
@@ -24,7 +23,6 @@ export class Weapon extends Item {
         this.isSpecial = isSpecial;
         this.projectile = projectile;
         this.projectileConfig = projectileConfig;
-
 
         // Fallback: Wenn Name/Icon nicht übergeben wurden (Game-Mode), aus Config nehmen
         if (!this.name) this.name = name || this.name || "Weapon";
@@ -59,7 +57,7 @@ export class Weapon extends Item {
             for (let row = 0; row <= Math.floor(this.mapHeight / this.gridWidth); row++) {
                 this.projectiles[row] = [];
                 for (let column = 0; column <= Math.floor(this.mapWidth / this.gridWidth); column++) {
-                    this.projectiles[row][column] = { within: [] };
+                    this.projectiles[row][column] = {within: []};
                 }
             }
         }
@@ -73,9 +71,7 @@ export class Weapon extends Item {
     shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null, enemyItemDrops = [], globalProjectiles = null) {
         // Berechne effektiven Cooldown mit Equipment-Multiplier
         const isPlayer = !(this.shooter instanceof Enemy);
-        const effectiveCooldown = isPlayer && player.cooldownMultiplier
-            ? this.cooldown * player.cooldownMultiplier
-            : this.cooldown;
+        const effectiveCooldown = isPlayer && player.cooldownMultiplier ? this.cooldown * player.cooldownMultiplier : this.cooldown;
 
         // Burst-System (Equipment Barrage)
         if (this.burstRemaining > 0) {
@@ -91,9 +87,9 @@ export class Weapon extends Item {
         if (currentTime - this.lastShotTime < effectiveCooldown) {
             return;
         }
-            if (this.shooter && this.shooter.constructor.name === "EnemyHexe") {
+        if (this.shooter && this.shooter.constructor.name === "EnemyHexe") {
             console.log("Hexe schießt mit Waffe:", this.name);
-         }
+        }
         this.lastShotTime = currentTime;
 
         // Starte Burst wenn extraProjectiles > 0
@@ -167,22 +163,21 @@ export class Weapon extends Item {
     calculateDirection(target) {
         // Spezialfall: Blickrichtung des Spielers verwenden
         if (target === 'facing' && this.shooter.facingDirection) {
-            return { ...this.shooter.facingDirection };
+            return {...this.shooter.facingDirection};
         }
 
         if (!target || target === 'facing') {
-            return { x: 1, y: 0 }; // Fallback: rechts
+            return {x: 1, y: 0}; // Fallback: rechts
         }
 
         const dx = target.globalEntityX - this.shooter.globalEntityX + (target.hitbox.width / 2);
         const dy = target.globalEntityY - this.shooter.globalEntityY + (target.hitbox.height / 2);
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist === 0) return { x: 1, y: 0 };
+        if (dist === 0) return {x: 1, y: 0};
 
         return {
-            x: dx / dist,
-            y: dy / dist
+            x: dx / dist, y: dy / dist
         };
     }
 
@@ -202,13 +197,7 @@ export class Weapon extends Item {
         } : {};
 
         // Erstelle Projectile(s)
-        const projectiles = this._instantiateProjectiles(
-            ProjectileClass,
-            direction,
-            gridMapTile,
-            currentTime,
-            isPlayer
-        );
+        const projectiles = this._instantiateProjectiles(ProjectileClass, direction, gridMapTile, currentTime, isPlayer);
 
         // Füge zu Speicher hinzu (Projectile entscheidet!)
         for (let projectile of projectiles) {
@@ -227,29 +216,17 @@ export class Weapon extends Item {
     _instantiateProjectiles(ProjectileClass, direction, gridMapTile, currentTime, isPlayer) {
         // Erweiterte Config mit shooter für Boomerang etc.
         const extendedConfig = {
-            ...this.projectileConfig,
-            shooter: this.shooter
+            ...this.projectileConfig, shooter: this.shooter
         };
 
         // Berechne effektiven Schaden mit Equipment-Multiplier
-        const effectiveDamage = isPlayer && this.shooter.damageMultiplier
-            ? this.dmg * this.shooter.damageMultiplier
-            : this.dmg;
+        const effectiveDamage = isPlayer && this.shooter.damageMultiplier ? this.dmg * this.shooter.damageMultiplier : this.dmg;
 
-        const projectile = new ProjectileClass(
-            this.shooter.globalEntityX,
-            this.shooter.globalEntityY,
-            direction,
-            effectiveDamage,
-            extendedConfig,
-            gridMapTile,
-            currentTime,
-            !isPlayer  // isEnemy Flag
+        const projectile = new ProjectileClass(this.shooter.globalEntityX, this.shooter.globalEntityY, direction, effectiveDamage, extendedConfig, gridMapTile, currentTime, !isPlayer  // isEnemy Flag
         );
 
         return [projectile];
     }
-
 
 
     /**
@@ -309,7 +286,8 @@ export class Weapon extends Item {
     renderEffects(ctx, playerOne, performanceNow) {
         // Wird von Special-Waffen überschrieben
     }
-        /**
+
+    /**
      * Erhöht das Waffenlevel und aktualisiert die Stats
      */
     lvlUp() {
