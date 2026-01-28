@@ -72,13 +72,13 @@ export class ShurikenWeapon extends Weapon {
 
       updateStats() {
         if (this.level === this._currentStatsLevel) return;
-        this.dmg += 5
+        this.dmg += 10;
         this.cooldown -= 10;
         this.piercing += 0;     // +1 Piercing alle 2 Level
         this.range += 50;         // +50 Range pro Level
-        this.projectileConfig.amount += 0.5;   // Fix: amount statt projectileAmount
-        this.projectileConfig.orbitRadius += 15;
-        this.projectileConfig.orbitSpeed += 0.2;
+        this.projectileConfig.amount += 0.3;   // Fix: amount statt projectileAmount
+        this.projectileConfig.orbitRadius += 10;
+        this.projectileConfig.orbitSpeed += 0.01;
         this._currentStatsLevel = this.level;
     }
 

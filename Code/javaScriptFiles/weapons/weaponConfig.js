@@ -44,8 +44,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
     switch (name) {
         // Simple Weapons (keine spezielle Logik, aber eigene Klasse für Übersichtlichkeit)
         case "Bow":          return new BowWeapon("./Graphics/equipmentIcons/PNG/2.png", "Fast piercing arrows", level, "Bow", shooter, mapWidth, mapHeight, gridWidth,
-        45,
-        1000,
+        40,
+        875,
         1000,
         0,
         20,
@@ -63,8 +63,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         });
         case "Knife":        return new KnifeWeapon("./Graphics/equipmentIcons/PNG/10.png", "Quick throwing knives", level, "Knife", shooter, mapWidth, mapHeight, gridWidth,
         20,
-        400,
-        600,
+        420,
+        550,
         0,
         20,
         1,
@@ -81,7 +81,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         });
         case "Fireball":     return new FireballWeapon("./Graphics/equipmentIcons/PNG/8.png", "Explosive fire attack", level, "Fireball", shooter, mapWidth, mapHeight, gridWidth,
         80,
-        2000,
+        1800,
         1500,
         0,
         20,
@@ -93,12 +93,12 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
              size: 90,
              image: "./Graphics/projectiles/feuerwal2.png",
             duration: 3000,
-            explosionRadius: 100,
+            explosionRadius: 150,
             explosionColor: 'rgba(255, 50, 0, 0.9)',
              glow: {color: "#FF4500", blur: 30},
             amount: 1});
         case "Molotov":      return new MolotovWeapon("./Graphics/equipmentIcons/PNG/5.png", "Burning area damage", level, "Molotov", shooter, mapWidth, mapHeight, gridWidth,
-        25,
+        20,
         1800,
             600,
             0,
@@ -153,8 +153,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
 
         // Special Weapons (mit spezieller Logik)
         case "Shuriken":     return new ShurikenWeapon("./Graphics/equipmentIcons/PNG/3.png", "Orbiting blade stars", level, "Shuriken", shooter, mapWidth, mapHeight, gridWidth,
-        25,
-        150,
+        30,
+        120,
         700,
         999,
         20,
@@ -173,8 +173,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             });
 
         case "Thunderstrike": return new ThunderstrikeWeapon( "./Graphics/equipmentIcons/PNG/9.png", "Lightning bolt strike", level, "Thunderstrike", shooter, mapWidth, mapHeight, gridWidth,
-         50,
-         1500,
+         60,
+         1300,
          300,
          0,
         20,
@@ -186,22 +186,22 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             lightningDuration: 150,
             lightningCount: 2});
         case "Aura":         return new AuraWeapon("./Graphics/equipmentIcons/PNG/7.png", "Damaging aura field", level, "Aura", shooter, mapWidth, mapHeight, gridWidth,
-         15,
-         0.5,
-         150,
+         16,
+         1000,
+         170,
          0,
          20,
          1,
          true,
          null, // Kein Projektil
          {
-            auraRadius: 150,
-            auraDmgInterval: 500,
+            auraRadius: 210,
+            auraDmgInterval: 280,
             auraColor: 'rgba(255, 255, 100, 0.3)'});
         /*
         case "Boomerang":          return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/11.png", "Returning boomerang", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
-        50,
-        1500,
+        14,
+        1900,
         600,
         999,
         20,
@@ -209,13 +209,29 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         true,
         BoomerangProjectile,
          {
-            speed: 8,
-            size: 300,
-            maxRange: 500,
+            speed: 7,
+            size: 140,
+            maxRange: 420,
             piercing: 999,
             shooter: shooter,
             });
         */
+
+        case "WitchFireball":
+            return new FireballWeapon(
+                null, "Witch Fireball", level, "WitchFireball", shooter, mapWidth, mapHeight, gridWidth,
+                25,   // Schaden
+                2000, // Cooldown
+                600,  // Range
+                0,    // Piercing
+                1,    // MaxLevel
+                1,    // StartLevel
+                false,// isSpecial
+                FireballProjectile,
+                { speed: 4, size: 90,image: "./Graphics/projectiles/feuerwal2.png", duration: 3000, explosionRadius: 80, explosionColor: 'rgba(138, 43, 226, 0.8)', amount: 1, isEnemy: true },
+                80,   // ExplosionRadius (für Weapon Stats)
+                'rgba(138, 43, 226, 0.8)' // ExplosionColor
+            );
 
         case "BasicEnemy":
             return new Weapon(
