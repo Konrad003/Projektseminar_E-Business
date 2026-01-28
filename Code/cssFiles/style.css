@@ -29,6 +29,10 @@ body, html {
 	width: auto;
 }
 
+a {
+	text-decoration: none;
+}
+
 h1 {
 	color: red;
 	font-size: 128px;

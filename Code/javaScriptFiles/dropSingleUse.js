@@ -53,6 +53,10 @@ export class AttackBoostDrop extends DropSingleUse {
   const hasAnyWeapon = weaponSlots.some(w => w != null)
   if (!hasAnyWeapon) return
 
+    if (window.Game.soundEffects) {
+      window.Sounds.hpUpSound.play()
+    }
+
   // merken, bis wann der Effekt aktiv ist (für roten Schimmer)
   player.attackBoostActiveUntil = performance.now() + this.duration
 
