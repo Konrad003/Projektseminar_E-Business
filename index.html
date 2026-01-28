@@ -147,12 +147,12 @@
         <div class="panel" style="display: flex; flex-direction: column; gap: 20px;">
             <div style="display: flex; flex-direction: row; gap: 10px;">
                 <div class="settings" id="inGameSoundSettings">
-                    <input id="soundEffectsVol" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
+                    <input id="soundEffectsVolInGame" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
                            value="1.0">
-                    <label for="soundEffectsVol">Sound Effects Volume</label>
+                    <label for="soundEffectsVolInGame">Sound Effects Volume</label>
 
-                    <input id="musicVol" max="1.0" min="0.0" name="musicVol" step="0.1" type="range" value="1.0">
-                    <label for="musicVol">Music Volume</label>
+                    <input id="musicVolInGame" max="1.0" min="0.0" name="musicVol" step="0.1" type="range" value="1.0">
+                    <label for="musicVolInGame">Music Volume</label>
                 </div>
 
                 <div class="settings" id="inGameSettings">
@@ -251,7 +251,7 @@
 
     <div class="menu">
         <button class="btn" onclick="Game.resumeGame()" onmousedown="Game.playButtonSound()">RESUME</button>
-        <button class="btn" onclick="Game.settings()" onmousedown="Game.playButtonSound()">SETTINGS</button>
+        <button class="btn" onclick="Game.inGameSettings()" onmousedown="Game.playButtonSound()">SETTINGS</button>
         <button class="btn" onclick="Game.home()" onmousedown="Game.playButtonSound(); Game.BackgroundMusicStop()">MAIN
             MENU
         </button>
@@ -419,9 +419,10 @@
 
     <div class="flex-row-gap" style="margin-top: 20px;">
         <button class="btn" id="retryButtonDefeat" onclick="Game.restart()"
-                onmousedown="Game.playButtonSound(); BackgroundMusicPlay()">Retry
+                onmousedown="Game.playButtonSound(); BackgroundMusicPlay(); Game.winLoseSoundStop()">Retry
         </button>
-        <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()" onmousedown="Game.playButtonSound()">Start
+        <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()"
+                onmousedown="Game.playButtonSound(); Game.winLoseSoundStop()">Start
             Menu
         </button>
     </div>
@@ -440,9 +441,10 @@
 
     <div class="flex-row-gap" style="margin-top: 20px;">
         <button class="btn" id="retryButtonWin" onclick="Game.restart()"
-                onmousedown="Game.playButtonSound(); BackgroundMusicPlay()">Retry
+                onmousedown="Game.playButtonSound(); BackgroundMusicPlay(); Game.winLoseSoundStop()">Retry
         </button>
-        <button class="btn" id="startMenuButtonWin" onclick="Game.home()" onmousedown="Game.playButtonSound()">Start
+        <button class="btn" id="startMenuButtonWin" onclick="Game.home()"
+                onmousedown="Game.playButtonSound(); Game.winLoseSoundStop()">Start
             Menu
         </button>
     </div>
