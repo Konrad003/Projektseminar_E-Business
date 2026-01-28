@@ -306,15 +306,15 @@ export class game {
         } else if (t < 240) {
             return 4;
         } else if (t < 300) {
-            return 6;
+            return 5;
         } else if (t < 360) {
-            return 7;
+            return 6;
         } else if (t < 420) {
-            return 9;
+            return 7;
         } else if (t < 480) {
-            return 10;
+            return 9;
         } else if (t < 540) {
-            return 12;
+            return 10;
         } else if (t < 600) {
             return 20;
         } else if (t < 660) {

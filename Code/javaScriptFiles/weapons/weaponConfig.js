@@ -44,8 +44,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
     switch (name) {
         // Simple Weapons (keine spezielle Logik, aber eigene Klasse für Übersichtlichkeit)
         case "Bow":          return new BowWeapon("./Graphics/equipmentIcons/PNG/2.png", "Fast piercing arrows", level, "Bow", shooter, mapWidth, mapHeight, gridWidth,
-        48,
-        850,
+        40,
+        875,
         1000,
         0,
         20,
