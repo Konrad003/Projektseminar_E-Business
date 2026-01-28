@@ -419,9 +419,10 @@
 
     <div class="flex-row-gap" style="margin-top: 20px;">
         <button class="btn" id="retryButtonDefeat" onclick="Game.restart()"
-                onmousedown="Game.playButtonSound(); BackgroundMusicPlay()">Retry
+                onmousedown="Game.playButtonSound(); BackgroundMusicPlay(); Game.winLoseSoundStop()">Retry
         </button>
-        <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()" onmousedown="Game.playButtonSound()">Start
+        <button class="btn" id="startMenuButtonDefeat" onclick="Game.home()"
+                onmousedown="Game.playButtonSound(); Game.winLoseSoundStop()">Start
             Menu
         </button>
     </div>
@@ -440,9 +441,10 @@
 
     <div class="flex-row-gap" style="margin-top: 20px;">
         <button class="btn" id="retryButtonWin" onclick="Game.restart()"
-                onmousedown="Game.playButtonSound(); BackgroundMusicPlay()">Retry
+                onmousedown="Game.playButtonSound(); BackgroundMusicPlay(); Game.winLoseSoundStop()">Retry
         </button>
-        <button class="btn" id="startMenuButtonWin" onclick="Game.home()" onmousedown="Game.playButtonSound()">Start
+        <button class="btn" id="startMenuButtonWin" onclick="Game.home()"
+                onmousedown="Game.playButtonSound(); Game.winLoseSoundStop()">Start
             Menu
         </button>
     </div>

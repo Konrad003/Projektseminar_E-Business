@@ -81,8 +81,9 @@ export class game {
 
     soundEffects = true
     music = true
-    soundEffectsVol = 1.0
-    musicVol = 1.0
+
+    soundEffectsVol = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
+    musicVol = parseFloat(localStorage.getItem("musicVol") || "1.0");
 
     //Tests
     testShoot = true
@@ -92,6 +93,14 @@ export class game {
     XP = 0
 
     constructor() {
+        // Sicherheitscheck: Falls im LocalStorage "NaN" steht oder etwas Ungültiges
+        if (isNaN(this.soundEffectsVol) || typeof this.soundEffectsVol !== 'number') {
+            this.soundEffectsVol = 1.0;
+        }
+        if (isNaN(this.musicVol) || typeof this.musicVol !== 'number') {
+            this.musicVol = 1.0;
+        }
+
         this.MapOne = null
         this.PlayerOne = null
         this.enemies = [] // Array für alle aktiven Gegner
@@ -100,6 +109,10 @@ export class game {
         this.Sounds();
 
         this.dashTrails = [] // Array für Dash-Effekte
+
+        // Listener initialisieren (nur einmal!)
+        this.settingsListener()
+        this.settingsListenerInGameSettings()
     }
 
     loadMap(file) {
@@ -182,6 +195,9 @@ export class game {
             this.soundEffectsVol = parseFloat(document.getElementById("soundEffectsVol").value)
             this.musicVol = parseFloat(document.getElementById("musicVol").value)
 
+            localStorage.setItem("soundEffectsVol", this.soundEffectsVol.toString())
+            localStorage.setItem("musicVol", this.musicVol.toString())
+
             this.testShoot = document.getElementById("testShoot").checked
             this.testDie = document.getElementById("testDie").checked
             this.dashActiveSetting = document.getElementById("activateDash").checked
@@ -200,6 +216,9 @@ export class game {
 
             this.soundEffectsVol = parseFloat(document.getElementById("soundEffectsVolInGame").value) // ID muss im HTML angepasst werden (siehe unten) oder eindeutig sein
             this.musicVol = parseFloat(document.getElementById("musicVolInGame").value) // ID muss im HTML angepasst werden
+
+            localStorage.setItem("soundEffectsVol", this.soundEffectsVol.toString())
+            localStorage.setItem("musicVol", this.musicVol.toString())
 
             this.Sounds() // Dies ist die einfachste Art, alle Audio-Objekte mit den neuen Volumes neu zu initialisieren
             // ODER alternativ direkt die Volumes der laufenden Instanzen setzen:
@@ -540,6 +559,10 @@ export class game {
     settings() {
         this.settingsListener()
 
+        document.getElementById("soundEffectsVol").value = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
+        ;
+        document.getElementById("musicVol").value = parseFloat(localStorage.getItem("musicVol") || "1.0");
+
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "none";
@@ -548,6 +571,11 @@ export class game {
 
     inGameSettings() {
         this.settingsListenerInGameSettings()
+
+        document.getElementById("soundEffectsVolInGame").value = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
+        ;
+        document.getElementById("musicVolInGame").value = parseFloat(localStorage.getItem("musicVol") || "1.0");
+
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("inGameSettingsScreen").style.display = "flex";
     }
@@ -666,8 +694,8 @@ export class game {
         this.hpUpSound = new Audio('./Sound/hp-up.mp3');
         this.hpUpSound.volume = this.soundEffectsVol;
 
-        this.shotSound = new Audio('./Sound/shot.mp3');
-        this.shotSound.volume = this.soundEffectsVol;
+        this.damageSound = new Audio('./Sound/damage.mp3');
+        this.damageSound.volume = this.soundEffectsVol;
 
         this.nukeSound = new Audio('./Sound/nuke-sound.mp3');
         this.nukeSound.volume = this.soundEffectsVol;
@@ -677,6 +705,9 @@ export class game {
 
         this.freezeSound = new Audio('./Sound/freeze-sound.mp3');
         this.freezeSound.volume = this.soundEffectsVol;
+
+        this.dashSound = new Audio('./Sound/dash.mp3');
+        this.dashSound.volume = this.soundEffectsVol;
 
         this.musikSound = new Audio('./Sound/musik.mp3');
         this.musikSound.volume = this.musicVol;
@@ -688,10 +719,11 @@ export class game {
             equipSound: this.equipSound,
             lvlUpSound: this.lvlUpSound,
             hpUpSound: this.hpUpSound,
-            shotSound: this.shotSound,
+            shotSound: this.damageSound,
             nukeSound: this.nukeSound,
             xpMagnetSound: this.xpMagnetSound,
             freezeSound: this.freezeSound,
+            dashSound: this.dashSound,
             musikSound: this.musikSound
         };
     }
@@ -719,6 +751,18 @@ export class game {
         Sounds.musikSound.currentTime = 0;
     }
 
+    winLoseSoundStop() {
+        if (window.Sounds && window.Sounds.WinSound) {
+            window.Sounds.WinSound.pause();
+            window.Sounds.WinSound.currentTime = 0;
+        }
+
+        if (window.Sounds && window.Sounds.loseSound) {
+            window.Sounds.loseSound.pause();
+            window.Sounds.loseSound.currentTime = 0;
+        }
+    }
+
     equipSoundPlay() {
         if (!this.soundEffects) return;
         if (!window.Sounds || !window.Sounds.equipSound) return;
@@ -736,6 +780,7 @@ export class game {
     }
 
     resetGame() {
+        this.winLoseSoundStop()
         // Timer stoppen und zurücksetzen
         this.stopGameTimer()
         this.resetTimer()
@@ -832,5 +877,14 @@ export class game {
     }
 }
 
-document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
-window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
+try {
+    document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
+    window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
+
+    console.log("Game initialized successfully");
+} catch (e) {
+    console.error("Failed to initialize Game:", e);
+
+
+    alert("Game initialization failed. Check console for details.\n" + e.message);
+}
