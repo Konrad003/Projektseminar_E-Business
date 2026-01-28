@@ -59,14 +59,18 @@ export class ThunderstrikeWeapon extends Weapon {
     }
        updateStats() {
         if (this.level === this._currentStatsLevel) return;
-        this.dmg += 3;
-        this.cooldown -= 30;
+        this.dmg += 9;
+        this.cooldown -= 90;
         this.piercing += 0;
         this.range += 30;
         // this.projectileConfig.amount += 0;
-        this.projectileConfig.lightningLength += 30;
+        this.projectileConfig.lightningLength += 25;
         this.projectileConfig.lightningCount += 0;
         this._currentStatsLevel = this.level;
+
+        if (this.level % 4 === 0) { // wenn 4 -> man bekommt nen 5.
+        this.projectileConfig.lightningCount += 1;
+        }
     }
 
     renderEffects(ctx, playerOne, performanceNow) {

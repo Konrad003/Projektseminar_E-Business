@@ -7,7 +7,7 @@ export class EquipmentExtraProjectile extends Equipment {
 
     update(player, map, inputState) {
         // Levellogik: Level 1-3 = +1, Level 4-6 = +2, Level 7-9 = +3, sonst zu op
-        let targetExtra = Math.floor(this.level / 1); // teilen das Level durch 3 und runden auf
+        let targetExtra = Math.min(5, Math.floor(this.level / 1)); // teilen das Level durch 3 und runden auf
 
         if (this.currentAppliedValue !== targetExtra) {
             this.apply(player, targetExtra);
