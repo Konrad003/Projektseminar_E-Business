@@ -929,11 +929,7 @@ export class game {
 try {
     document.getElementById("startScreen").style.display = "flex"; // Startbildschirm anzeigen
     window.Game = new game() // Ein globales Spielobjekt erstellen (für html)
-
-    console.log("Game initialized successfully");
 } catch (e) {
     console.error("Failed to initialize Game:", e);
-
-
     alert("Game initialization failed. Check console for details.\n" + e.message);
 }
