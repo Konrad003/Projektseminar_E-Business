@@ -16,7 +16,7 @@ import { Weapon } from "./Weapon.js";
 export class KnifeWeapon extends Weapon {
     constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
         super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel ,isSpecial, projectile, projectileConfig);
-
+        this.useFacingDirection = true;
     }
 
    updateStats() {

@@ -70,7 +70,7 @@ export class Weapon extends Item {
      * SCHUSS-LOGIK
      * Template-Method: Subklassen können überschreiben
      */
-    shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null, enemyItemDrops = []) {
+    shoot(player, currentTime, enemies, tilelength, gridWidth, inputState = null, enemyItemDrops = [], globalProjectiles = null) {
         // Berechne effektiven Cooldown mit Equipment-Multiplier
         const isPlayer = !(this.shooter instanceof Enemy);
         const effectiveCooldown = isPlayer && player.cooldownMultiplier
@@ -82,7 +82,7 @@ export class Weapon extends Item {
             if (currentTime - this.burstTimer >= this.burstDelay) {
                 this.burstTimer = currentTime;
                 this.burstRemaining--;
-                this._fireProjectile(player, currentTime, enemies, tilelength, gridWidth);
+                this._fireProjectile(player, currentTime, enemies, tilelength, gridWidth, globalProjectiles);
             }
             return;
         }
@@ -91,6 +91,9 @@ export class Weapon extends Item {
         if (currentTime - this.lastShotTime < effectiveCooldown) {
             return;
         }
+            if (this.shooter && this.shooter.constructor.name === "EnemyHexe") {
+            console.log("Hexe schießt mit Waffe:", this.name);
+         }
         this.lastShotTime = currentTime;
 
         // Starte Burst wenn extraProjectiles > 0
@@ -100,13 +103,13 @@ export class Weapon extends Item {
         }
 
         // Feuere erstes Projektil
-        this._fireProjectile(player, currentTime, enemies, tilelength, gridWidth);
+        this._fireProjectile(player, currentTime, enemies, tilelength, gridWidth, globalProjectiles);
     }
 
     /**
      * Interner Helper zum Feuern eines Projektils
      */
-    _fireProjectile(player, currentTime, enemies, tilelength, gridWidth) {
+    _fireProjectile(player, currentTime, enemies, tilelength, gridWidth, globalProjectiles) {
         // Ziel-Bestimmung
         const target = this.determineTarget(player, enemies);
         if (!target) return;
@@ -115,7 +118,7 @@ export class Weapon extends Item {
         const direction = this.calculateDirection(target);
 
         // Projektile erstellen (Config-driven)
-        this.createProjectiles(target, direction, currentTime, tilelength, gridWidth, player);
+        this.createProjectiles(target, direction, currentTime, tilelength, gridWidth, player, globalProjectiles);
     }
 
     /**
@@ -187,7 +190,7 @@ export class Weapon extends Item {
      * PROJEKTIL-ERSTELLUNG (Config-driven)
      * Das meiste ist jetzt Config → keine Subklassen-Überladung nötig
      */
-    createProjectiles(target, direction, currentTime, tilelength, gridWidth, player) {
+    createProjectiles(target, direction, currentTime, tilelength, gridWidth, player, globalProjectiles) {
         const ProjectileClass = this.projectile;
 
         // Grid-Position für Player-Projektile
@@ -209,7 +212,11 @@ export class Weapon extends Item {
 
         // Füge zu Speicher hinzu (Projectile entscheidet!)
         for (let projectile of projectiles) {
-            projectile.addTo(this.projectiles);
+            if (this.shooter instanceof Enemy && globalProjectiles) {
+                projectile.addTo(globalProjectiles);
+            } else {
+                projectile.addTo(this.projectiles);
+            }
         }
     }
 
@@ -260,7 +267,8 @@ export class Weapon extends Item {
         // Unterscheide nur: Grid vs Array (bestimmt durch Shooter)
         if (this.shooter instanceof Enemy) {
             // Enemy: einfaches Array
-            this._renderArray(this.projectiles, ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops);
+            // Fix: Übergebe leeres Array für enemies, damit Gegner sich nicht gegenseitig treffen
+            this._renderArray(this.projectiles, ctx, playerOne, performanceNow, [], map, gridWidth, enemyItemDrops);
         } else {
             // Player: Grid oder Array (Projectile entscheidet)
             this._renderGrid(this.projectiles, ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops);
@@ -325,10 +333,10 @@ export class Weapon extends Item {
      * TEMPLATE METHOD: Render-Logik für diese Waffe
      * Wird von Player aufgerufen in render()
      */
-    render(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState = null) {
+    render(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops, inputState = null, globalProjectiles = null) {
         // Update Waffe (Cooldown, etc.)
         this.update(performanceNow);
-        this.shoot(playerOne, performanceNow, enemies, map.tilelength, gridWidth, inputState, enemyItemDrops);
+        this.shoot(playerOne, performanceNow, enemies, map.tilelength, gridWidth, inputState, enemyItemDrops, globalProjectiles);
         // Render Projektile
         this.renderProjectiles(ctx, playerOne, performanceNow, enemies, map, gridWidth, enemyItemDrops);
 

@@ -13,7 +13,7 @@ export class EnemySchatzgoblin extends Enemy {
         const img = new Image();
         img.src = this.png;
 
-        this.level = 1
+       
         this.xpDrop = 30
         this.baseDamage = 0
         this.oldMoveX = oldMoveX
