@@ -132,23 +132,23 @@ export class Enemy extends MovingEntity {
                     enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/3.png"))
-                } else if (roll < 0.6) {
+                } else if (roll < 0.55) {
                     enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/2.png"))
-                } else if (roll < 0.7) {
+                } else if (roll < 0.65) {
                     enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, {
                         width: 16, height: 16
                     }, "./Graphics/singleUsePng/1.png"))
-                } else if (roll < 0.72) {
+                } else if (roll < 0.67) {
                     enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                         width: 16, height: 16
                     }, "./Graphics/singleUsePng/6.png"))
-                } else if (roll < 0.75) {
+                } else if (roll < 0.70) {
                     enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/4.png"))
-                } else if (roll < 0.95) {
+                } else if (roll < 0.82) {
                     enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/5.png"))
@@ -197,10 +197,8 @@ export class Enemy extends MovingEntity {
             let position = this.updateGridPlace(MapOne.tilelength, enemies, positionWithin, gridWidth)
             this.chasePlayer(MapOne, PlayerOne.globalEntityX, PlayerOne.globalEntityY, enemies)                   // Gegner läuft auf den Spieler zu
             if (this.weapon) {
-                // Shoot Logik - PlayerOne wird übergeben damit die Richtung korrekt berechnet wird
-                this.weapon.shoot(PlayerOne, performanceNow, enemies, MapOne.tilelength, gridWidth, null, enemyItemDrops);
-                // Render Projektile
-                this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops);
+                // Render ruft auch shoot auf, wir übergeben projectiles für globale Speicherung
+                this.weapon.render(ctx, PlayerOne, performanceNow, enemies, MapOne, gridWidth, enemyItemDrops, null, projectiles);
             }
         }
         // Zeichnen passiert IMMER, auch wenn gefreezt (damit Enemies nicht "verschwinden").
@@ -218,7 +216,8 @@ export class Enemy extends MovingEntity {
             const now = performanceNow ?? performance.now()
 
             if (now >= this.nextAllowedContactDamageAt) {
-                PlayerOne.takeDmg(15, enemies, positionWithin, [])
+                const contactDmg = this.baseDamage ?? 15;
+                PlayerOne.takeDmg(contactDmg, enemies, positionWithin, [])
                 this.nextAllowedContactDamageAt = now + this.contactDamageCooldownMs
             }
         }

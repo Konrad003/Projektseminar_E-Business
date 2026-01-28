@@ -8,7 +8,7 @@ import {EnemyFactory} from "./EnemyFactory.js"
 
 const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
-ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern  
+ctx.imageSmoothingEnabled = false;    // soll Flackern verhindern
 let zoomFactor = 0.90;
 let BasicWidth = 2560;
 let BasicHeight = 1440;
@@ -339,7 +339,7 @@ export class game {
         const spawn = () => {
             if (!this.gamePaused) {
 
-                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/, this.getEnemyLvl)
+                EnemyFactory.spawnEnemyOutsideView(this.enemies, this.PlayerOne, canvas, this.mapData.tilewidth, this.gridWidth, this.mapData.width, this.mapData.height, this.MapOne, 8/*Anzahl der Gegner pro Spawn*/, this.getEnemyLvl())
             }
             this.enemySpawnInterval = setTimeout(spawn, this.getCurrentSpawnInterval())       // quasi rekursiver Aufruf, nur mit variablem Rekursionsschritt (getCurrentSpawnInterval)  mit sich veränderbaren Intervall
         };
@@ -364,11 +364,11 @@ export class game {
         } else if (t < 420) {
             return 7;
         } else if (t < 480) {
-            return 8;
-        } else if (t < 540) {
             return 9;
-        } else if (t < 600) {
+        } else if (t < 540) {
             return 10;
+        } else if (t < 600) {
+            return 20;
         } else if (t < 660) {
             return 11;
         } else if (t < 720) {
@@ -394,7 +394,7 @@ export class game {
 
     getCurrentSpawnInterval() {
         // Basisspawnintervall in ms (je kleiner, desto härter)
-        return 1100 / this.getSpawnIntensity(this.gameTimer);
+        return 2000 / this.getSpawnIntensity(this.gameTimer);
     }
 
     getSpawnIntensity(t) {
@@ -877,6 +877,14 @@ export class game {
         }, performance.now(), this.enemies, this.gridWidth)
 
         this.MapOne.drawMiniMap(this.PlayerOne)
+
+        // Render global projectiles (Enemy Projectiles)
+        for (let i = this.projectiles.length - 1; i >= 0; i--) {
+            const projectile = this.projectiles[i];
+            if (projectile && projectile.handleProjectile) {
+                projectile.handleProjectile(ctx, this.projectiles, i, this.enemies, this.PlayerOne, this.MapOne, this.gridWidth, this.PlayerOne.enemyItemDrops, performance.now());
+            }
+        }
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
