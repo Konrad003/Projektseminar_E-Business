@@ -560,7 +560,7 @@ export class game {
         this.settingsListener()
 
         document.getElementById("soundEffectsVol").value = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
-        ;
+
         document.getElementById("musicVol").value = parseFloat(localStorage.getItem("musicVol") || "1.0");
 
         document.getElementById("gameScreen").style.display = "none";
@@ -573,7 +573,7 @@ export class game {
         this.settingsListenerInGameSettings()
 
         document.getElementById("soundEffectsVolInGame").value = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
-        ;
+
         document.getElementById("musicVolInGame").value = parseFloat(localStorage.getItem("musicVol") || "1.0");
 
         document.getElementById("pauseScreen").style.display = "none";
@@ -781,10 +781,10 @@ export class game {
 
     resetGame() {
         this.winLoseSoundStop()
+
         // Timer stoppen und zurücksetzen
         this.stopGameTimer()
         this.resetTimer()
-
 
         // Intervalle für Rendern und Gegner-Spawns stoppen
         if (this.renderInterval) {
@@ -796,6 +796,7 @@ export class game {
             this.enemySpawnInterval = null
         }
 
+        // Event-Listener entfernen
         if (this.keyDownBound) {
             window.removeEventListener("keydown", this.keyDownBound);
             this.keyDownBound = null;
@@ -805,8 +806,7 @@ export class game {
             this.keyUpBound = null;
         }
 
-        // Gegner-Array leeren
-
+        // Arrays und Objekte leeren
         this.enemies.length = 0
         this.projectiles.length = 0
         this.dashTrails = []
@@ -816,25 +816,23 @@ export class game {
 
         this.DropSystem = null
         this.weapon = null
-        this.Game = null
-        //console.log(this.LevelUpFactory)
-        //this.LevelUpFactory = null
-        //console.log(this.LevelUpFactory)
+        // this.Game = null // (Optional entfernen: this.Game existiert in der Klasse normalerweise nicht, window.Game ist die Instanz)
+
         // Eingabeflags zurücksetzen
         this.upPressed = false
         this.downPressed = false
         this.leftPressed = false
         this.rightPressed = false
+        this.spacePressed = false // Neu: Space-Input zurücksetzen
 
-        // Spiel-status zurücksetzen
+        // Spiel-Status zurücksetzen
         this.gamePaused = false
 
         // Canvas leeren
         ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-        //Andere Variablen
+        // Spielstatistiken für den Run zurücksetzen
         this.killCount = 0
-
     }
 
     render() {
