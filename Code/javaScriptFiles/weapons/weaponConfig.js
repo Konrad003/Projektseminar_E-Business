@@ -74,7 +74,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             amount: 1
         });
         case "Fireball":     return new FireballWeapon("./Graphics/equipmentIcons/PNG/8.png", "Explosive fire attack", level, "Fireball", shooter, mapWidth, mapHeight, gridWidth,
-        90,
+        80,
         1800,
         1500,
         0,
@@ -103,8 +103,8 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
             size: 8,
             flightDuration: 1000,
             dotRadius: 100,
-            dotDmg: 25,
-            dotInterval: 500,
+            dotDmg: 23,
+            dotInterval: 300,
             amount: 1
         });
 

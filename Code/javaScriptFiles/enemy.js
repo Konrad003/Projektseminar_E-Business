@@ -132,32 +132,27 @@ export class Enemy extends MovingEntity {
                     enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/3.png"))
-                } else if (roll < 0.58) {
+                } else if (roll < 0.55) {
                     enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/2.png"))
-                } else if (roll < 0.7) {
+                } else if (roll < 0.65) {
                     enemyItemDrops.push(new XpMagnetDrop(this.globalEntityX, this.globalEntityY, {
                         width: 16, height: 16
                     }, "./Graphics/singleUsePng/1.png"))
-                } else if (roll < 0.72) {
+                } else if (roll < 0.67) {
                     enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
                         width: 16, height: 16
                     }, "./Graphics/singleUsePng/6.png"))
-                } else if (roll < 0.75) {
+                } else if (roll < 0.70) {
                     enemyItemDrops.push(new NukeDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/4.png"))
-                } else if (roll < 0.95) {
+                } else if (roll < 0.82) {
                     enemyItemDrops.push(new FreezeDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/5.png"))
-                } else if (roll < 1) {
-                    console.log("Instant Level Drop!!!");
-                    enemyItemDrops.push(new InstantLevelDrop(this.globalEntityX, this.globalEntityY, {
-                        width: 32, height: 32
-                    }, "./Graphics/singleUsePng/6.png"))
-                }
+                } 
             }
 
             if (this.constructor.name === "EnemySchatzgoblin") {
