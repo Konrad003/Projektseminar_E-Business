@@ -90,8 +90,8 @@
 <section class="screen" id="settingsScreen">
     <h2 class="screenTitle">Settings</h2>
 
-    <form id="settingsForm" style="color: yellow">
-        <div class="panel" style="display: flex; flex-direction: column; gap: 20px;">
+    <form id="settingsForm" style="color: yellow; display: flex">
+        <div class="panel" style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
             <div style="display: flex; flex-direction: row; gap: 10px;">
                 <div class="settings" id="soundSettings">
                     <input id="soundEffectsVol" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
@@ -102,7 +102,7 @@
                     <label for="musicVol">Music Volume</label>
                 </div>
 
-                <div class="settings" id="gameSettings">
+                <div class="settings" id="testCaseSettings1" style="display: none">
                     <input id="testHealth" max="9999" min="1" name="testHealth" type="number" value="100">
                     <label for="testHealth">Set your Health</label>
 
@@ -113,7 +113,7 @@
                     <label for="testXP">Set your XP</label>
                 </div>
 
-                <div class="settings">
+                <div class="settings" id="testCaseSettings2" style="display: none">
                     <input checked id="testShoot" name="testShoot" type="checkbox" value="true">
                     <label for="testShoot">Enable Shooting</label>
 
@@ -143,8 +143,8 @@
 <section class="screen overlay-dark" id="inGameSettingsScreen">
     <h2 class="screenTitle">Ingame Settings</h2>
 
-    <form id="inGameSettingsForm" style="color: yellow">
-        <div class="panel" style="display: flex; flex-direction: column; gap: 20px;">
+    <form id="inGameSettingsForm" style="color: yellow; display: flex">
+        <div class="panel" style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
             <div style="display: flex; flex-direction: row; gap: 10px;">
                 <div class="settings" id="inGameSoundSettings">
                     <input id="soundEffectsVolInGame" max="1.0" min="0.0" name="soundEffectsVol" step="0.1" type="range"
@@ -154,38 +154,12 @@
                     <input id="musicVolInGame" max="1.0" min="0.0" name="musicVol" step="0.1" type="range" value="1.0">
                     <label for="musicVolInGame">Music Volume</label>
                 </div>
-
-                <div class="settings" id="inGameSettings">
-                    <input id="testHealthInGameSettings" max="9999" min="1" name="testHealthInGameSettings"
-                           type="number" value="100">
-                    <label for="testHealthInGameSettings">Set your Health</label>
-
-                    <input id="testMaxHealthInGameSettings" max="9999" min="1" name="testMaxHealthInGameSettings"
-                           type="number" value="100">
-                    <label for="testMaxHealthInGameSettings">Set your max. Health</label>
-
-                    <input id="testXPInGameSettings" max="9999" min="0" name="testXPInGameSettings" type="number"
-                           value="0">
-                    <label for="testXPInGameSettings">Set your XP</label>
-                </div>
-
-                <div class="settings">
-                    <input checked id="testShootInGameSettings" name="testShootInGameSettings" type="checkbox"
-                           value="true">
-                    <label for="testShootInGameSettings">Enable Shooting</label>
-
-                    <input id="testDieInGameSettings" name="testDieInGameSettings" type="checkbox" value="false">
-                    <label for="testDieInGameSettings">Player can die?</label>
-
-                    <input id="activateDashInGameSettings" name="activateDashInGameSettings" type="checkbox"
-                           value="false">
-                    <label for="activateDashInGameSettings">Player can Dash?</label>
-                </div>
             </div>
 
             <div class="menu" style="display: flex; flex-direction: row; gap: 10px;">
                 <div class="menu">
-                    <button class="btn" id="startMenuButtonInGameSettings" onclick="Game.home()"
+                    <button class="btn" id="startMenuButtonInGameSettings"
+                            onclick="document.getElementById('inGameSettingsScreen').style.display = 'none'"
                             onmousedown="Game.playButtonSound()">Back
                     </button>
                 </div>
