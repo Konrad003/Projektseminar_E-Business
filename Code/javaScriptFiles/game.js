@@ -221,6 +221,8 @@ export class game {
             this.Health = parseInt(document.getElementById("testHealth").value)
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
+            //localStorage.setItem("soundVol", toString(this.soundEffectsVol))
+            //this.soundEffectsVol = parseInt(localStorage.getItem("soundVol") || 1.0);
 
             this.Sounds()
             this.home()
@@ -679,6 +681,7 @@ export class game {
     }
 
     Sounds() {
+
         this.buttonSound = new Audio('./Sound/click.mp3');
         this.buttonSound.volume = this.soundEffectsVol;
 
@@ -852,14 +855,6 @@ export class game {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
 
-        this.PlayerOne.render(this.MapOne, {
-            upPressed: this.upPressed,
-            downPressed: this.downPressed,
-            leftPressed: this.leftPressed,
-            rightPressed: this.rightPressed,
-            spacePressed: this.spacePressed
-        }, performance.now(), this.enemies, this.gridWidth)
-
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
@@ -872,6 +867,16 @@ export class game {
                 }
             }
         }
+
+        this.PlayerOne.render(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed,
+            spacePressed: this.spacePressed
+        }, performance.now(), this.enemies, this.gridWidth)
+
+        this.MapOne.drawMiniMap(this.PlayerOne)
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp

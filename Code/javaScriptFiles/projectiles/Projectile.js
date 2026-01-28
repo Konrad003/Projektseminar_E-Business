@@ -1,4 +1,4 @@
-import { MovingEntity } from "../movingEntity.js";
+import {MovingEntity} from "../movingEntity.js";
 
 /**
  * Basis-Klasse für alle Projektile
@@ -17,7 +17,10 @@ export class Projectile extends MovingEntity {
     }
 
     constructor(globalEntityX, globalEntityY, direction, dmg, config = {}, gridMapTile = {}, creationTime, isEnemy = false) {
-        super(globalEntityX, globalEntityY, 1, null, config.speed || 6, { width: config.size || 6, height: config.size || 6 });
+        super(globalEntityX, globalEntityY, 1, config.image || null, config.speed || 6, {
+            width: config.width || config.size || 6,
+            height: config.height || config.size || 6
+        });
 
         this.direction = direction;
         this.dmg = dmg;
@@ -30,6 +33,18 @@ export class Projectile extends MovingEntity {
         // Aus Config extrahiert
         this.size = config.size || 6;
         this.piercing = config.piercing || 0;
+
+        // Drawing dimensions
+        this.drawWidth = config.width || this.size;
+        this.drawHeight = config.height || this.size;
+
+        // Rotation for spinning projectiles
+        this.rotationAngle = 0;
+        this.spinSpeed = config.spinSpeed || 0;
+
+        // Graphical tweaks
+        this.glow = config.glow || null; // { color: 'red', blur: 20 }
+        this.rotationOffset = config.rotationOffset || 0; // In Radians (e.g., Math.PI/2 for 90°)
     }
 
     /**
@@ -59,6 +74,9 @@ export class Projectile extends MovingEntity {
      * Update Position und State - Überschreiben in Subklassen
      */
     update(map, projectiles, projectileIndex, gridWidth, player, currentTime) {
+        if (this.spinSpeed) {
+            this.rotationAngle += this.spinSpeed;
+        }
         this.move(map, projectiles, projectileIndex, gridWidth, currentTime);
     }
 
@@ -99,9 +117,38 @@ export class Projectile extends MovingEntity {
     draw(ctx, player) {
         const screenX = this.globalEntityX - player.globalEntityX + player.canvasWidthMiddle;
         const screenY = this.globalEntityY - player.globalEntityY + player.canvasWidthHeight;
-        // TODO: Ersetzen durch this.png Bild
-        ctx.fillStyle = this.isEnemy ? '#FF0000' : '#FFFF00';
-        ctx.fillRect(screenX - this.size / 2, screenY - this.size / 2, this.size, this.size);
+
+        if (this.png) {
+            ctx.save();
+            ctx.translate(screenX, screenY);
+
+            // Apply Glow if configured
+            if (this.glow) {
+                ctx.shadowBlur = this.glow.blur || 15;
+                ctx.shadowColor = this.glow.color || 'white';
+            }
+
+            let angle;
+            if (this.spinSpeed !== 0) {
+                // Use continuous rotation for spinning projectiles
+                angle = this.rotationAngle;
+            } else {
+                // Calculate rotation angle based on direction for directional projectiles
+                angle = Math.atan2(this.direction.y, this.direction.x);
+            }
+
+            // Add static offset (e.g. if sprite points up instead of right)
+            ctx.rotate(angle + this.rotationOffset);
+
+            // Draw image centered
+            ctx.drawImage(this.png, -this.drawWidth / 2, -this.drawHeight / 2, this.drawWidth, this.drawHeight);
+
+            ctx.restore();
+        } else {
+            // TODO: Ersetzen durch this.png Bild
+            ctx.fillStyle = this.isEnemy ? '#FF0000' : '#FFFF00';
+            ctx.fillRect(screenX - this.size / 2, screenY - this.size / 2, this.size, this.size);
+        }
     }
 
     /**
@@ -120,15 +167,6 @@ export class Projectile extends MovingEntity {
         }
     }
 
-    /**
-     * Prüfe Collision mit einzelnem Entity
-     */
-    checkCollisionWith(entity) {
-        const dx = entity.globalEntityX - this.globalEntityX;
-        const dy = entity.globalEntityY - this.globalEntityY;
-        return Math.abs(dx) < this.hitbox.width / 2 + entity.hitbox.width / 2 &&
-               Math.abs(dy) < this.hitbox.height / 2 + entity.hitbox.height / 2;
-    }
 
     /**
      * Helper: Iteriere über alle Enemies im Grid
