@@ -2,7 +2,7 @@ import {Item} from "./item.js";
 
 export class Equipment extends Item {
     constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
-        super(icon, description, level, playerStatKey);
+        super(icon, description);
         this.name = name;
         this.icon = icon;
         this.level = level;
@@ -35,7 +35,7 @@ export class Equipment extends Item {
             // Wert speichern
             this.currentAppliedValue = targetValue;
 
-            console.log(`[${this.name}] ${this.playerStatKey} aktualisiert: ${player[this.playerStatKey]}`);
+            //console.log(`[${this.name}] ${this.playerStatKey} aktualisiert: ${player[this.playerStatKey]}`);
         }
     }
 }
