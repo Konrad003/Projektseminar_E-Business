@@ -197,7 +197,20 @@ export class game {
     settingsListenerInGameSettings() {
         document.getElementById("inGameSettingsForm").addEventListener("submit", (e) => {
             e.preventDefault();
-            // Save logic here
+
+            this.soundEffectsVol = parseFloat(document.getElementById("soundEffectsVolInGame").value) // ID muss im HTML angepasst werden (siehe unten) oder eindeutig sein
+            this.musicVol = parseFloat(document.getElementById("musicVolInGame").value) // ID muss im HTML angepasst werden
+
+            this.Sounds() // Dies ist die einfachste Art, alle Audio-Objekte mit den neuen Volumes neu zu initialisieren
+            // ODER alternativ direkt die Volumes der laufenden Instanzen setzen:
+            /*
+            if(window.Sounds) {
+                Object.values(window.Sounds).forEach(sound => {
+                    if(sound === window.Sounds.musikSound) sound.volume = this.musicVol;
+                    else sound.volume = this.soundEffectsVol;
+                });
+            }
+            */
 
             this.testShoot = document.getElementById("testShootInGameSettings").checked
             this.testDie = document.getElementById("testDieInGameSettings").checked
@@ -535,7 +548,6 @@ export class game {
 
     inGameSettings() {
         this.settingsListenerInGameSettings()
-
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("inGameSettingsScreen").style.display = "flex";
     }
