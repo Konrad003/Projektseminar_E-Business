@@ -21,7 +21,8 @@ export class BoomerangWeapon extends Weapon {
         // Pass shooter in config so boomerang can return
         const extendedConfig = {
             ...this.projectileConfig,
-            shooter: this.shooter
+            shooter: this.shooter,
+            piercing: this.piercing // Pass piercing stat to projectile
         };
 
         const ProjectileClass = this.projectile;
