@@ -20,6 +20,7 @@ export class MolotovWeapon extends Weapon {
     }
 
     updateStats() {
+        if (this.level === this._currentStatsLevel) return;
         this.dmg += 5 // warscheinlich reduntant, da DoT Schaden im Projektil geregelt wird
         this.cooldown -= 80;           // +15 Schaden pro Level
         this.piercing += 0,
@@ -27,5 +28,6 @@ export class MolotovWeapon extends Weapon {
         this.projectileConfig.amount += 0;   // Keine Extra-Projektile
         this.projectileConfig.dotRadius += 10;
         this.projectileConfig.dotDmg += 5;
+        this._currentStatsLevel = this.level;
     }
 }

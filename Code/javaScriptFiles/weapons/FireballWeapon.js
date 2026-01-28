@@ -28,6 +28,7 @@ export class FireballWeapon extends Weapon {
         this.range += 50,         // +50 Range pro Level
         this.projectileConfig.amount += 0;   // Keine Extra-Projektile
         this.explosionRadius += 150
+        this._currentStatsLevel = this.level;
 
     }
 }

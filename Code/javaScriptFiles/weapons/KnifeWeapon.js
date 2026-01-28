@@ -26,6 +26,7 @@ export class KnifeWeapon extends Weapon {
         this.piercing += 0.5,     // +1 Piercing alle 2 Level
         this.range += 50,         // +50 Range pro Level
         this.projectileConfig.amount += 0;   // Keine Extra-Projektile
+        this._currentStatsLevel = this.level;
 
     }
 }

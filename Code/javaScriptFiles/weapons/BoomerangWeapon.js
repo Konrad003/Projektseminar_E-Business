@@ -40,6 +40,7 @@ export class BoomerangWeapon extends Weapon {
         this.range += 50,         // +50 Range pro Level
         this.projectileConfig.projectileAmount += 0   // Keine Extra-Projektile
         this.projectileConfig.maxRange += 50;    // +50 maxRange pro Level
+        this._currentStatsLevel = this.level;
     }
 
 
