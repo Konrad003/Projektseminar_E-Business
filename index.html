@@ -246,9 +246,6 @@
         <button class="btn" onclick="Game.home()" onmousedown="Game.playButtonSound(); Game.BackgroundMusicStop()">MAIN
             MENU
         </button>
-
-        <button class="btn" onclick="Game.end()" onmousedown="Game.playButtonSound()">DEFEAT</button>
-        <button class="btn" onclick="Game.endWin()" onmousedown="Game.playButtonSound()">WIN</button>
     </div>
 </section>
 
@@ -442,23 +439,60 @@
 </section>
 
 <section class="screen" id="statsScreen">
-    <h1 class="screenTitle">
-        Your Total Game Stats
-    </h1>
+    <h1 class="screenTitle">Global Statistics</h1>
 
-    <div class="statsPanel">
-        <p>Your Game Time: <span class="stat-val" id="gameTime">00:00</span></p>
-        <p>Your Game XP: <span class="stat-val" id="gameXP">0</span></p>
-        <p>Your Game Kills: <span class="stat-val" id="gameKills">0</span></p>
-        <p>Your Game Wins: <span class="stat-val" id="gameWins">0</span></p>
-        <p>Your Game Defeats: <span class="stat-val" id="gameDefeats">0</span></p>
+    <div class="panel stats-grid">
+        <div class="stats-card">
+            <div class="stats-icon-container">
+                <img alt="Time Icon" src="./Graphics/timer.svg">
+            </div>
+            <div class="stats-info">
+                <span class="stats-label">Total Time</span>
+                <span class="stat-val" id="gameTime">00:00</span>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-icon-container">
+                <img alt="XP Icon" src="./Graphics/singleUsePng/xp.png">
+            </div>
+            <div class="stats-info">
+                <span class="stats-label">Total XP</span>
+                <span class="stat-val" id="gameXP">0</span>
+            </div>
+        </div>
+
+        <div class="stats-card">
+            <div class="stats-icon-container">
+                <img alt="Kills Icon" src="./Graphics/skull.svg">
+            </div>
+            <div class="stats-info">
+                <span class="stats-label">Total Kills</span>
+                <span class="stat-val" id="gameKills">0</span>
+            </div>
+        </div>
+
+        <div class="stats-card win-border">
+            <div class="stats-info">
+                <span class="stats-label">Wins</span>
+                <span class="stat-val highlight-yellow" id="gameWins">0</span>
+            </div>
+        </div>
+
+        <div class="stats-card loss-border">
+            <div class="stats-info">
+                <span class="stats-label">Defeats</span>
+                <span class="stat-val highlight-yellow" id="gameDefeats">0</span>
+            </div>
+        </div>
     </div>
 
-    <div class="flex-row-gap" style="margin-top: 20px;">
+    <div class="flex-row-gap" style="margin-top: 30px;">
         <button class="btn" id="clearLocalStorage" onclick="Game.statsReset()" onmousedown="Game.playButtonSound()">
-            Reset
+            Reset Stats
         </button>
-        <button class="btn" id="startMenuButtonStats" onclick="Game.home()" onmousedown="Game.playButtonSound()">Back
+        <button class="btn" id="startMenuButtonStats" onclick="Game.home()" onmousedown="Game.playButtonSound()">
+            Back
         </button>
     </div>
 </section>
