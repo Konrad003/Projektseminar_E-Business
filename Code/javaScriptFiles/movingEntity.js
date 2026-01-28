@@ -154,14 +154,25 @@ export class MovingEntity extends Entity {
         this.hp -= reducedAmount; // schaden abziehen
         document.getElementById("hudHealthProgress").style.value = this.hp
 
-        const isPlayer = (typeof Game !== 'undefined') && Game.PlayerOne === this;
-        const testDieEnabled = (typeof Game !== 'undefined') && Game.testDie;
+        const isPlayer = (typeof window.Game !== 'undefined') && window.Game.PlayerOne === this;
+
+        if (isPlayer && reducedAmount > 0) {
+            if (window.Sounds && window.Sounds.shotSound) {
+                window.Sounds.shotSound.currentTime = 0;
+                window.Sounds.shotSound.play().catch(() => {
+                });
+            }
+        }
+
+        const testDieEnabled = (typeof window.Game !== 'undefined') && window.Game.testDie;
         if (this.hp <= 0) {
             this.hp = 0;
             if (!isPlayer || !testDieEnabled) {
                 this.die(enemies, positionWithin, enemyItemDrops);
             }
         }
+
+
     }
 
     die() {

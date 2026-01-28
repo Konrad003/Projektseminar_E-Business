@@ -62,6 +62,9 @@ export class EquipmentDash extends Equipment {
         if (inputState.downPressed) {
             player.globalEntityY = map.downFree(player.globalEntityX, player.globalEntityY, dashDistance, player.hitbox);
         }
+        if (window.Game.soundEffects) {
+            window.Sounds.dashSound.play()
+        }
 
         // Nach einer kurzen Zeit den Dash-Status beenden
         // (Einfachheitshalber hier sofort nach der Bewegung,

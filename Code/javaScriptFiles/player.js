@@ -279,7 +279,5 @@ export class Player extends MovingEntity {
         }
     }
 
-    getColor() {
-        return 'blue'
-    }
+    // getColor() duplicate removed
 }
