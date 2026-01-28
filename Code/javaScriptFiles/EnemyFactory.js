@@ -5,9 +5,8 @@ import {EnemyHexe} from "./enemies/EnemyHexe.js"
 import {EnemySchatzgoblin} from "./enemies/EnemySchatzgoblin.js"
 import {EnemyGepanzerterRitter} from "./enemies/EnemyGepanzerterRitter.js"
 import {EnemySkellet} from "./enemies/EnemySkellet.js"
-import {Enemy} from "./enemy.js"
 import {WeaponConfig} from "./weapons/weaponConfig.js"
-import {MovingEntity} from "./movingEntity.js"
+
 export class EnemyFactory{
     static spawnEnemyOutsideView(enemiesArray, player, canvas, tilewidth, gridWidth, mapWidth, mapHeight, MapOne, CountOfEnemies, enemyLvl) {
         
@@ -87,7 +86,7 @@ export class EnemyFactory{
             {cls: EnemySlime, weight: 70 , weapon: null},
             {cls: EnemyReiter, weight: 5, weapon: null},
             {cls: EnemySensenmann, weight: 5, weapon: null},
-            {cls: EnemyHexe, weight: 3, weapon: "BasicEnemy" },
+            {cls: EnemyHexe, weight: 3, weapon: "EnemyFireball"},
             {cls: EnemySchatzgoblin, weight: 1, weapon: null},
             {cls: EnemyGepanzerterRitter, weight: 1, weapon: null},
             {cls: EnemySkellet, weight: 15, weapon: "BasicEnemy"}

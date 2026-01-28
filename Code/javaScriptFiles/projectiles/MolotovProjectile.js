@@ -1,4 +1,4 @@
-import { Projectile } from "./Projectile.js";
+import {Projectile} from "./Projectile.js";
 
 /**
  * MolotovProjectile: Bogen-Flug → Landung → Kreis mit DoT
@@ -80,13 +80,12 @@ export class MolotovProjectile extends Projectile {
         const screenY = this.globalEntityY - player.globalEntityY + player.canvasWidthHeight;
         // TODO: Ersetzen durch PNG (Molotov + Feuerkreis)
         if (this.landed) {
-            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+            ctx.fillStyle = 'rgba(242, 72, 34, 0.3)';
             ctx.beginPath();
             ctx.arc(screenX, screenY, this.dotRadius, 0, Math.PI * 2);
             ctx.fill();
         } else {
-            ctx.fillStyle = '#00FF00';
-            ctx.fillRect(screenX - 6, screenY - 6, 12, 12);
+            super.draw(ctx, player);
         }
     }
 }

@@ -1,5 +1,4 @@
-import { Projectile } from "./Projectile.js";
-
+import {Projectile} from "./Projectile.js";
 
 
 //BoomerangProjectile: Axt fliegt hin und zurück
@@ -63,11 +62,5 @@ export class BoomerangProjectile extends Projectile {
         
     }
 
-    draw(ctx, player) {
-        const screenX = this.globalEntityX - player.globalEntityX + player.canvasWidthMiddle;
-        const screenY = this.globalEntityY - player.globalEntityY + player.canvasWidthHeight;
-        // TODO: Ersetzen durch PNG (Axt)
-        ctx.fillStyle = '#A0522D';
-        ctx.fillRect(screenX - 8, screenY - 8, 16, 16);
-    }
+
 }

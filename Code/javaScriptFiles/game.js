@@ -113,6 +113,24 @@ export class game {
         // Listener initialisieren (nur einmal!)
         this.settingsListener()
         this.settingsListenerInGameSettings()
+
+        window.addEventListener("keydown", (e) => {
+            if (document.getElementById("settingsScreen").style.display === "flex") {
+                if (e.key === 't' || e.key === 'T') {
+                    const s1 = document.getElementById("testCaseSettings1");
+                    const s2 = document.getElementById("testCaseSettings2");
+                    if (s1 && s2) {
+                        if (s1.style.display === "none") {
+                            s1.style.display = "flex";
+                            s2.style.display = "flex";
+                        } else {
+                            s1.style.display = "none";
+                            s2.style.display = "none";
+                        }
+                    }
+                }
+            }
+        });
     }
 
     loadMap(file) {
@@ -167,7 +185,6 @@ export class game {
                 this.resumeGame()
             }
         }
-
     }
 
     keyUpHandler(e) { // liest Output der Tastatur aus
@@ -204,6 +221,8 @@ export class game {
             this.Health = parseInt(document.getElementById("testHealth").value)
             this.maxHealth = parseInt(document.getElementById("testMaxHealth").value)
             this.XP = parseInt(document.getElementById("testXP").value)
+            //localStorage.setItem("soundVol", toString(this.soundEffectsVol))
+            //this.soundEffectsVol = parseInt(localStorage.getItem("soundVol") || 1.0);
 
             this.Sounds()
             this.home()
@@ -220,23 +239,7 @@ export class game {
             localStorage.setItem("soundEffectsVol", this.soundEffectsVol.toString())
             localStorage.setItem("musicVol", this.musicVol.toString())
 
-            this.Sounds() // Dies ist die einfachste Art, alle Audio-Objekte mit den neuen Volumes neu zu initialisieren
-            // ODER alternativ direkt die Volumes der laufenden Instanzen setzen:
-            /*
-            if(window.Sounds) {
-                Object.values(window.Sounds).forEach(sound => {
-                    if(sound === window.Sounds.musikSound) sound.volume = this.musicVol;
-                    else sound.volume = this.soundEffectsVol;
-                });
-            }
-            */
-
-            this.testShoot = document.getElementById("testShootInGameSettings").checked
-            this.testDie = document.getElementById("testDieInGameSettings").checked
-            this.dashActiveSetting = document.getElementById("activateDashInGameSettings").checked
-            this.Health = parseInt(document.getElementById("testHealthInGameSettings").value)
-            this.maxHealth = parseInt(document.getElementById("testMaxHealthInGameSettings").value)
-            this.XP = parseInt(document.getElementById("testXPInGameSettings").value)
+            this.Sounds()
 
             this.pauseGame()
         });
@@ -621,6 +624,8 @@ export class game {
         document.getElementById("gameScreen").style.display = "none";
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("settingsScreen").style.display = "none";
+        document.getElementById("testCaseSettings1").style.display = "none";
+        document.getElementById("testCaseSettings2").style.display = "none";
         document.getElementById("defeatScreen").style.display = "none";
         document.getElementById("winScreen").style.display = "none";
         document.getElementById("lvlScreen").style.display = "none";
@@ -677,6 +682,7 @@ export class game {
     }
 
     Sounds() {
+
         this.buttonSound = new Audio('./Sound/click.mp3');
         this.buttonSound.volume = this.soundEffectsVol;
 
@@ -848,14 +854,6 @@ export class game {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         this.MapOne.render(this.PlayerOne)
 
-        this.PlayerOne.render(this.MapOne, {
-            upPressed: this.upPressed,
-            downPressed: this.downPressed,
-            leftPressed: this.leftPressed,
-            rightPressed: this.rightPressed,
-            spacePressed: this.spacePressed
-        }, performance.now(), this.enemies, this.gridWidth)
-
         // Gegner bewegen, zeichnen und bei Collision entfernen
         for (let row = 0; row <= Math.floor(this.mapData.height / (this.gridWidth)); row++) {
             for (let column = 0; column <= Math.floor(this.mapData.width / (this.gridWidth)); column++) {
@@ -868,6 +866,16 @@ export class game {
                 }
             }
         }
+
+        this.PlayerOne.render(this.MapOne, {
+            upPressed: this.upPressed,
+            downPressed: this.downPressed,
+            leftPressed: this.leftPressed,
+            rightPressed: this.rightPressed,
+            spacePressed: this.spacePressed
+        }, performance.now(), this.enemies, this.gridWidth)
+
+        this.MapOne.drawMiniMap(this.PlayerOne)
 
         this.hudHealthProgress.max = this.PlayerOne.maxHp
         this.hudHealthProgress.value = this.PlayerOne.hp
