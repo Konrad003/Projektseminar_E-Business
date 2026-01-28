@@ -626,6 +626,7 @@ export class game {
         document.getElementById("lvlScreen").style.display = "none";
         document.getElementById("playerSelectScreen").style.display = "none";
         document.getElementById("statsScreen").style.display = "none";
+        document.getElementById("mapScreen").style.display = "none";
         document.getElementById("startScreen").style.display = "flex";
     }
 

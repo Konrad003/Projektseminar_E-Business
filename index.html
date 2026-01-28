@@ -79,10 +79,15 @@
 <section class="screen" id="mapScreen">
     <div class="menu">
         <button class="btn" onclick="Game.mapSelect(0)"
-                onmousedown="Game.playButtonSound(); Game.BackgroundMusicPlay()">Jungle
+                onmousedown="Game.playButtonSound(); Game.BackgroundMusicPlay()">
+            Jungle
         </button>
-        <button class="btn" onclick="Game.mapSelect(1)"
-                onmousedown="Game.playButtonSound(); Game.BackgroundMusicPlay()">Vanilla
+        <button class="btn" onmousedown="Game.damageSound.play()">
+            Coming Soon
+        </button>
+        <button class="btn" id="startMenuButtonMap" onclick="Game.home()" onmousedown="Game.playButtonSound()"
+                style="margin-top: 50px">
+            Back
         </button>
     </div>
 </section>
