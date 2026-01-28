@@ -51,12 +51,10 @@ export class FireballProjectile extends Projectile {
         } else {
             // Vor Explosion: Check ob Ziel getroffen
             if (this.isEnemy) {
-                // Enemy-Feuerball trifft Player
                 if (this.checkCollisionWithEntity(player)) {
                     this.triggerExplosion(currentTime);
                 }
             } else {
-                // Player-Feuerball trifft Gegner
                 this.forEachEnemy(enemies, (enemy) => {
                     if (this.checkCollisionWithEntity(enemy)) {
                         this.triggerExplosion(currentTime);
@@ -84,6 +82,14 @@ export class FireballProjectile extends Projectile {
                 enemy.takeDmg(this.dmg, enemies, j, enemyItemDrops);
             }
         });
+    }
+
+    applyExplosionDamageToPlayer(player, enemyItemDrops) {
+        const dx = player.globalEntityX - this.globalEntityX;
+        const dy = player.globalEntityY - this.globalEntityY;
+        if (Math.hypot(dx, dy) < this.explosionRadius) {
+            player.takeDmg(this.dmg, [], null, enemyItemDrops);
+        }
     }
 
     draw(ctx, player) {
