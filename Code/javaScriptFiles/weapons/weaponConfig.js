@@ -119,7 +119,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
         true,
         OrbitingProjectile,
          {
-            amount: 1,  // Basis: 2 Shuriken
+            amount: 2,  // Basis: 2 Shuriken
             orbitRadius: 100,
             orbitSpeed: 1.6,
             size: 15,

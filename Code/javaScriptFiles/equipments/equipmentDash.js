@@ -7,7 +7,7 @@ export class EquipmentDash extends Equipment {
     constructor(icon, description, level, name, playerStatKey, valuePerLevel) {
         super(icon, description, level, name, playerStatKey, valuePerLevel);
         this.cooldown = 0;
-        this.dashDuration = 10; // Wie viele Frames der Dash dauert
+        this.dashDuration = 7; // Wie viele Frames der Dash dauert
         this.isDashing = false;
         this.baseCooldown = 1700; // Basis-Cooldown in Frames, sind ca 10 sek.
         this.cooldownReductionPerLevel = 170; // Reduziert den Cooldown um ca 1 Sekunde pro Level

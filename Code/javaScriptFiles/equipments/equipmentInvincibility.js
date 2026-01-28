@@ -7,7 +7,7 @@ export class EquipmentInvincibility extends Equipment {
         this.baseDuration = 4000; // 4 Sekunden Basiszeit (in Millisekunden)
         this.durationPerLevel = 2000; // +2 Sekunden pro Level
         this.activeTimeout = null;
-        this.activationInterval = 60000; // 60 Sekunden
+        this.activationInterval = 35000; // 60 Sekunden
         this.lastActivatedTime = 0;      // Merkt sich den letzten Start
     }
 
