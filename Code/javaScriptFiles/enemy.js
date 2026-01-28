@@ -132,7 +132,7 @@ export class Enemy extends MovingEntity {
                     enemyItemDrops.push(new HealDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/3.png"))
-                } else if (roll < 0.6) {
+                } else if (roll < 0.58) {
                     enemyItemDrops.push(new AttackBoostDrop(this.globalEntityX, this.globalEntityY, {
                         width: 32, height: 32
                     }, "./Graphics/singleUsePng/2.png"))

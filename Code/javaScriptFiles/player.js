@@ -143,11 +143,8 @@ export class Player extends MovingEntity {
     if (l === 2) return 8;
     if (l === 3) return 12;
 
-    // Early/Mid: schnell genug, um Builds zu bauen
-    if (l <= 6)  return 20 + (l - 3) * 10;   // L4=30, L5=40, L6=50
-
-    // Mid: normal
-    if (l <= 10) return 70 + (l - 6) * 18;   // L7=88 ... L10=142
+    if (l <= 6)  return 14 + (l - 3) * 6;   // L4=20, L5=26, L6=32
+    if (l <= 10) return 40 + (l - 6) * 10;  // L7=50, L8=60, L9=70, L10=80
 
     // Late: richtig langsam (Ende kaum noch Level-Ups)
     if (l <= 14) return 170 + (l - 10) * 30; // L11=200 ... L14=290
