@@ -14,6 +14,6 @@ export class EquipmentMaxHealth extends Equipment {
         // Wir heilen den Spieler zusätzlich um die Differenz
         player.hp += difference;
 
-        console.log(`[Vigor] MaxHP erhöht. Spieler um ${difference} geheilt.`);
+        //console.log(`[Vigor] MaxHP erhöht. Spieler um ${difference} geheilt.`);
     }
 }

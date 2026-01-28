@@ -40,13 +40,13 @@ export class EquipmentInvincibility extends Equipment {
         player.isInvincible = true;
         const currentDuration = this.baseDuration + (newLevel - 1) * this.durationPerLevel;
 
-        console.log(`[Holy Aura] Aktiviert für ${currentDuration / 1000}s. Nächster Check in 60s.`);
+        //console.log(`[Holy Aura] Aktiviert für ${currentDuration / 1000}s. Nächster Check in 60s.`);
 
         // Effekt nach Ablauf der Dauer wieder ausschalten
         this.activeTimeout = setTimeout(() => {
             player.isInvincible = false;
             this.activeTimeout = null;
-            console.log(`[Holy Aura] Abgelaufen.`);
+            //console.log(`[Holy Aura] Abgelaufen.`);
         }, currentDuration);
     }
 }
