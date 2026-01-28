@@ -67,10 +67,6 @@ export class ThunderstrikeWeapon extends Weapon {
         this.projectileConfig.lightningLength += 25;
         this.projectileConfig.lightningCount += 0;
         this._currentStatsLevel = this.level;
-
-        if (this.level % 4 === 0) { // wenn 4 -> man bekommt nen 5.
-        this.projectileConfig.lightningCount += 1;
-        }
     }
 
     renderEffects(ctx, playerOne, performanceNow) {

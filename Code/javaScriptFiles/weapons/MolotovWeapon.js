@@ -18,7 +18,7 @@ export class MolotovWeapon extends Weapon {
     constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
         super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig);
         this.activeMolotovs = []; // 
-        this.maxMolotovs = 6;     //  Cap dürfen gleichzeitig geworfen werden
+        this.maxMolotovs = 5;     //  Cap dürfen gleichzeitig geworfen werden -> sosnt zu laggy
     }
 
     updateStats() {
