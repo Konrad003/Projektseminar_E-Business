@@ -1,4 +1,4 @@
-import { Projectile } from "./Projectile.js";
+import {Projectile} from "./Projectile.js";
 
 /**
  * FireballProjectile: Fliegt → Explosion bei Timeout oder Collision
@@ -37,7 +37,11 @@ export class FireballProjectile extends Projectile {
         if (this.exploded) {
             // Explosion-Schaden in Radius
             if (!this.explosionDamageDealt) {
-                this.applyExplosionDamage(enemies, enemyItemDrops);
+                if (this.isEnemy) {
+                    this.applyExplosionDamageToPlayer(player, enemyItemDrops);
+                } else {
+                    this.applyExplosionDamage(enemies, enemyItemDrops);
+                }
                 this.explosionDamageDealt = true;
             }
             // Explosion abgelaufen → löschen
@@ -45,13 +49,30 @@ export class FireballProjectile extends Projectile {
                 this.isAlive = false;
             }
         } else {
-            // Vor Explosion: Check ob Gegner getroffen
-            this.forEachEnemy(enemies, (enemy) => {
-                if (this.checkCollisionWithEntity(enemy)) {
+            // Vor Explosion: Check ob Ziel getroffen
+            if (this.isEnemy) {
+                // Enemy-Feuerball trifft Player
+                if (this.checkCollisionWithEntity(player)) {
                     this.triggerExplosion(currentTime);
-                    return false; // break
                 }
-            });
+            } else {
+                // Player-Feuerball trifft Gegner
+                this.forEachEnemy(enemies, (enemy) => {
+                    if (this.checkCollisionWithEntity(enemy)) {
+                        this.triggerExplosion(currentTime);
+                        return false; // break
+                    }
+                });
+            }
+        }
+    }
+
+    applyExplosionDamageToPlayer(player, enemyItemDrops) {
+        const dx = player.globalEntityX - this.globalEntityX;
+        const dy = player.globalEntityY - this.globalEntityY;
+        if (Math.hypot(dx, dy) < this.explosionRadius) {
+            // Player nimmt Schaden (kein 'enemies' array nötig, itemDrops optional)
+            player.takeDmg(this.dmg, [], null, enemyItemDrops);
         }
     }
 
@@ -77,10 +98,7 @@ export class FireballProjectile extends Projectile {
             ctx.arc(screenX, screenY, this.explosionRadius, 0, Math.PI * 2);
             ctx.fill();
         } else {
-            ctx.fillStyle = '#FF4500';
-            ctx.beginPath();
-            ctx.arc(screenX, screenY, this.size, 0, Math.PI * 2);
-            ctx.fill();
+            super.draw(ctx, player);
         }
     }
 }
