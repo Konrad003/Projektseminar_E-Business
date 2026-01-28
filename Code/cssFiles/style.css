@@ -230,6 +230,25 @@ h1 {
 	z-index: 10;
 }
 
+.overlay-dark-small {
+	align-items: center;
+	backdrop-filter: blur(5px);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-radius: 10px; /* Optional: Falls deine Karten abgerundete Ecken haben */
+	display: flex;
+
+	flex-direction: column;
+	height: 100%; /* Volle Höhe des Players */
+	justify-content: center;
+
+	/* Um optional Text oder ein Schloss-Icon mittig anzuzeigen */
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%; /* Volle Breite des Players */
+	z-index: 10;
+}
+
 /*HUD Styles*/
 /* --- 8-BIT HUD TOP PANEL STYLES (FLEX VERSION) --- */
 
@@ -330,6 +349,7 @@ progress {
 	display: none;
 	flex-direction: column;
 	gap: 10px;
+	position: relative;
 }
 
 .slideImage {
