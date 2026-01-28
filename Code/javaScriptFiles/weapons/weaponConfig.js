@@ -114,7 +114,7 @@ static createWeapon(name, shooter, mapWidth, mapHeight, gridWidth, level = 1) {
                 amount: 1
             });
         case "Boomerang":
-            return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/4.png", "Returns after travel", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
+            return new BoomerangWeapon("./Graphics/equipmentIcons/PNG/11.png", "Returns after travel", level, "Boomerang", shooter, mapWidth, mapHeight, gridWidth,
                 35,
         1500,
                 800,
