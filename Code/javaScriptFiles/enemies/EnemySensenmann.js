@@ -4,8 +4,8 @@ export class EnemySensenmann extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.level = level
-        this.hp = 100 + level*20
-        this.speed = 1.05 + level*0.08
+        this.hp = 100 + level*800
+        this.speed = 1.05 + level*0.04
         this.png = "./Graphics/enemiesPNG/Sense/1.png"
         this.hitbox = {width: 634/9, height: 603/9}
 

@@ -3,7 +3,7 @@ import { WeaponConfig } from "../weapons/weaponConfig.js"
 export class EnemyHexe extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY,weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
-        this.hp = 62 + level*13
+        this.hp = 62 + level*400
         this.speed = 0.85
         this.png = "./Graphics/enemiesPNG/Hexe/1.png"
         this.hitbox = {width: 583/7, height: 703/7}
