@@ -79,8 +79,7 @@ export class game {
     hudXpProgress = document.getElementById("hudXpProgress")
     totalXP = 0
 
-    soundEffects = true
-    music = true
+    GP = false
 
     soundEffectsVol = parseFloat(localStorage.getItem("soundEffectsVol") || "1.0");
     musicVol = parseFloat(localStorage.getItem("musicVol") || "1.0");
@@ -592,6 +591,11 @@ export class game {
     }
 
     selectPlayer(src) {
+        if (this.playerSelect === 6 && this.GP === false) {
+            // Optional: Hier könnte man einen "Locked"-Sound abspielen
+            return;
+        }
+
         this.playerPngPath = src
         this.home()
     }
@@ -599,23 +603,51 @@ export class game {
     nextPlayer() {
         document.getElementById("player" + this.playerSelect).style.display = "none"
         this.playerSelect++
-        if (this.playerSelect > 5) {
+        if (this.playerSelect > 6) {
             this.playerSelect = 1
         } else if (this.playerSelect < 1) {
-            this.playerSelect = 5
+            this.playerSelect = 6
         }
+
+        this.checkGP()
+
+        if (this.playerSelect === 6 && this.GP === false) {
+            document.getElementById("hide").style.display = "flex"
+        } else {
+            document.getElementById("hide").style.display = "none"
+        }
+
         document.getElementById("player" + this.playerSelect).style.display = "flex"
     }
 
     prevPlayer() {
         document.getElementById("player" + this.playerSelect).style.display = "none"
         this.playerSelect--
-        if (this.playerSelect > 5) {
+        if (this.playerSelect > 6) {
             this.playerSelect = 1
         } else if (this.playerSelect < 1) {
-            this.playerSelect = 5
+            this.playerSelect = 6
+        }
+
+        this.checkGP()
+
+        if (this.playerSelect === 6 && this.GP === false) {
+            document.getElementById("hide").style.display = "flex"
+        } else {
+            document.getElementById("hide").style.display = "none"
         }
         document.getElementById("player" + this.playerSelect).style.display = "flex"
+    }
+
+    checkGP() {
+        const wins = parseInt(localStorage.getItem("gameWins")) || 0;
+
+        if (wins >= 1) {
+            this.GP = true;
+        } else {
+            // Wichtig, falls der Spieler zwischendurch "Reset Stats" drückt
+            this.GP = false;
+        }
     }
 
     home() {
