@@ -22,12 +22,13 @@ export class FireballWeapon extends Weapon {
     }
     updateStats() {
         if (this.level === this._currentStatsLevel) return;
-        this.dmg += 20
+        this.dmg += 10
         this.cooldown -= 100;           // +15 Schaden pro Level
         this.piercing += 0,     // +1 Piercing alle 2 Level
         this.range += 50,         // +50 Range pro Level
         this.projectileConfig.amount += 0;   // Keine Extra-Projektile
-        this.explosionRadius += 15
+        this.explosionRadius += 150
+        this._currentStatsLevel = this.level;
 
     }
 }

@@ -100,7 +100,7 @@ export class AttackBoostDrop extends DropSingleUse {
 export class HealDrop extends DropSingleUse {
   constructor(x, y, hitbox, png) {
     super(x, y, hitbox, png)
-    this.healAmount = 200
+    this.healAmount = 150
   }
 
   getColor() {
