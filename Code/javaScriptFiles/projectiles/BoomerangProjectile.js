@@ -37,9 +37,9 @@ export class BoomerangProjectile extends Projectile {
             if (this.distanceTraveled >= this.maxRange) {
                 this.returning = true;
             }
-            if ((oldX === this.globalEntityX && this.direction.x !== 0) ||
-            (oldY === this.globalEntityY && this.direction.y !== 0)) {
-            this.returning = true;}
+            if ((oldX === this.globalEntityX && this.direction.x !== 0) || (oldY === this.globalEntityY && this.direction.y !== 0)) {
+                this.returning = true;
+            }
 
         } else {
             // Kehre zurück
@@ -53,13 +53,13 @@ export class BoomerangProjectile extends Projectile {
                     return;
                 }
 
-                const returnDir = { x: dx / dist, y: dy / dist };
+                const returnDir = {x: dx / dist, y: dy / dist};
                 this.globalEntityX += returnDir.x * this.speed;
                 this.globalEntityY += returnDir.y * this.speed;
             }
         }
-   
-        
+
+
     }
 
 

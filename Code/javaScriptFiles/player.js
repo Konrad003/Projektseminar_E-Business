@@ -136,22 +136,22 @@ export class Player extends MovingEntity {
     }
 
     getXpForNextLevel() {
-    const l = this.level;
+        const l = this.level;
 
-    // Early: sehr schnell
-    if (l === 1) return 5;
-    if (l === 2) return 8;
-    if (l === 3) return 12;
+        // Early: sehr schnell
+        if (l === 1) return 5;
+        if (l === 2) return 8;
+        if (l === 3) return 12;
 
-    if (l <= 6)  return 14 + (l - 3) * 6;   // L4=20, L5=26, L6=32
-    if (l <= 10) return 40 + (l - 6) * 10;  // L7=50, L8=60, L9=70, L10=80
+        if (l <= 6) return 14 + (l - 3) * 6;   // L4=20, L5=26, L6=32
+        if (l <= 10) return 40 + (l - 6) * 10;  // L7=50, L8=60, L9=70, L10=80
 
-    // Late: richtig langsam (Ende kaum noch Level-Ups)
-    if (l <= 14) return 170 + (l - 10) * 30; // L11=200 ... L14=290
+        // Late: richtig langsam (Ende kaum noch Level-Ups)
+        if (l <= 14) return 170 + (l - 10) * 30; // L11=200 ... L14=290
 
-    // Super-Late: brutal zäh
-    return 320 + (l - 14) * 45;              // L15=365, L20=590
-}
+        // Super-Late: brutal zäh
+        return 320 + (l - 14) * 45;              // L15=365, L20=590
+    }
 
 
     die() {

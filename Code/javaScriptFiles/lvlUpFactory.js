@@ -12,26 +12,10 @@ import {WeaponConfig} from "./weapons/weaponConfig.js";
 export class LvlUpFactory {
     constructor(PlayerOne) {
         this.PlayerOne = PlayerOne;
-        const { mapWidth, mapHeight, gridWidth } = PlayerOne;
+        const {mapWidth, mapHeight, gridWidth} = PlayerOne;
 
-        this.equipmentObjekte = [new EquipmentArmor("./Graphics/equipmentIcons/PNG/18.png", "Reduces incoming damage", 1, "Armor", "armor", 2),
-            new EquipmentDamage("./Graphics/equipmentIcons/PNG/6.png", "Increases overall damage", 1, "Damage", "damageMultiplier", 0.2),
-            new EquipmentDash("./Graphics/equipmentIcons/PNG/12.png", "Allows a quick dodge move", 1, "Dash", null, 0),
-            new EquipmentExtraProjectile("./Graphics/equipmentIcons/PNG/1.png", "Fires extra projectiles", 1, "ExtraProjectile", "extraProjectiles", 0),
-            new EquipmentHaste("./Graphics/equipmentIcons/PNG/20.png", "Increases movement speed", 1, "Haste", "speed", 0.5),
-            new EquipmentInvincibility("./Graphics/equipmentIcons/PNG/17.png", "Grant temporary invincibility", 1, "Invincibility", "isInvincible", 0),
-            new EquipmentMaxHealth("./Graphics/equipmentIcons/PNG/15.png", "Increases maximum health", 1, "MaxHealth", "maxHp", 50),
-            new EquipmentRapidFire("./Graphics/equipmentIcons/PNG/16.png", "Reduces attack cooldown", 1, "RapidFire", "cooldownMultiplier", -0.1),
-            new EquipmentRadius("./Graphics/equipmentIcons/PNG/19.png", "Increases item pickup range", 1, "Radius", "pickupRadius", 50)]
-        this.weaponObjekte = [
-            WeaponConfig.createWeapon("Bow", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Knife", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Fireball", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Molotov", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Boomerang", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Shuriken", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Thunderstrike", PlayerOne, mapWidth, mapHeight, gridWidth),
-            WeaponConfig.createWeapon("Aura", PlayerOne, mapWidth, mapHeight, gridWidth)]
+        this.equipmentObjekte = [new EquipmentArmor("./Graphics/equipmentIcons/PNG/18.png", "Reduces incoming damage", 1, "Armor", "armor", 2), new EquipmentDamage("./Graphics/equipmentIcons/PNG/6.png", "Increases overall damage", 1, "Damage", "damageMultiplier", 0.2), new EquipmentDash("./Graphics/equipmentIcons/PNG/12.png", "Allows a quick dodge move", 1, "Dash", null, 0), new EquipmentExtraProjectile("./Graphics/equipmentIcons/PNG/1.png", "Fires extra projectiles", 1, "ExtraProjectile", "extraProjectiles", 0), new EquipmentHaste("./Graphics/equipmentIcons/PNG/20.png", "Increases movement speed", 1, "Haste", "speed", 0.5), new EquipmentInvincibility("./Graphics/equipmentIcons/PNG/17.png", "Grant temporary invincibility", 1, "Invincibility", "isInvincible", 0), new EquipmentMaxHealth("./Graphics/equipmentIcons/PNG/15.png", "Increases maximum health", 1, "MaxHealth", "maxHp", 50), new EquipmentRapidFire("./Graphics/equipmentIcons/PNG/16.png", "Reduces attack cooldown", 1, "RapidFire", "cooldownMultiplier", -0.1), new EquipmentRadius("./Graphics/equipmentIcons/PNG/19.png", "Increases item pickup range", 1, "Radius", "pickupRadius", 50)]
+        this.weaponObjekte = [WeaponConfig.createWeapon("Bow", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Knife", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Fireball", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Molotov", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Boomerang", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Shuriken", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Thunderstrike", PlayerOne, mapWidth, mapHeight, gridWidth), WeaponConfig.createWeapon("Aura", PlayerOne, mapWidth, mapHeight, gridWidth)]
 
         this.lvlRolled = new Set()
         const lvlButton1 = document.getElementById('lvl1Button');

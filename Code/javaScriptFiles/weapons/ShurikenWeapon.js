@@ -1,8 +1,9 @@
-import { Weapon } from "./Weapon.js";
+import {Weapon} from "./Weapon.js";
+
 //ShurikenWeapon: Orbiting Sterne
 export class ShurikenWeapon extends Weapon {
-    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
-        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig);
+    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
+        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig);
 
         // Eigenes Array für Shuriken (nicht Grid!)
         this.shurikenProjectiles = [];
@@ -47,16 +48,10 @@ export class ShurikenWeapon extends Weapon {
             const OrbitingProjectile = this.projectile;
 
 
-            const projectile = new OrbitingProjectile(
-                this.shooter.globalEntityX,
-                this.shooter.globalEntityY,
-                { x: 1, y: 0 },
-                this.dmg,
-                this.projectileConfig,
-                {},
-                performance.now(),
-                angle
-            );
+            const projectile = new OrbitingProjectile(this.shooter.globalEntityX, this.shooter.globalEntityY, {
+                x: 1,
+                y: 0
+            }, this.dmg, this.projectileConfig, {}, performance.now(), angle);
             this.shurikenProjectiles.push(projectile);
         }
     }
@@ -70,7 +65,7 @@ export class ShurikenWeapon extends Weapon {
         // Shuriken erstellen sich selbst im Constructor
     }
 
-      updateStats() {
+    updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 10;
         this.cooldown -= 10;

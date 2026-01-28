@@ -4,16 +4,14 @@ export class EnemySchatzgoblin extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.level = level
-        this.currentHPHP = this.hp = 500
+        this.currentHP = this.hp = 500
         this.speed = 5
         this.png = "./Graphics/enemiesPNG/Goblin/1.png"
-        this.hitbox = {width: 530/8, height: 577/8}
-
+        this.hitbox = {width: 530 / 8, height: 577 / 8}
 
         const img = new Image();
         img.src = this.png;
 
-       
         this.xpDrop = 30
         this.baseDamage = 0
         this.oldMoveX = oldMoveX
@@ -64,7 +62,8 @@ export class EnemySchatzgoblin extends Enemy {
     getColor() {
         return "DarkGreen"
     }
-           updateStats() {
+
+    updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 8
         this.hp += 15

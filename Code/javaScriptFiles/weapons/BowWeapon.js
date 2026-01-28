@@ -1,4 +1,4 @@
-import { Weapon } from "./Weapon.js";
+import {Weapon} from "./Weapon.js";
 
 /**
  * BowWeapon: Standard-Fernkampfwaffe
@@ -13,10 +13,11 @@ import { Weapon } from "./Weapon.js";
  * sie nutzt die generische Weapon-Logik ohne Änderungen.
  */
 export class BowWeapon extends Weapon {
-    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
-        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig);
+    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
+        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig);
     }
-     updateStats() {
+
+    updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 10
         this.cooldown -= 25;           // +15 Schaden pro Level
@@ -25,4 +26,4 @@ export class BowWeapon extends Weapon {
         this.projectileConfig.amount += 0;   // Keine Extra-Projektile
         this._currentStatsLevel = this.level;
     } // Keine Extra-Projektile
-    }
+}

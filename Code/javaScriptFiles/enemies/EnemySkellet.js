@@ -1,22 +1,20 @@
 import {Enemy} from "../enemy.js"
-import {Weapon} from "../weapons/Weapon.js"
-import { WeaponConfig } from "../weapons/weaponConfig.js"
+import {WeaponConfig} from "../weapons/weaponConfig.js"
 
 export class EnemySkellet extends Enemy {
     constructor(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile, oldMoveX, oldMoveY, blockedX, blockedY, weapon, level) {
         super(globalEntityX, globalEntityY, hp, png, speed, hitbox, gridMapTile)
         this.level = level
-        this.hp = 35 + level*12
+        this.hp = 35 + level * 12
         this.speed = 1.05
         this.png = "./Graphics/enemiesPNG/Skellet/2.png"
-        this.hitbox = {width: 447/13, height: 683/13}
+        this.hitbox = {width: 447 / 13, height: 683 / 13}
 
         const img = new Image();
         img.src = this.png;
 
-    
         this.xpDrop = 2
-        this.baseDamage = 6 + level*4
+        this.baseDamage = 6 + level * 4
         this.oldMoveX = oldMoveX
         this.oldMoveY = oldMoveY
         this.blockedX = blockedX
@@ -28,7 +26,8 @@ export class EnemySkellet extends Enemy {
     getColor() {
         return "white"
     }
-       updateStats() {
+
+    updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 8
         this.hp += 15

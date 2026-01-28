@@ -1,4 +1,3 @@
-
 export class Item {
 
     constructor(icon, description) {

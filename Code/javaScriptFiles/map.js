@@ -29,17 +29,17 @@ export class Map {
         this.tileDataLoaded = false
         this.tileData = []
         this.tilesPerRow = []
-        for  (let i = 0; i < this.mapDataTilesets; i++) {
+        for (let i = 0; i < this.mapDataTilesets; i++) {
             this.tilesetImage[i] = new Image()
         }
-          for  (let i = 0; i < this.mapDataTilesets; i++) {
+        for (let i = 0; i < this.mapDataTilesets; i++) {
             this.tilesetImage[i].onload = () => {
-            this.tilesSetsLoaded[i] = true;
-            this.tilesPerRow[i] = Math.round(this.tilesetImage[i].width / this.tilelength)
+                this.tilesSetsLoaded[i] = true;
+                this.tilesPerRow[i] = Math.round(this.tilesetImage[i].width / this.tilelength)
             }
 
             this.tilesetImage[i].src = mapData.tilesets[i].image
-            }
+        }
 
         this.loadTileData(mapData)
         this.mapImage.src = png
@@ -146,7 +146,8 @@ export class Map {
                 let linkToTileSetDesignIndex = null
                 let tileSetNr = null
                 if (design != null) {
-                    tileSetNrDesign = design[this.getTileNr(i, j)] -1}
+                    tileSetNrDesign = design[this.getTileNr(i, j)] - 1
+                }
                 if (hoehe0 != null && hoehe0[this.getTileNr(i, j)] > 0) {
                     linkToTileSet = this.getTilesetPathByNr(hoehe0[this.getTileNr(i, j)])
                     tilesPerRow = Math.round(linkToTileSet.data.imagewidth / this.tilelength)
@@ -203,12 +204,12 @@ export class Map {
 
     getTilesetPathByNr(tileNr) {
         if (tileNr <= 0) return null;
-        for (let i = 0; i < this.mapDataTilesets-1 ; i++) {
-            if (tileNr < this.mapDataTilesetsData[i+1].firstgid) {
-                return {data :this.mapDataTilesetsData[i] , index : i};
+        for (let i = 0; i < this.mapDataTilesets - 1; i++) {
+            if (tileNr < this.mapDataTilesetsData[i + 1].firstgid) {
+                return {data: this.mapDataTilesetsData[i], index: i};
             }
         }
-        return {data :this.mapDataTilesetsData[this.mapDataTilesets-1] , index : this.mapDataTilesets-1};
+        return {data: this.mapDataTilesetsData[this.mapDataTilesets - 1], index: this.mapDataTilesets - 1};
     }
 
     isTileOutOfBorder(tileRowWalker, tileColumnWalker,) {
@@ -297,10 +298,10 @@ export class Map {
 
 
         this.ctx.fillStyle = 'black'     // rahmen hintergrund
-        this.ctx.fillRect(this.miniMapX-4, this.miniMapY-4, this.miniMapWidth+8, this.miniMapHeight+8)
+        this.ctx.fillRect(this.miniMapX - 4, this.miniMapY - 4, this.miniMapWidth + 8, this.miniMapHeight + 8)
         this.ctx.strokeStyle = 'white'       //Rahmen
         this.ctx.lineWidth = 2
-        this.ctx.strokeRect(this.miniMapX-4, this.miniMapY-4, this.miniMapWidth+8, this.miniMapHeight+8)
+        this.ctx.strokeRect(this.miniMapX - 4, this.miniMapY - 4, this.miniMapWidth + 8, this.miniMapHeight + 8)
 
         let startTileX = player.globalEntityX / this.tilelength - this.miniMapTileView / 2      // Ausschnitt berechnen, dass Spieler in der Mitte ist
         let startTileY = player.globalEntityY / this.tilelength - this.miniMapTileView / 2
@@ -318,8 +319,7 @@ export class Map {
         )
 
         this.ctx.fillStyle = 'red'
-        this.ctx.fillRect(
-            Math.floor(this.miniMapX + (player.globalEntityX - startTileX * this.tilelength) * (this.miniMapWidth / (this.miniMapTileView * this.tilelength)) - 2),  //startkoordinateX
+        this.ctx.fillRect(Math.floor(this.miniMapX + (player.globalEntityX - startTileX * this.tilelength) * (this.miniMapWidth / (this.miniMapTileView * this.tilelength)) - 2),  //startkoordinateX
             Math.floor(this.miniMapY + (player.globalEntityY - startTileY * this.tilelength) * (this.miniMapHeight / (this.miniMapTileView * this.tilelength)) - 2), //startkoordinateY
             4, 4)                                       //Player größe
     }
@@ -334,7 +334,7 @@ export class Map {
         this.ctx.stroke();
     }
 
-    render(player){
+    render(player) {
         this.draw(player)
         this.drawMiniMap(player)
     }

@@ -1,4 +1,4 @@
-import { Weapon } from "./Weapon.js";
+import {Weapon} from "./Weapon.js";
 
 
 /**
@@ -6,8 +6,8 @@ import { Weapon } from "./Weapon.js";
  * WARUM SPECIAL: Keine Projektile, nur Damage-Loop
  */
 export class AuraWeapon extends Weapon {
-    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
-        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig);
+    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
+        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig);
         this.lastAuraDmgTime = 0;
         this.projectiles = [];
     }
@@ -44,6 +44,7 @@ export class AuraWeapon extends Weapon {
             }
         });
     }
+
     updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 3;

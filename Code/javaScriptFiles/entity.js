@@ -25,13 +25,9 @@ export class Entity {
     }
 
     checkCollisionWithEntity(otherEntity) {
-        return !(
-            this.globalEntityX + this.hitbox.width < otherEntity.globalEntityX ||
-            this.globalEntityX > otherEntity.globalEntityX + otherEntity.hitbox.width ||
-            this.globalEntityY + this.hitbox.height < otherEntity.globalEntityY ||
-            this.globalEntityY > otherEntity.globalEntityY + otherEntity.hitbox.height
-        );
+        return !(this.globalEntityX + this.hitbox.width < otherEntity.globalEntityX || this.globalEntityX > otherEntity.globalEntityX + otherEntity.hitbox.width || this.globalEntityY + this.hitbox.height < otherEntity.globalEntityY || this.globalEntityY > otherEntity.globalEntityY + otherEntity.hitbox.height);
     }
+
     draw(ctx, player, overrideColor = null) {
         let color = overrideColor || this.getColor()
         let leftBorder = player.globalEntityX + (player.hitbox.width / 2) - Entity.FOVwidthMiddle

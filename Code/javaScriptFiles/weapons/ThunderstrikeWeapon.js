@@ -1,13 +1,13 @@
-import { Weapon } from "./Weapon.js";
-import { Projectile } from "../projectiles/Projectile.js";
+import {Weapon} from "./Weapon.js";
+import {Projectile} from "../projectiles/Projectile.js";
 
 /**
  * ThunderstrikeWeapon: Blitz-Attacke
  * WARUM SPECIAL: Keine Projektile, nur Damage-Effekt + Custom shoot()
  */
 export class ThunderstrikeWeapon extends Weapon {
-    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
-        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth ,dmg ,cooldown ,range ,piercing ,maxLevel, startLevel, isSpecial, projectile, projectileConfig);
+    constructor(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig) {
+        super(icon, description, level, name, shooter, mapWidth, mapHeight, gridWidth, dmg, cooldown, range, piercing, maxLevel, startLevel, isSpecial, projectile, projectileConfig);
         this.lastLightningTime = 0;
         this.lastLightningDirections = [];
     }
@@ -57,7 +57,8 @@ export class ThunderstrikeWeapon extends Weapon {
             }
         });
     }
-       updateStats() {
+
+    updateStats() {
         if (this.level === this._currentStatsLevel) return;
         this.dmg += 9;
         this.cooldown -= 90;
