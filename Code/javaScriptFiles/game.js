@@ -535,7 +535,6 @@ export class game {
 
     inGameSettings() {
         this.settingsListenerInGameSettings()
-
         document.getElementById("pauseScreen").style.display = "none";
         document.getElementById("inGameSettingsScreen").style.display = "flex";
     }
